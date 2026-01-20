@@ -17,7 +17,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, configBuilder);
   SwaggerModule.setup('api-docs', app, document);
   //Versioning
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
