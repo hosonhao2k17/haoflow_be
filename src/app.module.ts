@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheableMemory } from 'cacheable';
+import { RoleEntity } from './api/roles/entities/role.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,6 +19,7 @@ import { CacheableMemory } from 'cacheable';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
+        entities: [RoleEntity],
       }),
       inject: [ConfigService],
     }),
