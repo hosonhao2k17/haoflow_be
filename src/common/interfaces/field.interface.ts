@@ -14,5 +14,11 @@ export interface IStringFieldOptions extends IFieldOptions {
     toLowerCase?: boolean;
     toUpperCase?: boolean;
     swaggerOptions?:  ApiPropertyOptions
-}
+} 
 
+export interface INumberFieldOptions extends IFieldOptions {
+    min?: number;
+    max?: number;
+    int?: boolean;
+    swaggerOptions?:  ApiPropertyOptions
+}
