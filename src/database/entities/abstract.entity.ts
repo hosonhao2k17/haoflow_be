@@ -14,6 +14,7 @@ export class AbstractEntity extends BaseEntity {
     @Column({
         type: 'varchar',
         length: 36,
+        nullable: true
     })
     createdBy: string; 
 

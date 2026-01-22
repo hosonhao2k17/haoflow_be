@@ -1,7 +1,7 @@
 import { Exclude, Expose } from "class-transformer";
 import { BaseResponseRdo } from "src/common/rdo/base-response.rdo";
 
-
+@Exclude()
 export class RoleRdo extends BaseResponseRdo{
 
     @Expose()
@@ -11,6 +11,6 @@ export class RoleRdo extends BaseResponseRdo{
     title: string;
 
     @Expose()
-    descriptions: string;
+    description: string;
 
 }
