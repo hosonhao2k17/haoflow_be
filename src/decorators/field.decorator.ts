@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty, IsNumber, IsString, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
 import { INumberFieldOptions, IStringFieldOptions } from "src/common/interfaces/field.interface";
 import { IsNullable } from "./validators/is-nullable.decorator";
 import { ToLowerCase, ToUpperCase } from "./transform.decorator";
@@ -16,9 +16,12 @@ export function StringField(
     if(options.nullable) {
         decorators.push(IsNullable({each: options.each}))
     } else {
-        decorators.push(IsNotEmpty({each: options.each}))
+        decorators.push(NotEquals(null,{each: options.each}))
     }
 
+    if(options.options) {
+        decorators.push(IsOptional({each: options.each}))
+    }
     if(options.swagger !== false) {
         const {swaggerOptions } = options
         decorators.push(
@@ -53,7 +56,11 @@ export function NumberField(options: INumberFieldOptions = {}) {
     if(options.nullable) {
         decorators.push(IsNullable({each: options.each}))
     } else {
-        decorators.push(IsNotEmpty({each: options.each}))
+        decorators.push(NotEquals(null,{each: options.each}))
+    }
+
+    if(options.options) {
+        decorators.push(IsOptional({each: options.each}))
     }
 
     if(options.swagger !==  false) {

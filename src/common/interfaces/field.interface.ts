@@ -6,6 +6,7 @@ export interface IFieldOptions {
     swagger?: boolean;
     nullable?: boolean;
     groups?: string[];
+    options?: boolean;
 }
 
 export interface IStringFieldOptions extends IFieldOptions {
