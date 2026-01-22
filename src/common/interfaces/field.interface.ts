@@ -23,3 +23,7 @@ export interface INumberFieldOptions extends IFieldOptions {
     int?: boolean;
     swaggerOptions?:  ApiPropertyOptions
 }
+
+export interface IEnumFieldOptions extends IFieldOptions {
+    swaggerOptions?:  ApiPropertyOptions
+}
