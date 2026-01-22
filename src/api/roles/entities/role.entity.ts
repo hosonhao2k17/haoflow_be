@@ -1,8 +1,9 @@
 import { RoleStatus } from "src/common/constants/status.constant";
-import { BaseEntity, Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AbstractEntity } from "src/database/entities/abstract.entity";
+import {  Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('roles')
-export class RoleEntity extends BaseEntity {
+export class RoleEntity extends AbstractEntity {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;

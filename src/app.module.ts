@@ -20,6 +20,7 @@ import { RoleEntity } from './api/roles/entities/role.entity';
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
         entities: [RoleEntity],
+        synchronize: true
       }),
       inject: [ConfigService],
     }),

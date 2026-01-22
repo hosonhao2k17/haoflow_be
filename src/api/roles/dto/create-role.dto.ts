@@ -1,8 +1,10 @@
-import { IsNumber, IsString } from "class-validator";
+import { StringField } from "src/decorators/field.decorator";
 
 export class CreateRoleDto {
 
-    @IsString()
-    @IsNumber()
+    @StringField()
     name: string;
+
+    @StringField()
+    title: string;
 }

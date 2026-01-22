@@ -7,7 +7,6 @@ export class AbstractEntity extends BaseEntity {
     @Order(9999)
     @CreateDateColumn({
         type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     }) 
     createdAt: Date;
 
@@ -21,8 +20,6 @@ export class AbstractEntity extends BaseEntity {
     @Order(9999)
     @UpdateDateColumn({
         type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
-        onUpdate: 'CURRENT_TIMESTAMP',
     }) 
     updatedAt: Date;
 
