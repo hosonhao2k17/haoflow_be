@@ -7,14 +7,17 @@ export function ToLowerCase(): PropertyDecorator {
         (params: TransformFnParams) => {
             const {value} = params;
 
-            if(value !== null || value !== undefined) {
-                return;
+            if(value === null || value === undefined) {
+                return value;
             }
             if(!Array.isArray(value)) {
                 return value.toLowerCase()
             }
 
             return value.map((item) => item.toLowerCase())
+        },
+        {
+            toClassOnly: true
         }
     )
 }
@@ -23,7 +26,7 @@ export function ToUpperCase(): PropertyDecorator {
     return Transform(
         (params: TransformFnParams) => {
             const {value} = params;
-            if(value !== null || value !== undefined) {
+            if(value === null || value === undefined) {
                 return;
             }
             if(!Array.isArray(value)) {
@@ -31,6 +34,9 @@ export function ToUpperCase(): PropertyDecorator {
             }
 
             return value.map((item) => item.toUpperCase())
+        },
+        {
+            toClassOnly: true
         }
     )
 }

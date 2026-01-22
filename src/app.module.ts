@@ -5,8 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheableMemory } from 'cacheable';
 import { RoleEntity } from './api/roles/entities/role.entity';
+import { RolesModule } from './api/roles/roles.module';
 @Module({
   imports: [
+    RolesModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
