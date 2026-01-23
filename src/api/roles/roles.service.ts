@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -42,8 +42,12 @@ export class RolesService {
     return new OffsetPaginatedRdo(plainToInstance(RoleRdo, list), pagination);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: string): Promise<RoleRdo> {
+    const role = await this.rolesRepository.findOneBy({id});
+    if(!role) {
+      throw new NotFoundException("User is not found")
+    }
+    return plainToInstance(RoleRdo, role)
   }
 
   update(id: number, updateRoleDto: UpdateRoleDto) {
