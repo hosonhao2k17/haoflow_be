@@ -50,8 +50,14 @@ export class RolesService {
     return plainToInstance(RoleRdo, role)
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  async update(id: string, updateRoleDto: UpdateRoleDto) : Promise<RoleRdo> {
+    const role = await this.rolesRepository.findOneBy({id});
+    if(!role) {
+      throw new NotFoundException("User is not found")
+    }
+    Object.assign(role, updateRoleDto);
+    await role.save();
+    return plainToInstance(RoleRdo, role)
   }
 
   remove(id: number) {
