@@ -21,7 +21,7 @@ export class RolesService {
     return plainToInstance(RoleRdo, role)
   }
 
-  async findAll(query: QueryRoleDto) {
+  async findAll(query: QueryRoleDto): Promise<OffsetPaginatedRdo<RoleRdo>> {
     const queryBuilder = this.rolesRepository
     .createQueryBuilder('role')
     .offset(query.getOffset())
