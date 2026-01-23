@@ -60,7 +60,8 @@ export class RolesService {
     return plainToInstance(RoleRdo, role)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async remove(id: string) :Promise<void> {
+    await this.findOne(id);
+    await this.rolesRepository.softDelete({id});
   }
 }
