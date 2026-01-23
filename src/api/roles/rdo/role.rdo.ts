@@ -13,4 +13,7 @@ export class RoleRdo extends BaseResponseRdo{
     @Expose()
     description: string;
 
+    @Expose()
+    status: string;
+
 }

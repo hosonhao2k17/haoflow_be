@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { QueryRoleDto } from './dto/query-role.dto';
 
 @Controller('roles')
 export class RolesController {
@@ -13,8 +14,8 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
-    return this.rolesService.findAll();
+  findAll(@Query() queryRoleDto: QueryRoleDto) {
+    return this.rolesService.findAll(queryRoleDto);
   }
 
   @Get(':id')

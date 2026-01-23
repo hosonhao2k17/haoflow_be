@@ -6,6 +6,9 @@ import { RoleEntity } from './entities/role.entity';
 import { Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { RoleRdo } from './rdo/role.rdo';
+import { QueryRoleDto } from './dto/query-role.dto';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 
 @Injectable()
 export class RolesService {
@@ -18,8 +21,25 @@ export class RolesService {
     return plainToInstance(RoleRdo, role)
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  async findAll(query: QueryRoleDto) {
+    const queryBuilder = this.rolesRepository
+    .createQueryBuilder('role')
+    .offset(query.getOffset())
+    .limit(query.limit)
+    .orderBy(`role.${query?.sortBy}`,query.sortOrder)
+
+    if(query.keyword){
+      queryBuilder.andWhere("role.name = :keyword OR role.title = :keyword",{keyword: query.keyword})
+    }
+
+    if(query.status) {
+      queryBuilder.andWhere("role.status = :status",{status: query.status})
+    }
+    const [list, totalRecords] = await queryBuilder.getManyAndCount()
+    
+    const pagination = new OffsetPaginationRdo(totalRecords, query);
+
+    return new OffsetPaginatedRdo(plainToInstance(RoleRdo, list), pagination);
   }
 
   findOne(id: number) {
