@@ -1,6 +1,7 @@
 import { RoleStatus } from "src/common/constants/status.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
-import {  Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {  Column, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { PermissionEntity } from "./permission.entity";
 
 @Entity('roles')
 export class RoleEntity extends AbstractEntity {
@@ -26,5 +27,11 @@ export class RoleEntity extends AbstractEntity {
 
     @DeleteDateColumn({ nullable: true })
     deletedAt?: Date;
+
+    @ManyToMany(() => PermissionEntity)
+    @JoinTable({
+        name: 'roles_permissions'
+    })
+    permissions: PermissionEntity[];
     
 }

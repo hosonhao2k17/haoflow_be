@@ -11,3 +11,10 @@ export enum RoleName {
 }
 
 export const SYSTEM = 'system'
+
+export enum ActionRole {
+    CREATE = 'create',
+    READ = 'read',
+    UPDATE = 'update',
+    DELETE = 'delete'
+}

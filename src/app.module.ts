@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheableMemory } from 'cacheable';
 import { RoleEntity } from './api/roles/entities/role.entity';
 import { RolesModule } from './api/roles/roles.module';
+import { PermissionEntity } from './api/roles/entities/permission.entity';
 @Module({
   imports: [
     RolesModule,
@@ -21,7 +22,7 @@ import { RolesModule } from './api/roles/roles.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity],
+        entities: [RoleEntity, PermissionEntity],
         synchronize: true
       }),
       inject: [ConfigService],
