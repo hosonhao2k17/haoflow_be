@@ -19,9 +19,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
-
         let errorRdo: ErrorRdo;
-        if(exception instanceof HttpException) {
+        if(exception instanceof UnprocessableEntityException) {
             errorRdo = this.handleUnprocessableEntityException(exception);
         } else if (exception instanceof ValidationException) {
             errorRdo = this.handleValidationException(exception)
@@ -47,7 +46,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             message: res.message,
             statusCode,
             timestamp,
-            errorCode: 'HTTP_EXCEPTION',
+            errorCode: getConstantKey(HttpStatus, statusCode),
             error: STATUS_CODES[statusCode] as string
         }
 
@@ -80,7 +79,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             message,
             error: STATUS_CODES[statusCode] as string,
             timestamp: new Date().toISOString(),
-            errorCode: 'INTERNAL_SERVER_ERROR'
+            errorCode: getConstantKey(HttpStatus, HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
     }
@@ -92,13 +91,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             error: string
         }
 
-
+        console.log(STATUS_CODES[response.statusCode])
 
         return {
             message: validation.message,
             statusCode: response.statusCode,
             error:  response.error,
-            errorCode: validation.name,
+            errorCode: getConstantKey(HttpStatus, response.statusCode),
             timestamp: new Date().toISOString(),
             details: this.formatMessageDetail(response.message)
         }
@@ -121,4 +120,5 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
         return errorDetails;
     }
+    
 }
