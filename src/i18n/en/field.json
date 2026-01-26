@@ -1,0 +1,20 @@
+{
+    "validation": {
+        "string": "Value must be a string",
+        "string.empty": "String must not be empty",
+        "string.min_length": "String is too short",
+        "string.max_length": "String is too long",
+
+        "number": "Value must be a number",
+        "number.min": "Value is less than the allowed minimum",
+        "number.max": "Value exceeds the allowed maximum",
+        "number.int": "Value must be an integer",
+
+        "email": "Invalid email address",
+        "boolean": "Value must be a boolean",
+
+        "array": "Value must be an array",
+        "array.min_size": "Array contains too few elements",
+        "array.max_size": "Array contains too many elements"
+    }
+}

@@ -15,7 +15,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     }
     catch(exception: any, host: ArgumentsHost) {
-
+        console.log(exception.getResponse().message)
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
@@ -91,8 +91,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             error: string
         }
 
-        console.log(STATUS_CODES[response.statusCode])
-
         return {
             message: validation.message,
             statusCode: response.statusCode,
@@ -108,13 +106,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     private formatMessageDetail(validations: ValidationError[]): ErrorDetailRdo[] {
 
-
         const errorDetails: ErrorDetailRdo[] = [];
         for(const item of validations) {
             errorDetails.push({
                 property: item.property,
                 code: Object.keys(item.constraints as object)[0],
-                message: Object.values(item.constraints as object)[0]
+                message: this.i18n.t(Object.values(item.constraints as object)[0])
             })
         }
 

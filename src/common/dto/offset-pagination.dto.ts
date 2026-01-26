@@ -3,10 +3,10 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from "../constants/default.constant";
 
 export class OffsetPaginationDto {
 
-    @NumberField({options: true, swaggerOptions: {required: false}})
+    @NumberField({options: true})
     page: number = DEFAULT_PAGE;
 
-    @NumberField({options: true, swaggerOptions: {required: false}})
+    @NumberField({options: true})
     limit: number = DEFAULT_LIMIT;
 
     getOffset(): number {

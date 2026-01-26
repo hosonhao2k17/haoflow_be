@@ -1,0 +1,21 @@
+{
+    "validation": {
+        "string": "Giá trị phải là chuỗi",
+        "string.empty": "Chuỗi không được để trống",
+        "string.min_length": "Chuỗi quá ngắn",
+        "string.max_length": "Chuỗi quá dài",
+
+        "number": "Giá trị phải là số",
+        "number.min": "Giá trị nhỏ hơn mức cho phép",
+        "number.max": "Giá trị lớn hơn mức cho phép",
+        "number.int": "Giá trị phải là số nguyên",
+
+        "email": "Email không hợp lệ",
+        "boolean": "Giá trị phải là true hoặc false",
+
+        "array": "Giá trị phải là mảng",
+        "array.min_size": "Mảng có quá ít phần tử",
+        "array.max_size": "Mảng có quá nhiều phần tử",
+        "enum": "Giá trị không tồn tại"
+    }
+}

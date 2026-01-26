@@ -1,17 +1,18 @@
-import { ApiProperty, ApiPropertyOptions } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, ApiPropertyOptions } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
 import { IEnumFieldOptions, INumberFieldOptions, IStringFieldOptions } from "src/common/interfaces/field.interface";
 import { IsNullable } from "./validators/is-nullable.decorator";
 import { ToLowerCase, ToUpperCase } from "./transform.decorator";
 import { applyDecorators } from "@nestjs/common";
+import { ErrorCode } from "src/common/constants/error-code.constant";
 
 
 export function StringField(
     options: IStringFieldOptions = {}
 ) {
     
-    const decorators = [Type(() => String), IsString({each: options.each})] 
+    const decorators = [Type(() => String), IsString({each: options.each, message: ErrorCode.STRING})] 
 
     if(options.nullable) {
         decorators.push(IsNullable({each: options.each}))
@@ -24,6 +25,15 @@ export function StringField(
     }
     if(options.swagger !== false) {
         const {swaggerOptions } = options
+        if(options.options) {
+            decorators.push(
+                ApiPropertyOptional({
+                    type: String,
+                    ...swaggerOptions,
+                    isArray: options.each
+                })
+            )
+        }
         decorators.push(
             ApiProperty({
                 type: String,
@@ -34,9 +44,9 @@ export function StringField(
     }
 
     const minLength = options.minLength || 1;
-    decorators.push(MinLength(minLength))
+    decorators.push(MinLength(minLength, {message: ErrorCode.STRING_MIN_LENGTH}))
     if(options.maxLength) {
-        decorators.push(MaxLength(options.maxLength))
+        decorators.push(MaxLength(options.maxLength, {message: ErrorCode.STRING_MAX_LENGTH}))
     }
 
     if(options.toLowerCase) {
@@ -65,18 +75,29 @@ export function NumberField(options: INumberFieldOptions = {}) {
 
     if(options.swagger !==  false) {
         const {swaggerOptions} = options;
-        decorators.push(ApiProperty({
-            type: Number,
-            ...swaggerOptions,
-            isArray: options.each
-        }));
+         if(options.options) {
+            decorators.push(
+                ApiPropertyOptional({
+                    type: String,
+                    ...swaggerOptions,
+                    isArray: options.each
+                })
+            )
+        }
+        decorators.push(
+            ApiProperty({
+                type: String,
+                ...swaggerOptions,
+                isArray: options.each
+            })
+        )
     }
 
     if(options.min) {
-        decorators.push(Min(options.min))
+        decorators.push(Min(options.min, {message: ErrorCode.NUMBER_MIN}))
     }
     if(options.max) {
-        decorators.push(Max(options.max))
+        decorators.push(Max(options.max, {message: ErrorCode.NUMBER_MAX}))
     }
 
     if(options.int) {
@@ -87,7 +108,7 @@ export function NumberField(options: INumberFieldOptions = {}) {
 }
 
 export function EnumField(entity: object, options: IEnumFieldOptions = {} ) {
-    const decorators = [IsEnum(entity, {each: options.each})];
+    const decorators = [IsEnum(entity, {each: options.each, message: ErrorCode.ENUM})];
 
     if(options.nullable) {
         decorators.push(IsNullable({each: options.each}))
@@ -101,9 +122,18 @@ export function EnumField(entity: object, options: IEnumFieldOptions = {} ) {
 
     if(options.swagger !== false) {
         const {swaggerOptions} = options;
+        if(options.options) {
+            decorators.push(
+                ApiPropertyOptional({
+                    type: String,
+                    ...swaggerOptions,
+                    isArray: options.each
+                })
+            )
+        }
         decorators.push(
             ApiProperty({
-                enum: entity,
+                type: String,
                 ...swaggerOptions,
                 isArray: options.each
             })

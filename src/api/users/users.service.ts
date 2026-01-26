@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ValidationException } from 'src/exceptions/validation.exception';
 
 @Injectable()
 export class UsersService {
@@ -9,7 +10,7 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    throw new ValidationException()
   }
 
   findOne(id: number) {

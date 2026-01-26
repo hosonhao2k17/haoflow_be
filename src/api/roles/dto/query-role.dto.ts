@@ -13,10 +13,12 @@ import { ToUpperCase } from "src/decorators/transform.decorator";
 export class QueryRoleDto extends OffsetPaginationDto implements ISort, ISearch {
 
 
-    @EnumField(RoleStatus, {options: true, swaggerOptions: {required: false}})
+    @EnumField(RoleStatus, {options: true, swaggerOptions: {
+        enum: RoleStatus
+    }})
     status?: RoleStatus;
 
-    @StringField({options: true, swaggerOptions: {required: false, default: 'createdAt'}})
+    @StringField({options: true, swaggerOptions: {default: 'createdAt'}})
     sortBy: string = DEFAULT_SORT_BY;
 
     @ToUpperCase()
@@ -29,7 +31,7 @@ export class QueryRoleDto extends OffsetPaginationDto implements ISort, ISearch 
     })
     sortOrder: SortOrder = DEFAULT_SORT_ORDER;
 
-    @StringField({options: true, swaggerOptions: {required: false}})
+    @StringField({options: true})
     keyword?: string;
 
 
