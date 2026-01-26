@@ -12,9 +12,15 @@ export enum RoleName {
 
 export const SYSTEM = 'system'
 
-export enum ActionRole {
+export enum ActionPermission {
     CREATE = 'create',
     READ = 'read',
     UPDATE = 'update',
     DELETE = 'delete'
+}
+
+export enum SubjectPermission {
+    USER = 'user',
+    ROLE = 'role',
+    TASK = 'task'
 }
