@@ -26,6 +26,10 @@ export enum ErrorCode {
   ARRAY_MIN_SIZE = 'field.validation.array.min_size',
   ARRAY_MAX_SIZE = 'field.validation.array.max_size',
 
-  //Enum
-  ENUM = 'field.validation.enum'
+  // ===== Enum =====
+  ENUM = 'field.validation.enum',
+
+  // ----- Role =====
+  ROLE_NOT_FOUND = 'role.error.not_found',
+  ROLE_NAME_EXISTS = 'role.error.name_exists'
 }

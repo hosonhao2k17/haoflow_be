@@ -9,6 +9,8 @@ import { RoleRdo } from './rdo/role.rdo';
 import { QueryRoleDto } from './dto/query-role.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { ValidationException } from 'src/exceptions/validation.exception';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
 
 @Injectable()
 export class RolesService {
@@ -45,7 +47,7 @@ export class RolesService {
   async findOne(id: string): Promise<RoleRdo> {
     const role = await this.rolesRepository.findOneBy({id});
     if(!role) {
-      throw new NotFoundException("User is not found")
+      throw new NotFoundException(ErrorCode.ROLE_NOT_FOUND)
     }
     return plainToInstance(RoleRdo, role)
   }
@@ -53,7 +55,7 @@ export class RolesService {
   async update(id: string, updateRoleDto: UpdateRoleDto) : Promise<RoleRdo> {
     const role = await this.rolesRepository.findOneBy({id});
     if(!role) {
-      throw new NotFoundException("User is not found")
+      throw new NotFoundException(ErrorCode.ROLE_NOT_FOUND)
     }
     Object.assign(role, updateRoleDto);
     await role.save();
