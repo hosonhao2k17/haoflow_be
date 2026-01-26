@@ -7,6 +7,8 @@ import { CacheableMemory } from 'cacheable';
 import { RoleEntity } from './api/roles/entities/role.entity';
 import { RolesModule } from './api/roles/roles.module';
 import { PermissionEntity } from './api/roles/entities/permission.entity';
+import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import { join } from 'path';
 @Module({
   imports: [
     RolesModule,
@@ -37,6 +39,23 @@ import { PermissionEntity } from './api/roles/entities/permission.entity';
           new KeyvRedis(configService.get<string>('REDIS_URL')),
         ]
       })
+    }),
+    I18nModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        fallbackLanguage: configService.getOrThrow('FALLBACK_LANGUAGE'),
+        loaderOptions: {
+          path: join(__dirname,'/i18n/'),
+          watch: true
+        }
+        
+      }),
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ]
+      
     })
   ],
   controllers: [],
