@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { UnprocessableEntityException, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { I18nService } from 'nestjs-i18n';
+import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,9 @@ async function bootstrap() {
     transform: true,
     whitelist: true,
     forbidNonWhitelisted: true,
+    exceptionFactory: (validations: ValidationError[]) => {
+      return new UnprocessableEntityException(validations);
+    }
   }));
 
   //Versioning
