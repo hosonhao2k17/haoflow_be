@@ -1,6 +1,6 @@
 import { PermissionEntity } from "src/api/roles/entities/permission.entity";
 import { RoleEntity } from "src/api/roles/entities/role.entity";
-import { RoleName } from "src/common/constants/app.constant";
+import { RoleName, SYSTEM } from "src/common/constants/app.constant";
 import { DataSource } from "typeorm";
 import { Seeder, SeederFactoryManager } from "typeorm-extension";
 import { PERMISSIONS } from "./data/permission-data";
@@ -17,7 +17,8 @@ export default class PermissionSeeder implements Seeder {
         for(const item of PERMISSIONS) {
             const isExists = await repositoriesPermission.findOneBy({
                 action: item.action,
-                subject: item.subject
+                subject: item.subject,
+                createdBy: SYSTEM
             })
             if(!isExists) {
                 await repositoriesPermission.save(item)

@@ -1,21 +1,21 @@
-import { ActionPermission, SubjectPermission, SYSTEM } from "src/common/constants/app.constant";
+import { ActionPermission, SubjectPermission } from "src/common/constants/app.constant";
 
 export const PERMISSIONS = [
   // ===== USER =====
-  { action: ActionPermission.CREATE, subject: SubjectPermission.USER, createdBy: SYSTEM },
-  { action: ActionPermission.READ, subject: SubjectPermission.USER, createdBy: SYSTEM  },
-  { action: ActionPermission.UPDATE, subject: SubjectPermission.USER,createdBy: SYSTEM  },
-  { action: ActionPermission.DELETE, subject: SubjectPermission.USER, createdBy: SYSTEM  },
+  { action: ActionPermission.CREATE, subject: SubjectPermission.USER },
+  { action: ActionPermission.READ, subject: SubjectPermission.USER },
+  { action: ActionPermission.UPDATE, subject: SubjectPermission.USER },
+  { action: ActionPermission.DELETE, subject: SubjectPermission.USER },
 
   // ===== ROLE =====
-  { action: ActionPermission.CREATE, subject: SubjectPermission.ROLE, createdBy: SYSTEM  },
-  { action: ActionPermission.READ, subject: SubjectPermission.ROLE, createdBy: SYSTEM  },
-  { action: ActionPermission.UPDATE, subject: SubjectPermission.ROLE, createdBy: SYSTEM  },
-  { action: ActionPermission.DELETE, subject: SubjectPermission.ROLE, createdBy: SYSTEM  },
+  { action: ActionPermission.CREATE, subject: SubjectPermission.ROLE },
+  { action: ActionPermission.READ, subject: SubjectPermission.ROLE },
+  { action: ActionPermission.UPDATE, subject: SubjectPermission.ROLE },
+  { action: ActionPermission.DELETE, subject: SubjectPermission.ROLE },
 
   // ===== TASK =====
-  { action: ActionPermission.CREATE, subject: SubjectPermission.TASK, createdBy: SYSTEM  },
-  { action: ActionPermission.READ, subject: SubjectPermission.TASK, createdBy: SYSTEM  },
-  { action: ActionPermission.UPDATE, subject: SubjectPermission.TASK, createdBy: SYSTEM  },
-  { action: ActionPermission.DELETE, subject: SubjectPermission.TASK, createdBy: SYSTEM  },
+  { action: ActionPermission.CREATE, subject: SubjectPermission.TASK },
+  { action: ActionPermission.READ, subject: SubjectPermission.TASK },
+  { action: ActionPermission.UPDATE, subject: SubjectPermission.TASK },
+  { action: ActionPermission.DELETE, subject: SubjectPermission.TASK },
 ];
