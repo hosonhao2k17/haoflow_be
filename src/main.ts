@@ -4,12 +4,14 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import { I18nService } from 'nestjs-i18n';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   //Global filter 
-  app.useGlobalFilters(new GlobalExceptionFilter())
+  const i18n = app.get(I18nService<Record<string, unknown>>)
+  app.useGlobalFilters(new GlobalExceptionFilter(i18n))
   //validation
   app.useGlobalPipes(new ValidationPipe({
     transform: true,

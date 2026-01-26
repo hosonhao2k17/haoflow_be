@@ -9,9 +9,11 @@ import { RolesModule } from './api/roles/roles.module';
 import { PermissionEntity } from './api/roles/entities/permission.entity';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { join } from 'path';
+import { UsersModule } from './api/users/users.module';
 @Module({
   imports: [
     RolesModule,
+    UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
