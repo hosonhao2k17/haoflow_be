@@ -36,7 +36,7 @@ export class RolesService {
     .offset(query.getOffset())
     .limit(query.limit)
     .orderBy(`role.${query?.sortBy}`,query.sortOrder)
-
+    .leftJoinAndSelect("role.permissions","permission")
     if(query.keyword){
       queryBuilder.andWhere("role.name = :keyword OR role.title = :keyword",{keyword: query.keyword})
     }
@@ -52,7 +52,12 @@ export class RolesService {
   }
 
   async findOne(id: string): Promise<RoleRdo> {
-    const role = await this.rolesRepository.findOneBy({id});
+    const role = await this.rolesRepository.findOne({
+      where: {id},
+      relations: {
+        permissions: true
+      }
+    });
     if(!role) {
       throw new NotFoundException(ErrorCode.ROLE_NOT_FOUND)
     }
@@ -60,17 +65,28 @@ export class RolesService {
   }
 
   async update(id: string, updateRoleDto: UpdateRoleDto) : Promise<RoleRdo> {
+    const role = await this.rolesRepository.findOne({
+      where: {id},
+      relations: {
+        permissions: true
+      }
+    });
+    if(!role) {
+      throw new NotFoundException(ErrorCode.ROLE_NOT_FOUND)
+    }
+    Object.assign(role, {
+      ...updateRoleDto,
+      permissions: updateRoleDto.permissions ? updateRoleDto.permissions.map((item) => ({id: item})) : role.permissions
+    });
+    await role.save();
+    return await this.findOne(id)
+  }
+
+  async remove(id: string) :Promise<void> {
     const role = await this.rolesRepository.findOneBy({id});
     if(!role) {
       throw new NotFoundException(ErrorCode.ROLE_NOT_FOUND)
     }
-    Object.assign(role, updateRoleDto);
-    await role.save();
-    return plainToInstance(RoleRdo, role)
-  }
-
-  async remove(id: string) :Promise<void> {
-    await this.findOne(id);
     await this.rolesRepository.softDelete({id});
   }
 }
