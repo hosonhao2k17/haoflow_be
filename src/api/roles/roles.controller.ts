@@ -17,7 +17,6 @@ export class RolesController {
   }
 
   @Get()
-  @ResponseMessage('take any role success')
   findAll(@Query() queryRoleDto: QueryRoleDto): Promise<OffsetPaginatedRdo<RoleRdo>> {
     return this.rolesService.findAll(queryRoleDto);
   }

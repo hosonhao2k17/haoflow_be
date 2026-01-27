@@ -10,6 +10,7 @@ import { PermissionEntity } from './api/roles/entities/permission.entity';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { join } from 'path';
 import { UsersModule } from './api/users/users.module';
+import { UserEntity } from './api/users/entities/user.entity';
 @Module({
   imports: [
     RolesModule,
@@ -26,7 +27,7 @@ import { UsersModule } from './api/users/users.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity],
+        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity],
         synchronize: true
       }),
       inject: [ConfigService],
