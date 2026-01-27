@@ -45,6 +45,8 @@ export class UserEntity extends AbstractEntity {
     })
     status: UserStatus
 
-    @ManyToOne(() => RoleEntity, (role) => role.users)
+    @ManyToOne(() => RoleEntity, (role) => role.users, {
+        nullable: false
+    })
     role: RoleEntity;
 }
