@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiPropertyOptions } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
-import { IEnumFieldOptions, INumberFieldOptions, IStringFieldOptions } from "src/common/interfaces/field.interface";
+import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
+import { IEmailFieldOptions, IEnumFieldOptions, INumberFieldOptions, IStringFieldOptions } from "src/common/interfaces/field.interface";
 import { IsNullable } from "./validators/is-nullable.decorator";
 import { ToLowerCase, ToUpperCase } from "./transform.decorator";
 import { applyDecorators } from "@nestjs/common";
@@ -141,4 +141,35 @@ export function EnumField(entity: object, options: IEnumFieldOptions = {} ) {
     }
 
     return applyDecorators(...decorators)
+}
+
+export function EmailField(options: IEmailFieldOptions = {}){
+
+    const decorators = [IsEmail({},{each: true})]
+    if(options.nullable) {
+        decorators.push(IsNullable({each: options.each}))
+    } else {
+        decorators.push(NotEquals(null, {each: true}))
+    }
+
+    if(options.options) {
+        decorators.push(IsOptional())
+    }
+    if(options.swagger) {
+        const apiProperty = {
+            type: String,
+            ...options.swaggerOptions,
+            isArray: options.each
+        }
+        if(options.options) {
+            ApiPropertyOptional(apiProperty)
+        } else {
+            decorators.push(
+                ApiProperty(apiProperty)
+            )
+        }
+    }
+
+
+    return applyDecorators(...decorators);
 }
