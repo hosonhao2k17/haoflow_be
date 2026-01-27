@@ -43,3 +43,7 @@ export interface IPasswordFieldOptions extends IFieldOptions {
 export interface IUuidFieldOptions extends IFieldOptions {
     swaggerOptions?: ApiPropertyOptions
 }
+
+export interface IDateFieldOptions extends IFieldOptions {
+    swaggerOptions?: ApiPropertyOptions
+}
