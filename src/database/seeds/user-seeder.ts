@@ -26,18 +26,20 @@ export class UserSeeder implements Seeder {
             const roleAdmin = await rolesRepository.findOneBy({
                 name: RoleName.ADMIN
             });
-            await usersRepository.save({
-                fullName: 'Nguyễn Thị Trị Viên',
-                email: process.env.ADMIN_EMAIL,
-                password: process.env.ADMIN_PASSWORD,
-                gender: Gender.MALE,
-                avatar: 'https://i.pinimg.com/736x/e5/7b/98/e57b987df5b29f59db3eb669499154ee.jpg',
-                createdBy: SYSTEM,
-                role: {
-                    id: roleAdmin?.id
-                },
-            
-            })
+            await usersRepository.save(
+                usersRepository.create({
+                    fullName: 'Nguyễn Thị Trị Viên',
+                    email: process.env.ADMIN_EMAIL,
+                    password: process.env.ADMIN_PASSWORD,
+                    gender: Gender.MALE,
+                    avatar: 'https://i.pinimg.com/736x/e5/7b/98/e57b987df5b29f59db3eb669499154ee.jpg',
+                    createdBy: SYSTEM,
+                    role: {
+                        id: roleAdmin?.id
+                    },
+                
+                })
+            )
         }
     }
     

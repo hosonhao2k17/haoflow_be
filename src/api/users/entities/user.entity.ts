@@ -1,7 +1,8 @@
 import { RoleEntity } from "src/api/roles/entities/role.entity";
 import { Gender, UserStatus } from "src/common/constants/app.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { hashPassword } from "src/utils/password";
+import { BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
@@ -49,4 +50,11 @@ export class UserEntity extends AbstractEntity {
         nullable: false
     })
     role: RoleEntity;
+
+    @BeforeInsert()
+    async hashPasswordBeforeInsert(): Promise<void> {
+        if(this.password) {
+            this.password = await hashPassword(this.password)
+        }
+    }
 }
