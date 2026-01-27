@@ -35,3 +35,7 @@ export interface IEmailFieldOptions extends IFieldOptions {
 export interface IurlFieldOptions extends IFieldOptions {
     swaggerOptions?: ApiPropertyOptions
 }
+
+export interface IPasswordFieldOptions extends IFieldOptions {
+    swaggerOptions?: ApiPropertyOptions
+}
