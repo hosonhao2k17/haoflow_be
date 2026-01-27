@@ -18,7 +18,14 @@ export class RolesService {
   constructor(@InjectRepository(RoleEntity) private rolesRepository: Repository<RoleEntity>) {}
 
   async create(createRoleDto: CreateRoleDto): Promise<RoleRdo> {
-    const role = await this.rolesRepository.create(createRoleDto);
+    const {name, status, description, title, permissions} = createRoleDto;
+    const role = await this.rolesRepository.create({
+      name, 
+      status, 
+      description, 
+      title,
+      permissions: permissions.map((item) => ({id: item}))
+    });
     await role.save()
     return plainToInstance(RoleRdo, role)
   }

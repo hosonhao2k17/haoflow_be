@@ -44,9 +44,9 @@ export function StringField(
     }
 
     const minLength = options.minLength || 1;
-    decorators.push(MinLength(minLength, {message: ErrorCode.STRING_MIN_LENGTH}))
+    decorators.push(MinLength(minLength, {message: ErrorCode.STRING_MIN_LENGTH, each: options.each}))
     if(options.maxLength) {
-        decorators.push(MaxLength(options.maxLength, {message: ErrorCode.STRING_MAX_LENGTH}))
+        decorators.push(MaxLength(options.maxLength, {message: ErrorCode.STRING_MAX_LENGTH, each: options.each}))
     }
 
     if(options.toLowerCase) {

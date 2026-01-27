@@ -15,4 +15,7 @@ export class CreateRoleDto {
 
     @StringField({options: true})
     description?: string;
+
+    @StringField({each: true})
+    permissions: string[];
 }
