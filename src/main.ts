@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { UnprocessableEntityException, ValidationPipe, VersioningType } from '@nestjs/common';
@@ -6,10 +6,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { I18nService } from 'nestjs-i18n';
 import { ValidationError } from 'class-validator';
+import { TransformResponseInterceptor } from './interceptors/transform-response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  //Transform response interceptor
+  const reflector = app.get(Reflector)
+  app.useGlobalInterceptors(new TransformResponseInterceptor(reflector))
   //Global filter 
   const i18n = app.get(I18nService<Record<string, unknown>>)
   app.useGlobalFilters(new GlobalExceptionFilter(i18n))

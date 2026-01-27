@@ -11,7 +11,7 @@ export enum RoleName {
 }
 
 export const SYSTEM = 'system'
-
+export const RESPONSE_MESSAGE = 'response_message'
 export enum ActionPermission {
     CREATE = 'create',
     READ = 'read',

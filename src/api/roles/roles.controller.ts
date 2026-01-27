@@ -5,6 +5,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { QueryRoleDto } from './dto/query-role.dto';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { RoleRdo } from './rdo/role.rdo';
+import { ResponseMessage } from 'src/decorators/message.decorator';
 
 @Controller('roles')
 export class RolesController {
@@ -16,6 +17,7 @@ export class RolesController {
   }
 
   @Get()
+  @ResponseMessage('take any role success')
   findAll(@Query() queryRoleDto: QueryRoleDto): Promise<OffsetPaginatedRdo<RoleRdo>> {
     return this.rolesService.findAll(queryRoleDto);
   }

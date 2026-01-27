@@ -1,0 +1,29 @@
+import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { map, Observable } from "rxjs";
+import { RESPONSE_MESSAGE } from "src/common/constants/app.constant";
+import { ITransformResponse } from "src/common/interfaces/transform-response.interface";
+
+
+
+export class TransformResponseInterceptor<T> implements NestInterceptor<T, ITransformResponse<T>> {
+
+    constructor(private readonly reflector: Reflector) {}
+    intercept(context: ExecutionContext, next: CallHandler<T>): Observable<ITransformResponse<T>> | Promise<Observable<ITransformResponse<T>>> {
+        
+        const message = this.reflector.get(RESPONSE_MESSAGE, context.getHandler()) || "success"
+
+        const res = context.switchToHttp().getResponse();
+
+        const statusCode = res.statusCode;
+
+        return next.handle().pipe(
+            map(data => ({
+                message,
+                statusCode,
+                data
+            }))
+        )
+    }
+    
+}
