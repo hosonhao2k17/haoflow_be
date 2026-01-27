@@ -27,3 +27,11 @@ export interface INumberFieldOptions extends IFieldOptions {
 export interface IEnumFieldOptions extends IFieldOptions {
     swaggerOptions?:  ApiPropertyOptions
 }
+
+export interface IEmailFieldOptions extends IFieldOptions {
+    swaggerOptions?: ApiPropertyOptions
+}
+
+export interface IurlFieldOptions extends IFieldOptions {
+    swaggerOptions?: ApiPropertyOptions
+}

@@ -1,12 +1,12 @@
 import { ApiProperty, ApiPropertyOptional, ApiPropertyOptions } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
-import { IEmailFieldOptions, IEnumFieldOptions, INumberFieldOptions, IStringFieldOptions } from "src/common/interfaces/field.interface";
+import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
+import { IEmailFieldOptions, IEnumFieldOptions, INumberFieldOptions, IStringFieldOptions, IurlFieldOptions } from "src/common/interfaces/field.interface";
 import { IsNullable } from "./validators/is-nullable.decorator";
 import { ToLowerCase, ToUpperCase } from "./transform.decorator";
 import { applyDecorators } from "@nestjs/common";
 import { ErrorCode } from "src/common/constants/error-code.constant";
-
+import * as validator from 'validator';
 
 export function StringField(
     options: IStringFieldOptions = {}
@@ -145,24 +145,26 @@ export function EnumField(entity: object, options: IEnumFieldOptions = {} ) {
 
 export function EmailField(options: IEmailFieldOptions = {}){
 
-    const decorators = [IsEmail({},{each: true})]
+    const decorators = [IsEmail({},{each: options.each})]
     if(options.nullable) {
         decorators.push(IsNullable({each: options.each}))
     } else {
-        decorators.push(NotEquals(null, {each: true}))
+        decorators.push(NotEquals(null, {each: options.each}))
     }
 
     if(options.options) {
         decorators.push(IsOptional())
     }
-    if(options.swagger) {
+    if(options.swagger !==  false) {
         const apiProperty = {
             type: String,
             ...options.swaggerOptions,
             isArray: options.each
         }
         if(options.options) {
-            ApiPropertyOptional(apiProperty)
+            decorators.push(
+                ApiPropertyOptional(apiProperty)
+            )
         } else {
             decorators.push(
                 ApiProperty(apiProperty)
@@ -172,4 +174,36 @@ export function EmailField(options: IEmailFieldOptions = {}){
 
 
     return applyDecorators(...decorators);
+}
+
+export function UrlField(options: IurlFieldOptions = {}) {
+    const decorators = [IsUrl({},{each: true})]
+
+    if(options.nullable) {
+        decorators.push(IsNullable({each: options.each}))
+    } else {
+        decorators.push(NotEquals(null, {each: options.each}))
+    }
+
+    if(options.options) {
+        decorators.push(IsOptional())
+    }
+    if(options.swagger !==  false) {
+        const apiProperty = {
+            type: String,
+            ...options.swaggerOptions,
+            isArray: options.each
+        }
+        if(options.options) {
+            decorators.push(
+                ApiPropertyOptional(apiProperty)
+            )
+        } else {
+            decorators.push(
+                ApiProperty(apiProperty)
+            )
+        }
+    }
+
+     return applyDecorators(...decorators);
 }
