@@ -7,9 +7,11 @@ import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { I18nService } from 'nestjs-i18n';
 import { ValidationError } from 'class-validator';
 import { TransformResponseInterceptor } from './interceptors/transform-response.interceptor';
+import * as qs from "qs";
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   //Transform response interceptor
   const reflector = app.get(Reflector)
@@ -27,6 +29,12 @@ async function bootstrap() {
     }
   }));
 
+  app.set("query parser", (query: string) =>
+    qs.parse(query, {
+      allowDots: false,
+      depth: 10,
+    }),
+  );
   //Versioning
   app.setGlobalPrefix
   app.enableVersioning({

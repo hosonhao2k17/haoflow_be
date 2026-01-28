@@ -7,6 +7,7 @@ import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRdo } from './rdo/user.rdo';
 import { plainToInstance } from 'class-transformer';
+import { QueryUserDto } from './dto/query-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,8 +27,9 @@ export class UsersService {
     return plainToInstance(UserRdo, user)
   }
 
-  findAll() {
-    throw new ValidationException()
+  findAll(queryUserDto: QueryUserDto) {
+    const queryBuilder = this.usersRepository.createQueryBuilder('user')
+    console.log(queryUserDto)
   }
 
   findOne(id: number) {
