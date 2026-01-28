@@ -49,8 +49,15 @@ export class UsersService {
     return plainToInstance(UserRdo, user)
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.usersRepository.findOneBy({id});
+    if(!user) {
+      throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    Object.assign(user, updateUserDto)
+    await user.save()
+    return plainToInstance(UserRdo, user);
   }
 
   remove(id: number) {
