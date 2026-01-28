@@ -7,10 +7,11 @@ import { ISearch } from "src/common/interfaces/search.interface";
 import { ISort } from "src/common/interfaces/sort.interface";
 import { EnumField, StringField } from "src/decorators/field.decorator";
 import { ToUpperCase } from "src/decorators/transform.decorator";
+import { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 
 
 
-export class QueryRoleDto extends OffsetPaginationDto implements ISort, ISearch {
+export class QueryRoleDto extends OffsetPaginationDto implements ISearch {
 
 
     @EnumField(RoleStatus, {options: true, swaggerOptions: {
@@ -18,21 +19,20 @@ export class QueryRoleDto extends OffsetPaginationDto implements ISort, ISearch 
     }})
     status?: RoleStatus;
 
-    @StringField({options: true, swaggerOptions: {default: 'createdAt'}})
-    sortBy: string = DEFAULT_SORT_BY;
-
-    @ToUpperCase()
-    @EnumField(SortOrder,{
-        options: true, 
-        swaggerOptions: {
-            required: false, 
-            default: SortOrder.DESC
-        }
-    })
-    sortOrder: SortOrder = DEFAULT_SORT_ORDER;
-
     @StringField({options: true})
     keyword?: string;
 
+    handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>, alias: string): SelectQueryBuilder<T> {
+        super.handleQueryBuilder(queryBuilder, alias);
+        if(this.status) {
+            queryBuilder
+            .andWhere(`${alias}.status = :status`,{status: this.status})
+        }
+        if(this.keyword) {
+            queryBuilder
+            .andWhere(`${alias}.name = :keyword OR ${alias}.title = :keyword`,{keyword: this.keyword})
+        }
+        return queryBuilder
+    }
 
 }

@@ -29,7 +29,6 @@ export class UsersService {
 
   findAll(queryUserDto: QueryUserDto) {
     const queryBuilder = this.usersRepository.createQueryBuilder('user')
-    console.log(queryUserDto)
   }
 
   findOne(id: number) {

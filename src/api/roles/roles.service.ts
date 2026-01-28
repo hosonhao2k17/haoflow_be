@@ -33,18 +33,8 @@ export class RolesService {
   async findAll(query: QueryRoleDto): Promise<OffsetPaginatedRdo<RoleRdo>> {
     const queryBuilder = this.rolesRepository
     .createQueryBuilder('role')
-    .offset(query.getOffset())
-    .limit(query.limit)
-    .orderBy(`role.${query?.sortBy}`,query.sortOrder)
-    .leftJoinAndSelect("role.permissions","permission")
-    if(query.keyword){
-      queryBuilder.andWhere("role.name = :keyword OR role.title = :keyword",{keyword: query.keyword})
-    }
-
-    if(query.status) {
-      queryBuilder.andWhere("role.status = :status",{status: query.status})
-    }
-    const [list, totalRecords] = await queryBuilder.getManyAndCount()
+    const handler = query.handleQueryBuilder(queryBuilder,'role')
+    const [list, totalRecords] = await handler.getManyAndCount()
     
     const pagination = new OffsetPaginationRdo(totalRecords, query);
 
