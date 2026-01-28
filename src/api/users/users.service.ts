@@ -8,6 +8,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRdo } from './rdo/user.rdo';
 import { plainToInstance } from 'class-transformer';
 import { QueryUserDto } from './dto/query-user.dto';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 
 @Injectable()
 export class UsersService {
@@ -27,9 +29,15 @@ export class UsersService {
     return plainToInstance(UserRdo, user)
   }
 
-  findAll(queryUserDto: QueryUserDto) {
+  async findAll(queryUserDto: QueryUserDto): Promise<OffsetPaginatedRdo<UserRdo>> {
     const queryBuilder = this.usersRepository.createQueryBuilder('user');
-    // const handle = queryUserDto.handleQueryBuilder(queryBuilder,'user');
+     queryUserDto.handleQueryBuilder(queryBuilder);
+
+     const [list, totalRecords] = await queryBuilder.getManyAndCount()
+         
+    const pagination = new OffsetPaginationRdo(totalRecords, queryUserDto);
+
+    return new OffsetPaginatedRdo(plainToInstance(UserRdo, list), pagination);
   }
 
   findOne(id: number) {

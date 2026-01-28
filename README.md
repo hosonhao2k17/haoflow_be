@@ -28,7 +28,7 @@
 ## Project setup
 
 ```bash
-$ npm install
+$ npx 
 ```
 
 ## Compile and run the project

@@ -3,6 +3,8 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { UserRdo } from './rdo/user.rdo';
 
 @Controller('users')
 export class UsersController {
@@ -14,7 +16,7 @@ export class UsersController {
   }
 
   @Get()
-  findAll(@Query() queryUserDto: QueryUserDto) {
+  findAll(@Query() queryUserDto: QueryUserDto): Promise<OffsetPaginatedRdo<UserRdo>> {
     return this.usersService.findAll(queryUserDto);
   }
 

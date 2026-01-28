@@ -26,5 +26,8 @@ export class UserRdo extends BaseRdo{
     @Expose()
     status: UserStatus;
 
+    @Expose()
+    roleId: string;
+
     
 }
