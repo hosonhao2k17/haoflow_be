@@ -18,7 +18,8 @@ export default class PermissionSeeder implements Seeder {
             const isExists = await repositoriesPermission.findOneBy({
                 action: item.action,
                 subject: item.subject,
-                createdBy: SYSTEM
+                createdBy: SYSTEM,
+                updatedBy: SYSTEM
             })
             if(!isExists) {
                 await repositoriesPermission.save(item)

@@ -16,12 +16,14 @@ export default class RoleSeeder implements Seeder {
         title: 'Administrator',
         description: 'Admin',
         createdBy: SYSTEM,
+        updatedBy: SYSTEM
       },
       {
         name: RoleName.USER,
         title: 'User',
         description: 'User',
         createdBy: SYSTEM,
+        updatedBy: SYSTEM
       },
     ];
 

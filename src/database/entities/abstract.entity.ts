@@ -19,6 +19,14 @@ export class AbstractEntity extends BaseEntity {
     createdBy: string; 
 
     @Order(9999)
+    @Column({
+        type: 'varchar',
+        length: 36,
+        nullable: true
+    })
+    updatedBy: string; 
+
+    @Order(9999)
     @UpdateDateColumn({
         type: 'timestamp',
     }) 

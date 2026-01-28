@@ -19,9 +19,6 @@ export class UserSeeder implements Seeder {
         const exists = await usersRepository.findOneBy({
             email: process.env.ADMIN_EMAIL
         })
-        const roleAdmin = await rolesRepository.findOneBy({
-            name: RoleName.ADMIN
-        });
         if(!exists) {
             const roleAdmin = await rolesRepository.findOneBy({
                 name: RoleName.ADMIN
@@ -34,6 +31,7 @@ export class UserSeeder implements Seeder {
                     gender: Gender.MALE,
                     avatar: 'https://i.pinimg.com/736x/e5/7b/98/e57b987df5b29f59db3eb669499154ee.jpg',
                     createdBy: SYSTEM,
+                    updatedBy: SYSTEM,
                     role: {
                         id: roleAdmin?.id
                     },
