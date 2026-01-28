@@ -31,5 +31,8 @@ export enum ErrorCode {
 
   // ----- Role =====
   ROLE_NOT_FOUND = 'role.error.not_found',
-  ROLE_NAME_EXISTS = 'role.error.name_exists'
+  ROLE_NAME_EXISTS = 'role.error.name_exists',
+
+  // ===== User =====
+  USER_NOT_FOUND = 'user.error.not_found'
 }

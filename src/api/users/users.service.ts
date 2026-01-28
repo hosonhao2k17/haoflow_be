@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationException } from 'src/exceptions/validation.exception';
@@ -10,6 +10,7 @@ import { plainToInstance } from 'class-transformer';
 import { QueryUserDto } from './dto/query-user.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
 
 @Injectable()
 export class UsersService {
@@ -40,8 +41,12 @@ export class UsersService {
     return new OffsetPaginatedRdo(plainToInstance(UserRdo, list), pagination);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) :Promise<UserRdo> {
+    const user = await this.usersRepository.findOneBy({id});
+    if(!user) {
+      throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
+    }
+    return plainToInstance(UserRdo, user)
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
