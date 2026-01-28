@@ -7,11 +7,11 @@ import { EnumField, StringField, UuidField } from "src/decorators/field.decorato
 import { plainToInstance, Transform, Type } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsOptional, ValidateNested } from "class-validator";
+import { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 
 
 
 export class QueryUserDto {
 
-    
 
 }

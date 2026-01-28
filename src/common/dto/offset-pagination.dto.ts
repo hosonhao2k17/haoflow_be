@@ -4,6 +4,8 @@ import { AbstractQueryDto } from "./abstract-query.dto";
 import { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 
 export class OffsetPaginationDto extends AbstractQueryDto{
+    protected alias: string;
+    
 
     @NumberField({options: true})
     page: number = DEFAULT_PAGE;
@@ -15,11 +17,10 @@ export class OffsetPaginationDto extends AbstractQueryDto{
         return (this.page - 1 ) *  this.limit;
     }
 
-    handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>, alias: string): SelectQueryBuilder<T> {
-        super.handleQueryBuilder(queryBuilder, alias);
+    handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>,): void {
+        super.handleQueryBuilder(queryBuilder);
         queryBuilder
             .limit(this.limit)
             .offset(this.getOffset())
-        return queryBuilder
     }
 }

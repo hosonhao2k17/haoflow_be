@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { IsEnum } from "class-validator";
 import { SortOrder } from "src/common/constants/app.constant";
 import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER } from "src/common/constants/default.constant";
@@ -13,6 +14,7 @@ import { ObjectLiteral, SelectQueryBuilder } from "typeorm";
 
 export class QueryRoleDto extends OffsetPaginationDto implements ISearch {
 
+    protected alias: string = 'role'
 
     @EnumField(RoleStatus, {options: true, swaggerOptions: {
         enum: RoleStatus
@@ -22,17 +24,16 @@ export class QueryRoleDto extends OffsetPaginationDto implements ISearch {
     @StringField({options: true})
     keyword?: string;
 
-    handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>, alias: string): SelectQueryBuilder<T> {
-        super.handleQueryBuilder(queryBuilder, alias);
+    handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>,): void {
+        super.handleQueryBuilder(queryBuilder);
         if(this.status) {
             queryBuilder
-            .andWhere(`${alias}.status = :status`,{status: this.status})
+            .andWhere(`${this.alias}.status = :status`,{status: this.status})
         }
         if(this.keyword) {
             queryBuilder
-            .andWhere(`${alias}.name = :keyword OR ${alias}.title = :keyword`,{keyword: this.keyword})
+            .andWhere(`${this.alias}.name = :keyword OR ${this.alias}.title = :keyword`,{keyword: this.keyword})
         }
-        return queryBuilder
     }
 
 }

@@ -32,9 +32,9 @@ export class RolesService {
 
   async findAll(query: QueryRoleDto): Promise<OffsetPaginatedRdo<RoleRdo>> {
     const queryBuilder = this.rolesRepository
-    .createQueryBuilder('role')
-    const handler = query.handleQueryBuilder(queryBuilder,'role')
-    const [list, totalRecords] = await handler.getManyAndCount()
+    .createQueryBuilder(query.getAlias())
+    query.handleQueryBuilder(queryBuilder)
+    const [list, totalRecords] = await queryBuilder.getManyAndCount()
     
     const pagination = new OffsetPaginationRdo(totalRecords, query);
 

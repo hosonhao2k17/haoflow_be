@@ -4,9 +4,13 @@ import { SortOrder } from "../constants/app.constant";
 import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER } from "../constants/default.constant";
 import { ISort } from "../interfaces/sort.interface";
 import { SelectQueryBuilder,ObjectLiteral } from "typeorm";
+import { Allow } from "class-validator";
 
 
-export class AbstractQueryDto implements ISort {
+export abstract class AbstractQueryDto implements ISort {
+
+    @Allow()
+    protected abstract readonly alias: string;
 
     @StringField({options: true})
     createdBy?: string;
@@ -26,19 +30,19 @@ export class AbstractQueryDto implements ISort {
     })
     sortOrder?: SortOrder = DEFAULT_SORT_ORDER;
 
+    getAlias(): string {
+        return this.alias;
+    }
+
     handleQueryBuilder<T extends ObjectLiteral>(
         queryBuilder: SelectQueryBuilder<T>,
-        alias: string
     ) {
-        queryBuilder.orderBy(`${alias}.${this.sortBy}`,this.sortOrder)
+        queryBuilder.orderBy(`${this.alias}.${this.sortBy}`,this.sortOrder)
         if(this.createdBy) {
-            queryBuilder.andWhere(`${alias}.createdBy = :createdBy`,{createdBy: this.createdBy})
+            queryBuilder.andWhere(`${this.alias}.createdBy = :createdBy`,{createdBy: this.createdBy})
         } 
         if(this.updatedBy) {
-            queryBuilder.andWhere(`${alias}.updatedBy = :updatedBy`,{updatedBy: this.updatedBy})
+            queryBuilder.andWhere(`${this.alias}.updatedBy = :updatedBy`,{updatedBy: this.updatedBy})
         }
-
-        return queryBuilder
-
     }
 }
