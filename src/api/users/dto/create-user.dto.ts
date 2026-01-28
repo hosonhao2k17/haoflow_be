@@ -1,6 +1,5 @@
-import { IsUUID } from "class-validator";
 import { Gender, UserStatus } from "src/common/constants/app.constant";
-import { DateField, EmailField, EnumField, PasswordField, StringField, UrlField } from "src/decorators/field.decorator";
+import { DateField, EmailField, EnumField, PasswordField, StringField, UrlField, UuidField } from "src/decorators/field.decorator";
 
 export class CreateUserDto {
 
@@ -22,7 +21,7 @@ export class CreateUserDto {
     @EnumField(UserStatus,{options: true})
     status?: UserStatus;
 
-    @IsUUID()
+    @UuidField()
     roleId: string;
 
     @DateField({options: true})
