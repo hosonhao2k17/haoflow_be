@@ -60,7 +60,8 @@ export class UsersService {
     return plainToInstance(UserRdo, user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) :Promise<void> {
+    await this.usersRepository.findOneBy({id});
+    await this.usersRepository.softDelete(id)
   }
 }
