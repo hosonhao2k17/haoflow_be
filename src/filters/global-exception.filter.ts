@@ -8,6 +8,7 @@ import { I18nService } from "nestjs-i18n";
 import { getConstantKey } from "src/utils/get-constant-key";
 import { ValidationError } from "class-validator";
 import { ErrorDetailRdo } from "src/common/rdo/error-detail.rdo";
+import { IsErroCode } from "src/utils/error";
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -23,8 +24,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             errorRdo = this.handleUnprocessableEntityException(exception);
         } else if (exception instanceof ValidationException) {
             errorRdo = this.handleValidationException(exception)
-        } else if(exception instanceof NotFoundException) {
-            errorRdo = this.handleNotFoundException(exception)
         } else if (exception instanceof HttpException) {
              errorRdo = this.handleHttpException(exception)
         }  else {
@@ -32,23 +31,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         }
 
         response.status(errorRdo.statusCode).json(errorRdo)
-    }
-    
-    handleNotFoundException(exception: NotFoundException): ErrorRdo {
-        const statusCode = exception.getStatus();
-        const res = exception.getResponse() as {
-            errorCode: string,
-            message: string
-        };
-
-        const timestamp = new Date().toISOString();
-        return {
-            message: this.i18n.t(res.message),
-            statusCode,
-            timestamp,
-            errorCode: getConstantKey(HttpStatus, statusCode),
-            error: STATUS_CODES[statusCode] as string
-        }
     }
 
     handleHttpException(exception: HttpException): ErrorRdo {
@@ -59,9 +41,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             message: string
         };
         const timestamp = new Date().toISOString();
-
         return {
-            message: res.message,
+            message: IsErroCode(res.message) ? this.i18n.t(res.message) : res.message,
             statusCode,
             timestamp,
             errorCode: getConstantKey(HttpStatus, statusCode),
