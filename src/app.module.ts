@@ -11,10 +11,12 @@ import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } fro
 import { join } from 'path';
 import { UsersModule } from './api/users/users.module';
 import { UserEntity } from './api/users/entities/user.entity';
+import { AuthModule } from './api/auth/auth.module';
 @Module({
   imports: [
     RolesModule,
     UsersModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
