@@ -11,6 +11,11 @@ import { QueryUserDto } from './dto/query-user.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
+import { LoadMoreUserDto } from './dto/load-more-user.dto';
+import e from 'express';
+import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
+import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
+import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +33,21 @@ export class UsersService {
     }).save();
 
     return plainToInstance(UserRdo, user)
+  }
+
+  async loadMore(loadMoreUser: LoadMoreUserDto) {
+    const queryBuilder = this.usersRepository.createQueryBuilder(loadMoreUser.getAlias())
+    loadMoreUser.handleQueryBuilder(queryBuilder);
+    const [users, total] = await queryBuilder.getManyAndCount();
+
+    const pagination = new CursorPaginationRdo(
+      loadMoreUser.limit,
+      getBeforeCursor(users),
+      getAfterCursor(users),
+      total
+    )
+    
+    return new CursorPaginatedRdo(plainToInstance(UserRdo, users), pagination)
   }
 
   async findAll(queryUserDto: QueryUserDto): Promise<OffsetPaginatedRdo<UserRdo>> {

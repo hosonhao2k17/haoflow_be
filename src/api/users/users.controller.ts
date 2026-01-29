@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { UserRdo } from './rdo/user.rdo';
+import { LoadMoreUserDto } from './dto/load-more-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -13,6 +14,11 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Get('load-more')
+  loadMore(@Query() loadMoreUserDto: LoadMoreUserDto) {
+    return this.usersService.loadMore(loadMoreUserDto)
   }
 
   @Get()
