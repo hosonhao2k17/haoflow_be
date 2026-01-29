@@ -84,4 +84,8 @@ export class UsersService {
     await this.usersRepository.findOneBy({id});
     await this.usersRepository.softDelete(id)
   }
+
+  getUserByEmail(email: string) :Promise<UserEntity | null> {
+    return this.usersRepository.findOneBy({email})
+  }
 }
