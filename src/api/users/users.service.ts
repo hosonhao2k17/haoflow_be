@@ -86,6 +86,15 @@ export class UsersService {
   }
 
   getUserByEmail(email: string) :Promise<UserEntity | null> {
-    return this.usersRepository.findOneBy({email})
+    return this.usersRepository.findOne(
+      {
+        where: {
+          email
+        },
+        relations: {
+          role: true
+        }
+      }
+    )
   }
 }

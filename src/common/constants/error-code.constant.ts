@@ -34,5 +34,8 @@ export enum ErrorCode {
   ROLE_NAME_EXISTS = 'role.error.name_exists',
 
   // ===== User =====
-  USER_NOT_FOUND = 'user.error.not_found'
+  USER_NOT_FOUND = 'user.error.not_found',
+
+  // ===== Auth ===== 
+  INVALID_LOGIN = 'auth.error.invalid_login'
 }

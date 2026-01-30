@@ -1,0 +1,7 @@
+
+{
+    "error": {
+        "not_found": "Người dùng không tồn tại",
+        "invalid_login": "Email hoặc mật khẩu không đúng"
+    }
+}
