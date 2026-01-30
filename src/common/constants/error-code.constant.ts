@@ -37,5 +37,6 @@ export enum ErrorCode {
   USER_NOT_FOUND = 'user.error.not_found',
 
   // ===== Auth ===== 
-  INVALID_LOGIN = 'auth.error.invalid_login'
+  INVALID_LOGIN = 'auth.error.invalid_login',
+  INVALID_TOKEN = 'auth.error.invalid_token'
 }

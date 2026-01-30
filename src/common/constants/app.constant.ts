@@ -34,3 +34,5 @@ export enum UserStatus {
     ACTIVE = 'active',
     INACTIVE = 'inactive',
 }
+
+export const PUBLIC_KEY = 'public_key'

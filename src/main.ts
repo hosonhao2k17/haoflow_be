@@ -49,6 +49,7 @@ async function bootstrap() {
     .setTitle('HaoFlow API')
     .setDescription('The HaoFlow API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, configBuilder);
   SwaggerModule.setup('api-docs', app, document);
