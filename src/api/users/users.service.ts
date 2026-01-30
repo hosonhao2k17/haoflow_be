@@ -16,6 +16,7 @@ import e from 'express';
 import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
 import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
+import { CurrentUserRdo } from './rdo/current-user.rdo';
 
 @Injectable()
 export class UsersService {
@@ -96,5 +97,17 @@ export class UsersService {
         }
       }
     )
+  }
+
+  async getCurrentUser(id: string) {
+    const user = await this.usersRepository.findOne({
+      where: {id},
+      relations: {
+        role: {
+          permissions: true
+        }
+      }
+    })
+    return plainToInstance(CurrentUserRdo, user)
   }
 }

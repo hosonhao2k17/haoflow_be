@@ -6,37 +6,51 @@ import { QueryUserDto } from './dto/query-user.dto';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { UserRdo } from './rdo/user.rdo';
 import { LoadMoreUserDto } from './dto/load-more-user.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { User } from 'src/decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiBearerAuth()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get('load-more')
+  @ApiBearerAuth()
   loadMore(@Query() loadMoreUserDto: LoadMoreUserDto) {
     return this.usersService.loadMore(loadMoreUserDto)
   }
 
+  @Get('me')
+  @ApiBearerAuth()
+  getCurrentUser(@User('id') id: string) {
+    return this.usersService.getCurrentUser(id)
+  }
+
   @Get()
+  @ApiBearerAuth()
   findAll(@Query() queryUserDto: QueryUserDto): Promise<OffsetPaginatedRdo<UserRdo>> {
     return this.usersService.findAll(queryUserDto);
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) :Promise<UserRdo> {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) :Promise<void> {
     return this.usersService.remove(id);
