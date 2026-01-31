@@ -12,6 +12,7 @@ import { join } from 'path';
 import { UsersModule } from './api/users/users.module';
 import { UserEntity } from './api/users/entities/user.entity';
 import { AuthModule } from './api/auth/auth.module';
+import { MailModule } from './mail/mail.module';
 @Module({
   imports: [
     RolesModule,
@@ -61,7 +62,8 @@ import { AuthModule } from './api/auth/auth.module';
         new HeaderResolver(['x-lang']),
       ]
       
-    })
+    }),
+    MailModule
   ],
   controllers: [],
   providers: [],

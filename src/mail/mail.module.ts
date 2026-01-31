@@ -17,7 +17,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           pass: configService.get('MAIL_PASS')
         },
         defaults: {
-          from: ''
+          from: configService.get('MAIL_USER')
         },
         template: {
           dir: join(__dirname, 'templates'),

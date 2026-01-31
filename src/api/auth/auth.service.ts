@@ -8,6 +8,8 @@ import { plainToInstance } from 'class-transformer';
 import { LoginRdo } from './rdo/login.rdo';
 import { UserRdo } from '../users/rdo/user.rdo';
 import ms, { StringValue } from 'ms'
+import { RegisterDto } from './dto/register.dto';
+import { RoleName } from 'src/common/constants/app.constant';
 @Injectable()
 export class AuthService {
 
@@ -36,6 +38,15 @@ export class AuthService {
             expiresIn: ms(this.configService.get<StringValue>('JWT_ACCESS_EXPIRES') as StringValue) / 1000,
             userId: user.id
 
+        })
+    }
+
+    async register(registerDto: RegisterDto) :Promise<void> {
+        
+     
+        const user = await this.usersService.create({
+            ...registerDto,
+            roleName: RoleName.USER
         })
     }
 

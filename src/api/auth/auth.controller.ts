@@ -5,6 +5,7 @@ import { LoginDto } from './dto/login.dto';
 import { Public } from 'src/decorators/public.decorator';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginRdo } from './rdo/login.rdo';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,5 +19,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Public()
+  @Post('register')
+  register(@Body() registerDto: RegisterDto) :Promise<void> {
+    return this.authService.register(registerDto)
   }
 }

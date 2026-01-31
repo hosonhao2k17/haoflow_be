@@ -11,6 +11,7 @@ import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { ValidationException } from 'src/exceptions/validation.exception';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
+import { RoleName } from 'src/common/constants/app.constant';
 
 @Injectable()
 export class RolesService {
@@ -78,5 +79,13 @@ export class RolesService {
       throw new NotFoundException(ErrorCode.ROLE_NOT_FOUND)
     }
     await this.rolesRepository.softDelete({id});
+  }
+
+  async getRoleByName(roleName: RoleName): Promise<RoleEntity> {
+    const role = await this.rolesRepository.findOneBy({name: roleName})
+    if(!role) {
+      throw new NotFoundException(ErrorCode.ROLE_NOT_FOUND)
+    }
+    return role
   }
 }

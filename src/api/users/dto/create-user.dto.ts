@@ -1,4 +1,4 @@
-import { Gender, UserStatus } from "src/common/constants/app.constant";
+import { Gender, RoleName, UserStatus } from "src/common/constants/app.constant";
 import { DateField, EmailField, EnumField, PasswordField, StringField, UrlField, UuidField } from "src/decorators/field.decorator";
 
 export class CreateUserDto {
@@ -21,8 +21,8 @@ export class CreateUserDto {
     @EnumField(UserStatus,{options: true})
     status?: UserStatus;
 
-    @UuidField()
-    roleId: string;
+    @EnumField(RoleName)
+    roleName: RoleName
 
     @DateField({options: true})
     birthDate?: Date;

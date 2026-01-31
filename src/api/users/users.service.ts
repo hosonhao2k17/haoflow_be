@@ -17,20 +17,23 @@ import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
 import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 import { CurrentUserRdo } from './rdo/current-user.rdo';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class UsersService {
 
-  constructor(@InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>) {
+  constructor(
+    @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
+    private rolesService: RolesService
+  ) {
 
   }
 
   async create(createUserDto: CreateUserDto) :Promise<UserRdo> {
+    const role = await this.rolesService.getRoleByName(createUserDto.roleName);
     const user = await this.usersRepository.create({
       ...createUserDto,
-      role: {
-        id: createUserDto.roleId
-      }
+      role
     }).save();
 
     return plainToInstance(UserRdo, user)
