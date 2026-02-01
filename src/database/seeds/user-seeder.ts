@@ -29,6 +29,7 @@ export class UserSeeder implements Seeder {
                     email: process.env.ADMIN_EMAIL,
                     password: process.env.ADMIN_PASSWORD,
                     gender: Gender.MALE,
+                    verified: true,
                     avatar: 'https://i.pinimg.com/736x/e5/7b/98/e57b987df5b29f59db3eb669499154ee.jpg',
                     role: {
                         id: roleAdmin?.id

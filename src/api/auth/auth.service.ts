@@ -9,7 +9,7 @@ import { LoginRdo } from './rdo/login.rdo';
 import { UserRdo } from '../users/rdo/user.rdo';
 import ms, { StringValue } from 'ms'
 import { RegisterDto } from './dto/register.dto';
-import { RoleName } from 'src/common/constants/app.constant';
+import { RoleName, UserStatus } from 'src/common/constants/app.constant';
 import { MailService } from 'src/mail/mail.service';
 @Injectable()
 export class AuthService {
@@ -28,10 +28,16 @@ export class AuthService {
         if(!user || ! await user.comparePassword(password)) {
             throw new UnauthorizedException(ErrorCode.INVALID_LOGIN)
         }
+        if(user.status === UserStatus.INACTIVE) {
+            throw new UnauthorizedException(ErrorCode.STATUS_INACTIVE)
+        }
+        if(user.verified === false) {
+            throw new UnauthorizedException(ErrorCode.NOT_VERIFY)
+        }
         
         const [accessToken, refreshToken] = await Promise.all([
             this.generateAccessToken(user.id, user.role.id),
-            this.generateRefreshToken(user.id,user.role.id)
+            this.generateRefreshToken(user.id)
         ])
         
         return plainToInstance(LoginRdo, {
@@ -66,10 +72,9 @@ export class AuthService {
         })
     }
 
-    generateRefreshToken(id: string, roleId: string) :Promise<string> {
+    generateRefreshToken(id: string) :Promise<string> {
         return this.jwtService.signAsync({
-            id,
-            roleId
+            id
         },{
             secret: this.configService.get('JWT_REFRESH_SECRET'),
             expiresIn: ms(this.configService.getOrThrow<StringValue>('JWT_REFRESH_EXPIRES'))

@@ -28,7 +28,7 @@
 ## Project setup
 
 ```bash
-$ npx 
+$ npx typeorm-extension seed:run -d dist/data-source.js UserSeeder
 ```
 
 ## Compile and run the project
