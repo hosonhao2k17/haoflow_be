@@ -6,6 +6,7 @@ import { Public } from 'src/decorators/public.decorator';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginRdo } from './rdo/login.rdo';
 import { RegisterDto } from './dto/register.dto';
+import { ResponseMessage } from 'src/decorators/message.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,8 @@ export class AuthController {
 
   @Public()
   @Post('register')
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage('Check your email')
   register(@Body() registerDto: RegisterDto) :Promise<void> {
     return this.authService.register(registerDto)
   }

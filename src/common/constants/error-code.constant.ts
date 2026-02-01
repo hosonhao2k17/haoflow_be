@@ -38,5 +38,8 @@ export enum ErrorCode {
 
   // ===== Auth ===== 
   INVALID_LOGIN = 'auth.error.invalid_login',
-  INVALID_TOKEN = 'auth.error.invalid_token'
+  INVALID_TOKEN = 'auth.error.invalid_token',
+
+  // ===== Mail =====
+  MAIL_SUBJECT = 'mail.send.subject'
 }

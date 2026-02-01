@@ -10,13 +10,15 @@ import { UserRdo } from '../users/rdo/user.rdo';
 import ms, { StringValue } from 'ms'
 import { RegisterDto } from './dto/register.dto';
 import { RoleName } from 'src/common/constants/app.constant';
+import { MailService } from 'src/mail/mail.service';
 @Injectable()
 export class AuthService {
 
     constructor(
         private usersService: UsersService,
         private jwtService: JwtService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private mailService: MailService
     ) {}
 
 
@@ -48,6 +50,9 @@ export class AuthService {
             ...registerDto,
             roleName: RoleName.USER
         })
+
+        const token = await this.generateEmailVerificationToken(user.id);
+        await this.mailService.sendUserConfirmation(user.email, token);
     }
 
     generateAccessToken(id: string, roleId: string) :Promise<string> {
@@ -57,7 +62,7 @@ export class AuthService {
             roleId
         },{
             secret: this.configService.get('JWT_ACCESS_SECRET'),
-            expiresIn: ms(this.configService.get<StringValue>('JWT_ACCESS_EXPIRES') as StringValue)
+            expiresIn: ms(this.configService.getOrThrow<StringValue>('JWT_ACCESS_EXPIRES'))
         })
     }
 
@@ -67,7 +72,16 @@ export class AuthService {
             roleId
         },{
             secret: this.configService.get('JWT_REFRESH_SECRET'),
-            expiresIn: ms(this.configService.get<StringValue>('JWT_REFRESH_EXPIRES') as StringValue)
+            expiresIn: ms(this.configService.getOrThrow<StringValue>('JWT_REFRESH_EXPIRES'))
+        })
+    }
+
+    generateEmailVerificationToken(id: string) {
+        return this.jwtService.signAsync({
+            id
+        },{
+            secret: this.configService.get('JWT_VERIFY_SECRET'),
+            expiresIn: ms(this.configService.getOrThrow<StringValue>('JWT_VERIFY_EXPIRES'))
         })
     }
 }

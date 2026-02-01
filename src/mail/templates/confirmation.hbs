@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Xác thực Email</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f2f7ff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    table {
+      border-spacing: 0;
+    }
+
+    img {
+      border: 0;
+      display: block;
+    }
+
+    .wrapper {
+      width: 100%;
+      padding: 32px 12px;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(10, 95, 191, 0.18);
+    }
+
+    .header {
+      padding: 32px 20px 16px;
+      text-align: center;
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0A5FBF;
+      margin-top: 12px;
+    }
+
+    .brand-tagline {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .content {
+      padding: 6px 32px 36px;
+      text-align: center;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    .text {
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #0A5FBF, #1E90FF);
+      color: #ffffff !important;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 12px 24px rgba(10, 95, 191, 0.35);
+    }
+
+    .note {
+      margin-top: 28px;
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .footer {
+      padding: 18px;
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      background-color: #f8fafc;
+    }
+  </style>
+</head>
+
+<body>
+  <table class="wrapper" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+
+        <table class="container" cellpadding="0" cellspacing="0">
+
+          <!-- HEADER / LOGO -->
+          <tr>
+            <td class="header">
+
+              <!-- LOGO TRÒN -->
+              <img
+                src="https://res.cloudinary.com/dwcp8hogw/image/upload/w_128,h_128,c_fill,q_auto,f_auto/ChatGPT_Image_15_32_55_31_thg_1_2026_murhs2.png"
+                alt="Son Hao Logo"
+                width="130"
+                height="130"
+                style="
+                  margin: 0 auto;
+                  border-radius: 50%;
+                  background: #ffffff;
+                  box-shadow: 0 10px 24px rgba(10,95,191,0.25);
+                "
+              />
+            </td>
+          </tr>
+
+          <!-- CONTENT -->
+          <tr>
+            <td class="content">
+              <div class="title">Xác thực email của bạn</div>
+
+              <div class="text">
+                Cảm ơn bạn đã đăng ký sử dụng hệ thống.<br />
+                Vui lòng nhấn nút bên dưới để xác thực email và kích hoạt tài khoản.
+              </div>
+
+              <!-- VERIFY BUTTON -->
+              <a href="{{url}}" class="btn">
+                Xác thực email
+              </a>
+
+              <div class="note">
+                Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.<br />
+                Liên kết sẽ hết hạn sau <b>15 phút</b>.
+              </div>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td class="footer">
+              © 2026 Son Hao Software.<br />
+              Đây là email tự động, vui lòng không trả lời.
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

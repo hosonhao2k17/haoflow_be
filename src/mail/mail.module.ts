@@ -16,7 +16,9 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           user: configService.get('MAIL_USER'),
           pass: configService.get('MAIL_PASS')
         },
-        defaults: {
+        
+      },
+      defaults: {
           from: configService.get('MAIL_USER')
         },
         template: {
@@ -26,7 +28,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
             strict: true,
           },
         },
-      }
     })
   })],
   providers: [MailService],
