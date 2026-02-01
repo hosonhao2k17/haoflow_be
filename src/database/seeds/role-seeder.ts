@@ -1,6 +1,5 @@
-import { title } from "process";
 import { RoleEntity } from "src/api/roles/entities/role.entity";
-import { RoleName, SYSTEM } from "src/common/constants/app.constant";
+import { RoleName, } from "src/common/constants/app.constant";
 import { DataSource } from "typeorm";
 import { Seeder } from "typeorm-extension";
 
@@ -14,16 +13,12 @@ export default class RoleSeeder implements Seeder {
       {
         name: RoleName.ADMIN,
         title: 'Administrator',
-        description: 'Admin',
-        createdBy: SYSTEM,
-        updatedBy: SYSTEM
+        description: 'Admin'
       },
       {
         name: RoleName.USER,
         title: 'User',
-        description: 'User',
-        createdBy: SYSTEM,
-        updatedBy: SYSTEM
+        description: 'User'
       },
     ];
 
