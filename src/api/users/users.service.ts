@@ -89,16 +89,7 @@ export class UsersService {
   }
 
   getUserByEmail(email: string) :Promise<UserEntity | null> {
-    return this.usersRepository.findOne(
-      {
-        where: {
-          email
-        },
-        relations: {
-          role: true
-        }
-      }
-    )
+    return this.usersRepository.findOneBy({email})
   }
 
   async getCurrentUser(id: string) {

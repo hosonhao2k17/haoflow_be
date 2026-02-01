@@ -11,6 +11,7 @@ import ms, { StringValue } from 'ms'
 import { RegisterDto } from './dto/register.dto';
 import { RoleName, UserStatus } from 'src/common/constants/app.constant';
 import { MailService } from 'src/mail/mail.service';
+import { RefreshRdo } from './rdo/refresh.rdo';
 @Injectable()
 export class AuthService {
 
@@ -36,7 +37,7 @@ export class AuthService {
         }
         
         const [accessToken, refreshToken] = await Promise.all([
-            this.generateAccessToken(user.id, user.role.id),
+            this.generateAccessToken(user.id),
             this.generateRefreshToken(user.id)
         ])
         
@@ -61,11 +62,26 @@ export class AuthService {
         await this.mailService.sendUserConfirmation(user.email, token);
     }
 
-    generateAccessToken(id: string, roleId: string) :Promise<string> {
+    async refresh(id: string):Promise<RefreshRdo> {
+
+        const [accessToken, refreshToken] = await Promise.all([
+            this.generateAccessToken(id),
+            this.generateRefreshToken(id)
+        ])
+
+        return plainToInstance(RefreshRdo, {
+            accessToken,
+            refreshToken,
+            expiresIn: ms(this.configService.get<StringValue>('JWT_ACCESS_EXPIRES') as StringValue) / 1000,
+            userId:id
+
+        })
+    }
+
+    generateAccessToken(id: string) :Promise<string> {
 
         return this.jwtService.signAsync({
-            id,
-            roleId
+            id
         },{
             secret: this.configService.get('JWT_ACCESS_SECRET'),
             expiresIn: ms(this.configService.getOrThrow<StringValue>('JWT_ACCESS_EXPIRES'))

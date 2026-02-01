@@ -5,7 +5,7 @@ import { LoginRdo } from "src/api/auth/rdo/login.rdo";
 
 
 
-export class LoginInterceptor implements NestInterceptor {
+export class RefreshTokenInterceptor implements NestInterceptor {
 
 
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {

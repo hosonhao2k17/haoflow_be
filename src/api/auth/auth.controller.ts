@@ -1,13 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { LoginDto } from './dto/login.dto';
 import { Public } from 'src/decorators/public.decorator';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiResponse } from '@nestjs/swagger';
 import { LoginRdo } from './rdo/login.rdo';
 import { RegisterDto } from './dto/register.dto';
 import { ResponseMessage } from 'src/decorators/message.decorator';
-import { LoginInterceptor } from 'src/interceptors/login.interceptor';
+import { RefreshTokenInterceptor } from 'src/interceptors/refresh-token.interceptor';
+import { JwtRefreshGuard } from 'src/guards/jwt-refresh.guard';
+import { User } from 'src/decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -18,10 +19,18 @@ export class AuthController {
   @ApiResponse({
     example: LoginRdo
   })
-  @UseInterceptors(LoginInterceptor)
+  @UseInterceptors(RefreshTokenInterceptor)
   @HttpCode(HttpStatus.OK)
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Public()
+  @Post('refresh')
+  @UseGuards(JwtRefreshGuard)
+  @UseInterceptors(RefreshTokenInterceptor)
+  refresh(@User('id') id: string) {
+    return this.authService.refresh(id);
   }
 
   @Public()
