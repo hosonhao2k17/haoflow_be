@@ -15,4 +15,7 @@ export class BaseRdo<T = string> {
     @Expose()
     createdBy: string;
 
+    @Expose()
+    updatedBy: string;
+
 }

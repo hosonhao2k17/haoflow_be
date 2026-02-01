@@ -1,8 +1,10 @@
-import { BaseEntity, Column, CreateDateColumn, DataSource, UpdateDateColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DataSource, UpdateDateColumn } from "typeorm";
 import { getOrder, Order } from "../decorators/order.decorator";
+import { requestContext } from "src/common/context/request.context";
+import { SYSTEM } from "src/common/constants/app.constant";
 
 
-export class AbstractEntity extends BaseEntity {
+export abstract class AbstractEntity extends BaseEntity {
 
     @Order(9999)
     @CreateDateColumn({
@@ -43,4 +45,18 @@ export class AbstractEntity extends BaseEntity {
             });
         }
     }
+
+    @BeforeInsert()
+    handleCreate() {
+        const ctx = requestContext.getStore();
+        this.createdBy = ctx?.userId ?? SYSTEM
+        this.updatedBy = ctx?.userId ?? SYSTEM
+    }
+
+    @BeforeUpdate()
+    handleUpdate() {
+        const ctx = requestContext.getStore();
+        this.updatedBy = ctx?.userId ?? SYSTEM;
+    }
+
 }
