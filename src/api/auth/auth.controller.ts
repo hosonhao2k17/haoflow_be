@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { LoginDto } from './dto/login.dto';
@@ -7,6 +7,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginRdo } from './rdo/login.rdo';
 import { RegisterDto } from './dto/register.dto';
 import { ResponseMessage } from 'src/decorators/message.decorator';
+import { LoginInterceptor } from 'src/interceptors/login.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -17,6 +18,7 @@ export class AuthController {
   @ApiResponse({
     example: LoginRdo
   })
+  @UseInterceptors(LoginInterceptor)
   @HttpCode(HttpStatus.OK)
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);

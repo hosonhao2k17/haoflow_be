@@ -10,10 +10,13 @@ import { TransformResponseInterceptor } from './interceptors/transform-response.
 import * as qs from "qs";
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AuditInterceptor } from './interceptors/audit.interceptor';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  //Handle cookie
+  app.use(cookieParser());
   //Transform response interceptor
   const reflector = app.get(Reflector)
   app.useGlobalInterceptors(new TransformResponseInterceptor(reflector), new AuditInterceptor())
