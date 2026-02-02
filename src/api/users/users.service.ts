@@ -18,12 +18,17 @@ import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 import { CurrentUserRdo } from './rdo/current-user.rdo';
 import { RolesService } from '../roles/roles.service';
 import { AsyncLocalStorage } from 'node:async_hooks';
+import { SessionEntity } from './entities/session.entity';
+import { ConfigService } from '@nestjs/config';
+import ms, { StringValue } from 'ms';
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
-    private rolesService: RolesService
+    private rolesService: RolesService,
+    @InjectRepository(SessionEntity) private sessionRepository: Repository<SessionEntity>,
+    private configSerive: ConfigService
   ) {
 
   }
@@ -36,6 +41,17 @@ export class UsersService {
     }).save();
 
     return plainToInstance(UserRdo, user)
+  }
+
+  createSession(userId: string): Promise<SessionEntity> {
+
+    const expiresIn = this.configSerive.getOrThrow<StringValue>('JWT_ACCESS_EXPIRES');
+    const expiresAt = new Date(Date.now() + ms(expiresIn))
+
+    return this.sessionRepository.create({
+      user: {id: userId}, 
+      expiresAt
+    }).save()
   }
 
   async loadMore(loadMoreUser: LoadMoreUserDto) {

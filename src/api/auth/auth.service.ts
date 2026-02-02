@@ -35,10 +35,11 @@ export class AuthService {
         if(user.verified === false) {
             throw new UnauthorizedException(ErrorCode.NOT_VERIFY)
         }
-        
+
+        const session = await this.usersService.createSession(user.id)
         const [accessToken, refreshToken] = await Promise.all([
-            this.generateAccessToken(user.id),
-            this.generateRefreshToken(user.id)
+            this.generateAccessToken(user.id, session.id),
+            this.generateRefreshToken(user.id, session.id)
         ])
         
         return plainToInstance(LoginRdo, {
@@ -64,9 +65,10 @@ export class AuthService {
 
     async refresh(id: string):Promise<RefreshRdo> {
 
+        const session = await this.usersService.createSession(id)
         const [accessToken, refreshToken] = await Promise.all([
-            this.generateAccessToken(id),
-            this.generateRefreshToken(id)
+            this.generateAccessToken(id, session.id),
+            this.generateRefreshToken(id, session.id)
         ])
 
         return plainToInstance(RefreshRdo, {
@@ -78,19 +80,21 @@ export class AuthService {
         })
     }
 
-    generateAccessToken(id: string) :Promise<string> {
+    generateAccessToken(id: string, sessionId: string) :Promise<string> {
 
         return this.jwtService.signAsync({
-            id
+            id,
+            sessionId
         },{
             secret: this.configService.get('JWT_ACCESS_SECRET'),
             expiresIn: ms(this.configService.getOrThrow<StringValue>('JWT_ACCESS_EXPIRES'))
         })
     }
 
-    generateRefreshToken(id: string) :Promise<string> {
+    generateRefreshToken(id: string, sessionId: string) :Promise<string> {
         return this.jwtService.signAsync({
-            id
+            id,
+            sessionId
         },{
             secret: this.configService.get('JWT_REFRESH_SECRET'),
             expiresIn: ms(this.configService.getOrThrow<StringValue>('JWT_REFRESH_EXPIRES'))

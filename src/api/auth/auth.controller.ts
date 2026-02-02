@@ -1,8 +1,9 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { LoginDto } from './dto/login.dto';
 import { Public } from 'src/decorators/public.decorator';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginRdo } from './rdo/login.rdo';
 import { RegisterDto } from './dto/register.dto';
 import { ResponseMessage } from 'src/decorators/message.decorator';
@@ -27,6 +28,7 @@ export class AuthController {
 
   @Public()
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)
   @UseInterceptors(RefreshTokenInterceptor)
   refresh(@User('id') id: string) {
@@ -35,7 +37,6 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  @HttpCode(HttpStatus.OK)
   @ResponseMessage('Check your email')
   register(@Body() registerDto: RegisterDto) :Promise<void> {
     return this.authService.register(registerDto)

@@ -2,7 +2,8 @@ import { RoleEntity } from "src/api/roles/entities/role.entity";
 import { Gender, UserStatus } from "src/common/constants/app.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
 import { comparePassword, hashPassword } from "src/utils/password";
-import { BeforeInsert, Column, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { SessionEntity } from "./session.entity";
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
@@ -56,6 +57,9 @@ export class UserEntity extends AbstractEntity {
         nullable: false
     })
     role: RoleEntity;
+
+    @OneToMany(() => SessionEntity, (session) => session.user)
+    sessions: SessionEntity[];
 
     @DeleteDateColumn()
     deletedAt: Date;

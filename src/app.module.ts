@@ -13,6 +13,7 @@ import { UsersModule } from './api/users/users.module';
 import { UserEntity } from './api/users/entities/user.entity';
 import { AuthModule } from './api/auth/auth.module';
 import { MailModule } from './mail/mail.module';
+import { SessionEntity } from './api/users/entities/session.entity';
 @Module({
   imports: [
     RolesModule,
@@ -30,7 +31,7 @@ import { MailModule } from './mail/mail.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity],
+        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity],
         synchronize: true
       }),
       inject: [ConfigService],
