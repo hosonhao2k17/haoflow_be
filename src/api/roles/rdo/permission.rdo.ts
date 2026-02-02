@@ -1,5 +1,5 @@
 import { Exclude, Expose } from "class-transformer";
-import { ActionPermission } from "src/common/constants/app.constant";
+import { PermissionAction } from "src/common/constants/app.constant";
 
 @Exclude()
 export class PermissionRdo {
@@ -7,7 +7,7 @@ export class PermissionRdo {
     id: string;
 
     @Expose()
-    action: ActionPermission;
+    action: PermissionAction;
 
     @Expose()
     subject: string;

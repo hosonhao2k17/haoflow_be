@@ -4,6 +4,7 @@ import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/com
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
+import { UsersService } from 'src/api/users/users.service';
 import { PUBLIC_KEY } from 'src/common/constants/app.constant';
 import { CacheKey } from 'src/common/constants/cache.constant';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
@@ -14,7 +15,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     constructor(
         private reflector: Reflector,
-        private cacheManager: Cache
+        private cacheManager: Cache,
+        private usersService: UsersService
     ) {
         super()
     }
@@ -32,6 +34,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         if(isBlacklisted) {
             throw new UnauthorizedException(ErrorCode.SESSION_BLACKLIST)
         }
+
+        req.user.permissions = (await this.usersService.getCurrentUser(req.user.id)).role.permissions
         
         return true;
     }

@@ -1,4 +1,4 @@
-import { ActionPermission } from "src/common/constants/app.constant";
+import { PermissionAction } from "src/common/constants/app.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
@@ -11,9 +11,9 @@ export class PermissionEntity extends AbstractEntity{
 
     @Column({
         type: 'enum',
-        enum: ActionPermission
+        enum: PermissionAction
     })
-    action: ActionPermission;
+    action: PermissionAction;
 
     @Column({
         length: 150

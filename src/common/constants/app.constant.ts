@@ -12,14 +12,14 @@ export enum RoleName {
 
 export const SYSTEM = 'system'
 export const RESPONSE_MESSAGE = 'response_message'
-export enum ActionPermission {
+export enum PermissionAction {
     CREATE = 'create',
     READ = 'read',
     UPDATE = 'update',
     DELETE = 'delete'
 }
 
-export enum SubjectPermission {
+export enum PermissionSubject{
     USER = 'user',
     ROLE = 'role',
     TASK = 'task'
@@ -38,3 +38,6 @@ export enum UserStatus {
 export const PUBLIC_KEY = 'public_key'
 
 export const REMOVE_REFRESH_TOKEN = 'remove_refresh_token'
+
+export const PERMISSIONS_ACTION = 'PERMISSIONS_ACTION'
+export const PERMISSIONS_SUBJECT = 'PERMISSIONS_SUBJECT'

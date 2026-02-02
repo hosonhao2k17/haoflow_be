@@ -42,6 +42,7 @@ export enum ErrorCode {
   STATUS_INACTIVE = 'auth.error.status_inactive',
   NOT_VERIFY = 'auth.error.not_verify',
   SESSION_BLACKLIST = 'auth.error.session_blacklist',
+  NOT_ENOUGH_PERMISSION = 'auth.error.not_enough_permission',
 
   // ===== Mail =====
   MAIL_SUBJECT = 'mail.send.subject'
