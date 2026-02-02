@@ -41,6 +41,7 @@ export enum ErrorCode {
   INVALID_TOKEN = 'auth.error.invalid_token',
   STATUS_INACTIVE = 'auth.error.status_inactive',
   NOT_VERIFY = 'auth.error.not_verify',
+  SESSION_BLACKLIST = 'auth.error.session_blacklist',
 
   // ===== Mail =====
   MAIL_SUBJECT = 'mail.send.subject'

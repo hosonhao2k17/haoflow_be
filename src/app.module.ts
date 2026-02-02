@@ -40,7 +40,7 @@ import { SessionEntity } from './api/users/entities/session.entity';
       isGlobal: true,
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        store: [
+        stores: [
           new Keyv({
             store: new CacheableMemory({ttl: 60000, lruSize: 5000}),
           }),

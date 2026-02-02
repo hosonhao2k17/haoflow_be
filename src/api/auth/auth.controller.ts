@@ -27,10 +27,11 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Post()
+  @Post('refresh')
   @UseInterceptors(RefreshTokenInterceptor)
   @RemoveRefresh()
   @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
   @ResponseMessage('Logout success')
   logout(@User('sessionId') sessionId: string) {
     return this.authService.logout(sessionId)
