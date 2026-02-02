@@ -37,6 +37,7 @@ import { SessionEntity } from './api/users/entities/session.entity';
       inject: [ConfigService],
     }),
     CacheModule.registerAsync({
+      isGlobal: true,
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         store: [
@@ -44,7 +45,7 @@ import { SessionEntity } from './api/users/entities/session.entity';
             store: new CacheableMemory({ttl: 60000, lruSize: 5000}),
           }),
           new KeyvRedis(configService.get<string>('REDIS_URL')),
-        ]
+        ],
       })
     }),
     I18nModule.forRootAsync({

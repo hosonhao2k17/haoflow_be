@@ -36,3 +36,5 @@ export enum UserStatus {
 }
 
 export const PUBLIC_KEY = 'public_key'
+
+export const REMOVE_REFRESH_TOKEN = 'remove_refresh_token'

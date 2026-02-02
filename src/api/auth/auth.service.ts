@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
@@ -12,6 +12,9 @@ import { RegisterDto } from './dto/register.dto';
 import { RoleName, UserStatus } from 'src/common/constants/app.constant';
 import { MailService } from 'src/mail/mail.service';
 import { RefreshRdo } from './rdo/refresh.rdo';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { createCacheKey } from 'src/utils/cache';
+import { CacheKey } from 'src/common/constants/cache.constant';
 @Injectable()
 export class AuthService {
 
@@ -19,7 +22,8 @@ export class AuthService {
         private usersService: UsersService,
         private jwtService: JwtService,
         private configService: ConfigService,
-        private mailService: MailService
+        private mailService: MailService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) {}
 
 
@@ -49,6 +53,12 @@ export class AuthService {
             userId: user.id
 
         })
+    }
+
+    async logout(sessionId: string) {
+
+        
+        await this.cacheManager.set(createCacheKey(CacheKey.SESSION_BLACKLIST, sessionId),true);
     }
 
     async register(registerDto: RegisterDto) :Promise<void> {
