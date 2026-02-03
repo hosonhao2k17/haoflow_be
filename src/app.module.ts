@@ -20,6 +20,7 @@ import { TaskCategoriesModule } from './api/task-categories/task-categories.modu
 import { TaskCategoryEntity } from './api/task-categories/entities/task-category.entity';
 import { DailyPlansModule } from './api/daily-plans/daily-plans.module';
 import { DailyPlanEntity } from './api/daily-plans/entities/daily-plan.entity';
+import { TimeBlockEntity } from './api/daily-plans/entities/time-block.entity';
 @Module({
   imports: [
     RolesModule,
@@ -40,7 +41,7 @@ import { DailyPlanEntity } from './api/daily-plans/entities/daily-plan.entity';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity, DailyPlanEntity],
+        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity, DailyPlanEntity, TimeBlockEntity],
         synchronize: true
       }),
       inject: [ConfigService],

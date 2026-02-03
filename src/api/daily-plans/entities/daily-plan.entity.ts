@@ -1,6 +1,7 @@
 import { TaskEntity } from "src/api/tasks/entities/task.entity";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { TimeBlockEntity } from "./time-block.entity";
 
 @Entity('daily_plans')
 export class DailyPlanEntity extends AbstractEntity {
@@ -15,4 +16,8 @@ export class DailyPlanEntity extends AbstractEntity {
 
     @OneToMany(() => TaskEntity, (tasks) => tasks.dailyPlan)
     tasks: TaskEntity;
+
+    @OneToOne(() => TimeBlockEntity)
+    @JoinColumn()
+    timeBlock: TimeBlockEntity
 }
