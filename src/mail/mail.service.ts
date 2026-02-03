@@ -15,7 +15,7 @@ export class MailService {
 
     async sendUserConfirmation(to: string, token: string) {
 
-        const url = `${this.configService.get('URL')}/api/v1/auth/verify`
+        const url = `${this.configService.get('URL')}/api/v1/auth/verify?token=${token}`
         await this.mailerService.sendMail({
             to,
             subject: this.i18nService.t(ErrorCode.MAIL_SUBJECT),

@@ -15,6 +15,8 @@ import { RefreshRdo } from './rdo/refresh.rdo';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { createCacheKey } from 'src/utils/cache';
 import { CacheKey } from 'src/common/constants/cache.constant';
+import { VerifyDto } from './dto/verify.dto';
+import { PayloadType } from './types/payload.type';
 @Injectable()
 export class AuthService {
 
@@ -88,6 +90,16 @@ export class AuthService {
             userId:id
 
         })
+    }
+
+    async verify(verifyDto: VerifyDto) {
+        const {token} = verifyDto;
+        const payload = await this.verfifyEmailVerificationToken(token);
+        await this.usersService.update(payload.id, {verified: true})
+    }
+
+    verfifyEmailVerificationToken(token: string) :Promise<PayloadType> {
+        return this.jwtService.verifyAsync<PayloadType>(token, {secret: this.configService.get('JWT_VERIFY_SECRET')})
     }
 
     generateAccessToken(id: string, sessionId: string) :Promise<string> {

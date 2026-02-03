@@ -47,3 +47,7 @@ export interface IUuidFieldOptions extends IFieldOptions {
 export interface IDateFieldOptions extends IFieldOptions {
     swaggerOptions?: ApiPropertyOptions
 }
+
+export interface IBooleanFiledOptions extends IFieldOptions {
+    swaggerOptions?: ApiPropertyOptions
+}

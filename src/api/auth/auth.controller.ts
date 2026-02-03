@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UnauthorizedException, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, UnauthorizedException, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { LoginDto } from './dto/login.dto';
@@ -11,6 +11,7 @@ import { RefreshTokenInterceptor } from 'src/interceptors/refresh-token.intercep
 import { JwtRefreshGuard } from 'src/guards/jwt-refresh.guard';
 import { User } from 'src/decorators/user.decorator';
 import { RemoveRefresh } from 'src/decorators/remove-refresh.decorator';
+import { VerifyDto } from './dto/verify.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +28,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Post('refresh')
+  @Post('logout')
   @UseInterceptors(RefreshTokenInterceptor)
   @RemoveRefresh()
   @ApiBearerAuth()
@@ -51,5 +52,12 @@ export class AuthController {
   @ResponseMessage('Check your email')
   register(@Body() registerDto: RegisterDto) :Promise<void> {
     return this.authService.register(registerDto)
+  }
+
+  @Get('verify')
+  @Public()
+  @ResponseMessage('Veify sucess')
+  verify(@Query() verifyDto: VerifyDto) {
+    return this.authService.verify(verifyDto)
   }
 }
