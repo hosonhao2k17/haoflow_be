@@ -1,7 +1,8 @@
+import { DailyPlanEntity } from "src/api/daily-plans/entities/daily-plan.entity";
 import { TaskCategoryEntity } from "src/api/task-categories/entities/task-category.entity";
 import { TaskStatus } from "src/common/constants/app.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity('tasks')
@@ -37,4 +38,7 @@ export class TaskEntity extends AbstractEntity {
 
     @ManyToOne(() => TaskCategoryEntity, (taskCategory) => taskCategory.tasks)
     category: TaskCategoryEntity;
+
+    @OneToMany(() => DailyPlanEntity, (dailyPlan) => dailyPlan.tasks)
+    dailyPlan: DailyPlanEntity
 }
