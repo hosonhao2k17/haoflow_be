@@ -1,9 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 import { AuthService } from "src/api/auth/auth.service";
 import { UsersService } from "src/api/users/users.service";
 import { PermissionAction, PERMISSIONS_ACTION, PERMISSIONS_SUBJECT, PermissionSubject, PUBLIC_KEY } from "src/common/constants/app.constant";
+import { ErrorCode } from "src/common/constants/error-code.constant";
 
 
 
@@ -11,7 +12,6 @@ import { PermissionAction, PERMISSIONS_ACTION, PERMISSIONS_SUBJECT, PermissionSu
 export class PermissionGuard implements CanActivate {
 
     constructor(
-        private readonly usersService: UsersService,
         private readonly reflector: Reflector
     ) {}
 
@@ -26,16 +26,15 @@ export class PermissionGuard implements CanActivate {
             return true;
         }
         
-        const user = await this.usersService.getCurrentUser(req.user.id);
         const permissionAction = this.reflector.get<PermissionAction>(PERMISSIONS_ACTION, context.getHandler());
         const permissionSubject = this.reflector.get<PermissionSubject>(PERMISSIONS_SUBJECT,context.getClass() )
-
-        for(const item of user.role.permissions) {
+        if(!permissionAction || !permissionSubject) return true
+        for(const item of req.user.permissions) {
             if(item.action === permissionAction && item.subject === permissionSubject) {
                 return true;
             }
         }
 
-        return false;
+        throw new ForbiddenException(ErrorCode.NOT_ENOUGH_PERMISSION)
     }
 } 

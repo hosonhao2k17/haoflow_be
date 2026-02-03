@@ -15,6 +15,7 @@ import { AuthModule } from './api/auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { SessionEntity } from './api/users/entities/session.entity';
 import { TasksModule } from './api/tasks/tasks.module';
+import { TaskEntity } from './api/tasks/entities/task.entity';
 @Module({
   imports: [
     RolesModule,
@@ -33,7 +34,7 @@ import { TasksModule } from './api/tasks/tasks.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity],
+        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity],
         synchronize: true
       }),
       inject: [ConfigService],

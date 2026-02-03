@@ -41,3 +41,9 @@ export const REMOVE_REFRESH_TOKEN = 'remove_refresh_token'
 
 export const PERMISSIONS_ACTION = 'PERMISSIONS_ACTION'
 export const PERMISSIONS_SUBJECT = 'PERMISSIONS_SUBJECT'
+
+export enum TaskStatus {
+    TODO = 'todo',
+    DONE = 'done',
+    SKIPPED = 'skipped'
+}
