@@ -11,13 +11,7 @@ export class TaskEntity extends AbstractEntity {
     id: string;
 
     @Column()
-    title: string;
-
-    @Column({
-        type: 'text',
-        nullable: true
-    })
-    description?: string;
+    todo: string;
 
     @Column({
         type: 'date'

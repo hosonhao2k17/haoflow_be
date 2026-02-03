@@ -1,10 +1,7 @@
 import { Exclude, Expose } from "class-transformer";
 
 
-/**
- * T is id  default uuid type
- */
-export class BaseRdo<T = string> {
+export class BaseRdo {
 
     @Expose()
     createdAt: Date;
