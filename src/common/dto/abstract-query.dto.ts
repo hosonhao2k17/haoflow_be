@@ -12,12 +12,6 @@ export abstract class AbstractQueryDto implements ISort {
     @Allow()
     protected abstract readonly alias: string;
 
-    @StringField({options: true})
-    createdBy?: string;
-
-    @StringField({options: true})
-    updatedBy?: string;
-
     @StringField({options: true, swaggerOptions: {default: 'createdAt'}})
     sortBy?: string = DEFAULT_SORT_BY;
 
@@ -38,11 +32,5 @@ export abstract class AbstractQueryDto implements ISort {
         queryBuilder: SelectQueryBuilder<T>,
     ) {
         queryBuilder.orderBy(`${this.alias}.${this.sortBy}`,this.sortOrder)
-        if(this.createdBy) {
-            queryBuilder.andWhere(`${this.alias}.createdBy = :createdBy`,{createdBy: this.createdBy})
-        } 
-        if(this.updatedBy) {
-            queryBuilder.andWhere(`${this.alias}.updatedBy = :updatedBy`,{updatedBy: this.updatedBy})
-        }
     }
 }

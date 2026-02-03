@@ -24,6 +24,14 @@ export class QueryRoleDto extends OffsetPaginationDto implements ISearch {
     @StringField({options: true})
     keyword?: string;
 
+    @StringField({options: true})
+    createdBy?: string;
+
+    @StringField({options: true})
+    updatedBy?: string
+
+    
+
     handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>,): void {
         super.handleQueryBuilder(queryBuilder);
         if(this.status) {
@@ -33,6 +41,12 @@ export class QueryRoleDto extends OffsetPaginationDto implements ISearch {
         if(this.keyword) {
             queryBuilder
             .andWhere(`${this.alias}.name = :keyword OR ${this.alias}.title = :keyword`,{keyword: this.keyword})
+        }
+        if(this.createdBy) {
+            queryBuilder.andWhere(`${this.alias}.createdBy = :createdBy`,{createdBy: this.createdBy})
+        } 
+        if(this.updatedBy) {
+            queryBuilder.andWhere(`${this.alias}.updatedBy = :updatedBy`,{updatedBy: this.updatedBy})
         }
     }
 

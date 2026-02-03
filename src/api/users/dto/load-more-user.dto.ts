@@ -23,7 +23,13 @@ export class LoadMoreUserDto extends CursorPaginationDto{
     status?: UserStatus
 
     @UuidField({options: true})
-    roleId: string;
+    roleId?: string;
+
+    @StringField({options: true})
+    createdBy?: string;
+
+    @StringField({options: true})
+    updatedBy?: string
 
     handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>): void {
         super.handleQueryBuilder(queryBuilder)
@@ -38,6 +44,12 @@ export class LoadMoreUserDto extends CursorPaginationDto{
         }
         if(this.roleId) {
             queryBuilder.andWhere(`${this.alias}.roleId = :roleId`,{roleId: this.roleId})
+        }
+        if(this.createdBy) {
+            queryBuilder.andWhere(`${this.alias}.createdBy = :createdBy`,{createdBy: this.createdBy})
+        } 
+        if(this.updatedBy) {
+            queryBuilder.andWhere(`${this.alias}.updatedBy = :updatedBy`,{updatedBy: this.updatedBy})
         }
     }
     
