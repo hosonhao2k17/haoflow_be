@@ -5,6 +5,7 @@ import { UpdateTaskCategoryDto } from './dto/update-task-category.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { TaskCategoryRdo } from './rdo/task-catgory.rdo';
+import { QueryTaskCategoryDto } from './dto/query-task-category.dto';
 
 @Controller('task-categories')
 export class TaskCategoriesController {
@@ -14,6 +15,12 @@ export class TaskCategoriesController {
   @ApiBearerAuth()
   create(@Body() createTaskCategoryDto: CreateTaskCategoryDto) {
     return this.taskCategoriesService.create(createTaskCategoryDto);
+  }
+
+  @Get()
+  @ApiBearerAuth()
+  findAll(@Query() queryTaskCategoryDto: QueryTaskCategoryDto) {
+    return this.taskCategoriesService.findAll(queryTaskCategoryDto)
   }
 
   @Get(':id')

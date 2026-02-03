@@ -7,6 +7,11 @@ import { Repository } from 'typeorm';
 import { TaskCategoryRdo } from './rdo/task-catgory.rdo';
 import { plainToInstance } from 'class-transformer';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
+import { QueryTaskCategoryDto } from './dto/query-task-category.dto';
+import { OffsetPaginationDto } from 'src/common/dto/offset-pagination.dto';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { requestContext } from 'src/common/context/request.context';
 
 @Injectable()
 export class TaskCategoriesService {
@@ -19,6 +24,17 @@ export class TaskCategoriesService {
     .create(createTaskCategoryDto)
     .save()
    return plainToInstance(TaskCategoryRdo, category)
+  }
+
+  async findAll(queryTaskCategoryDto: QueryTaskCategoryDto) {
+    const queryBuilder = this.taskCategoryRepository.createQueryBuilder(queryTaskCategoryDto.getAlias());
+    queryTaskCategoryDto.handleQueryBuilder(queryBuilder);
+    const context = requestContext.getStore()
+    const userId = context?.userId;
+    queryBuilder.andWhere(`${queryTaskCategoryDto.getAlias()}.createdBy = :userId`,{userId})
+    const [items, total] = await queryBuilder.getManyAndCount();
+    const pagination = new OffsetPaginationRdo(total, queryTaskCategoryDto);
+    return new OffsetPaginatedRdo(plainToInstance(TaskCategoryRdo, items), pagination);
   }
 
   async findOne(id: string) :Promise<TaskCategoryRdo> {
