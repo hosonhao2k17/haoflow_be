@@ -14,11 +14,13 @@ import { UserEntity } from './api/users/entities/user.entity';
 import { AuthModule } from './api/auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { SessionEntity } from './api/users/entities/session.entity';
+import { TasksModule } from './api/tasks/tasks.module';
 @Module({
   imports: [
     RolesModule,
     UsersModule,
     AuthModule,
+    TasksModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
