@@ -18,6 +18,7 @@ import { TasksModule } from './api/tasks/tasks.module';
 import { TaskEntity } from './api/tasks/entities/task.entity';
 import { TaskCategoriesModule } from './api/task-categories/task-categories.module';
 import { TaskCategoryEntity } from './api/task-categories/entities/task-category.entity';
+import { DailyPlansModule } from './api/daily-plans/daily-plans.module';
 @Module({
   imports: [
     RolesModule,
@@ -25,6 +26,7 @@ import { TaskCategoryEntity } from './api/task-categories/entities/task-category
     AuthModule,
     TasksModule,
     TaskCategoriesModule,
+    DailyPlansModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
