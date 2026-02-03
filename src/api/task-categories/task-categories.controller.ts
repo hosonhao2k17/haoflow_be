@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { TaskCategoriesService } from './task-categories.service';
 import { CreateTaskCategoryDto } from './dto/create-task-category.dto';
 import { UpdateTaskCategoryDto } from './dto/update-task-category.dto';
@@ -30,7 +30,8 @@ export class TaskCategoriesController {
 
   @Delete(':id')
   @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.taskCategoriesService.remove(+id);
+    return this.taskCategoriesService.remove(id);
   }
 }

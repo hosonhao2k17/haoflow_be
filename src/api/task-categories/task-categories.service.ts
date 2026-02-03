@@ -39,7 +39,11 @@ export class TaskCategoriesService {
     return plainToInstance(TaskCategoryRdo, category)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} taskCategory`;
+  async remove(id: string) :Promise<void> {
+    const category = await this.taskCategoryRepository.findOneBy({id});
+    if(!category) {
+      throw new NotFoundException(ErrorCode.TASK_CATEGORY_NOT_FOUND)
+    }
+    await this.taskCategoryRepository.softDelete(id);
   }
 }
