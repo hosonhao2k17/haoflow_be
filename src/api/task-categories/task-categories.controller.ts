@@ -25,7 +25,7 @@ export class TaskCategoriesController {
   @Patch(':id')
   @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateTaskCategoryDto: UpdateTaskCategoryDto) {
-    return this.taskCategoriesService.update(+id, updateTaskCategoryDto);
+    return this.taskCategoriesService.update(id, updateTaskCategoryDto);
   }
 
   @Delete(':id')

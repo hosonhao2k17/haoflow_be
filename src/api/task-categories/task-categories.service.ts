@@ -29,8 +29,14 @@ export class TaskCategoriesService {
     return plainToInstance(TaskCategoryRdo, category)
   }
 
-  update(id: number, updateTaskCategoryDto: UpdateTaskCategoryDto) {
-    return `This action updates a #${id} taskCategory`;
+  async update(id: string, updateTaskCategoryDto: UpdateTaskCategoryDto) :Promise<TaskCategoryRdo> {
+    const category = await this.taskCategoryRepository.findOneBy({id});
+    if(!category) {
+      throw new NotFoundException(ErrorCode.TASK_CATEGORY_NOT_FOUND)
+    }
+    Object.assign(category, updateTaskCategoryDto);
+    await category.save()
+    return plainToInstance(TaskCategoryRdo, category)
   }
 
   remove(id: number) {
