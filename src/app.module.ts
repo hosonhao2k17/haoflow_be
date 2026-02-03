@@ -16,12 +16,15 @@ import { MailModule } from './mail/mail.module';
 import { SessionEntity } from './api/users/entities/session.entity';
 import { TasksModule } from './api/tasks/tasks.module';
 import { TaskEntity } from './api/tasks/entities/task.entity';
+import { TaskCategoriesModule } from './api/task-categories/task-categories.module';
+import { TaskCategoryEntity } from './api/task-categories/entities/task-category.entity';
 @Module({
   imports: [
     RolesModule,
     UsersModule,
     AuthModule,
     TasksModule,
+    TaskCategoriesModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -34,7 +37,7 @@ import { TaskEntity } from './api/tasks/entities/task.entity';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity],
+        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity],
         synchronize: true
       }),
       inject: [ConfigService],
