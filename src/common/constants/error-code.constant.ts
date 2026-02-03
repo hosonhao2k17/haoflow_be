@@ -45,5 +45,8 @@ export enum ErrorCode {
   NOT_ENOUGH_PERMISSION = 'auth.error.not_enough_permission',
 
   // ===== Mail =====
-  MAIL_SUBJECT = 'mail.send.subject'
+  MAIL_SUBJECT = 'mail.send.subject',
+
+  // ===== Task Category
+  TASK_CATEGORY_NOT_FOUND = 'task-category.error.not_found'
 }

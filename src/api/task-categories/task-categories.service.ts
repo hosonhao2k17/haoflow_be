@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskCategoryDto } from './dto/create-task-category.dto';
 import { UpdateTaskCategoryDto } from './dto/update-task-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { TaskCategoryEntity } from './entities/task-category.entity';
 import { Repository } from 'typeorm';
 import { TaskCategoryRdo } from './rdo/task-catgory.rdo';
 import { plainToInstance } from 'class-transformer';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
 
 @Injectable()
 export class TaskCategoriesService {
@@ -20,12 +21,12 @@ export class TaskCategoriesService {
    return plainToInstance(TaskCategoryRdo, category)
   }
 
-  findAll() {
-    return `This action returns all taskCategories`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} taskCategory`;
+  async findOne(id: string) :Promise<TaskCategoryRdo> {
+    const category = await this.taskCategoryRepository.findOneBy({id});
+    if(!category) {
+      throw new NotFoundException(ErrorCode.TASK_CATEGORY_NOT_FOUND)
+    }
+    return plainToInstance(TaskCategoryRdo, category)
   }
 
   update(id: number, updateTaskCategoryDto: UpdateTaskCategoryDto) {
