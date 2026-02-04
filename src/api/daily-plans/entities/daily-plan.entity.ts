@@ -28,4 +28,6 @@ export class DailyPlanEntity extends AbstractEntity {
     @OneToOne(() => TimeBlockEntity)
     @JoinColumn()
     timeBlock: TimeBlockEntity
+
+    
 }

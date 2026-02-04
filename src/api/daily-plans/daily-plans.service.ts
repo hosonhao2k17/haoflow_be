@@ -10,6 +10,7 @@ import { DailyPlanRdo } from './rdo/daily-plan.rdo';
 import { QueryDailyPlanDto } from './dto/query-daily-plan.dto';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { requestContext } from 'src/common/context/request.context';
 
 @Injectable()
 export class DailyPlansService {
@@ -28,10 +29,13 @@ export class DailyPlansService {
   }
 
   async findAll(queryDailyPlanDto: QueryDailyPlanDto) {
-    const alias = queryDailyPlanDto.getAlias()
+    const alias = queryDailyPlanDto.getAlias();
+    const context = requestContext.getStore()
     const queryBuilder = this.dailyPlansRepository
       .createQueryBuilder(alias)
       .leftJoinAndSelect(`${alias}.timeBlock`,'timeBlock')
+      .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId})
+
     queryDailyPlanDto.handleQueryBuilder(queryBuilder);
     const [items, total] = await queryBuilder.getManyAndCount();
     const pagination = new OffsetPaginationRdo(total, queryDailyPlanDto);
