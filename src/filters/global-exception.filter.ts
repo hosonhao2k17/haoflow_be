@@ -19,6 +19,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
+        
         let errorRdo: ErrorRdo;
         if(exception instanceof UnprocessableEntityException) {
             errorRdo = this.handleUnprocessableEntityException(exception);
@@ -73,7 +74,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     handleError(exception: any): ErrorRdo {
         const statusCode = HttpStatus.INTERNAL_SERVER_ERROR
         const message = exception.message || 'An unexpected error occured'
-        console.log(exception)
         return {
             statusCode,
             message,

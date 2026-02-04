@@ -9,6 +9,14 @@ export class DailyPlanEntity extends AbstractEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column()
+    title: string;
+
+    @Column({
+        nullable: true
+    })
+    description: string;
+
     @Column({
         type: 'date'
     })

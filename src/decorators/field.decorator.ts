@@ -273,7 +273,7 @@ export function UuidField(options: IUuidFieldOptions = {}) {
 }
 
 export function DateField(options: IDateFieldOptions = {}) {
-    const decorators = [IsDate({each: options.each})]
+    const decorators = [IsDate({each: options.each}), Type(() => Date)]
      if(options.nullable) {
         decorators.push(IsNullable({each: options.each}))
     } else {

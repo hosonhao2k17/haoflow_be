@@ -2,12 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { DailyPlansService } from './daily-plans.service';
 import { CreateDailyPlanDto } from './dto/create-daily-plan.dto';
 import { UpdateDailyPlanDto } from './dto/update-daily-plan.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('daily-plans')
 export class DailyPlansController {
   constructor(private readonly dailyPlansService: DailyPlansService) {}
 
   @Post()
+  @ApiBearerAuth()
   create(@Body() createDailyPlanDto: CreateDailyPlanDto) {
     return this.dailyPlansService.create(createDailyPlanDto);
   }
