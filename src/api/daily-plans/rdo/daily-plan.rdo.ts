@@ -1,6 +1,7 @@
 import { Exclude, Expose, Type } from "class-transformer";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 import { TimeBlockRdo } from "./time-block.rdo";
+import { TaskRdo } from "src/api/tasks/rdo/task.rdo";
 
 @Exclude()
 export class DailyPlanRdo extends BaseRdo {

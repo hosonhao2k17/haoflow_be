@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { DailyPlansService } from './daily-plans.service';
 import { CreateDailyPlanDto } from './dto/create-daily-plan.dto';
 import { UpdateDailyPlanDto } from './dto/update-daily-plan.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { QueryDailyPlanDto } from './dto/query-daily-plan.dto';
 
 @Controller('daily-plans')
 export class DailyPlansController {
@@ -15,8 +16,9 @@ export class DailyPlansController {
   }
 
   @Get()
-  findAll() {
-    return this.dailyPlansService.findAll();
+  @ApiBearerAuth()
+  findAll(@Query() queryDailyPlanDto: QueryDailyPlanDto) {
+    return this.dailyPlansService.findAll(queryDailyPlanDto);
   }
 
   @Get(':id')

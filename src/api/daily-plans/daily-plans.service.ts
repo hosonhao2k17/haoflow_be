@@ -7,6 +7,9 @@ import { Repository } from 'typeorm';
 import { TimeBlockEntity } from './entities/time-block.entity';
 import { plainToInstance } from 'class-transformer';
 import { DailyPlanRdo } from './rdo/daily-plan.rdo';
+import { QueryDailyPlanDto } from './dto/query-daily-plan.dto';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 
 @Injectable()
 export class DailyPlansService {
@@ -16,12 +19,24 @@ export class DailyPlansService {
     @InjectRepository(TimeBlockEntity) private timeBlocksRepository: Repository<TimeBlockEntity>
   ) {}
   async create(createDailyPlanDto: CreateDailyPlanDto) :Promise<DailyPlanRdo> {
-    const dailyPlan = await this.dailyPlansRepository.create(createDailyPlanDto).save();
+    const timeBlock = await this.timeBlocksRepository.create(createDailyPlanDto.timeBlock).save()
+    const dailyPlan = await this.dailyPlansRepository.create({
+      ...createDailyPlanDto,
+      timeBlock
+    }).save();
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
 
-  findAll() {
-    return `This action returns all dailyPlans`;
+  async findAll(queryDailyPlanDto: QueryDailyPlanDto) {
+    const alias = queryDailyPlanDto.getAlias()
+    const queryBuilder = this.dailyPlansRepository
+      .createQueryBuilder(alias)
+      .leftJoinAndSelect(`${alias}.timeBlock`,'timeBlock')
+    queryDailyPlanDto.handleQueryBuilder(queryBuilder);
+    const [items, total] = await queryBuilder.getManyAndCount();
+    const pagination = new OffsetPaginationRdo(total, queryDailyPlanDto);
+
+    return new OffsetPaginatedRdo(plainToInstance(DailyPlanRdo, items), pagination)
   }
 
   findOne(id: number) {

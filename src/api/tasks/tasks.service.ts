@@ -17,7 +17,7 @@ export class TasksService {
     @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>,
     @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>
   ) {}
-  async create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
     const task = this.tasksRepository.create({
       ...createTaskDto,
       category: {
