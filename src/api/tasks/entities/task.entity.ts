@@ -25,7 +25,8 @@ export class TaskEntity extends AbstractEntity {
     endTime: Date;
 
     @Column({
-        type: 'int'
+        type: 'int',
+        default: 0
     })
     orderIndex: number;
 
@@ -39,6 +40,6 @@ export class TaskEntity extends AbstractEntity {
     @ManyToOne(() => TaskCategoryEntity, (taskCategory) => taskCategory.tasks)
     category: TaskCategoryEntity;
 
-    @OneToMany(() => DailyPlanEntity, (dailyPlan) => dailyPlan.tasks)
+    @ManyToOne(() => DailyPlanEntity, (dailyPlan) => dailyPlan.tasks)
     dailyPlan: DailyPlanEntity
 }
