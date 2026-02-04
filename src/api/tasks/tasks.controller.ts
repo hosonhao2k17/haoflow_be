@@ -3,6 +3,7 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { ReorderTaskDto } from './dto/reorder-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -12,6 +13,12 @@ export class TasksController {
   @ApiBearerAuth()
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
+  }
+
+  @Patch('reorder')
+  @ApiBearerAuth()
+  reorder(@Body() dto: ReorderTaskDto[]) {
+    return this.tasksService.reorder(dto)
   }
 
   @Get()

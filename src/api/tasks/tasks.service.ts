@@ -9,6 +9,7 @@ import { plainToInstance } from 'class-transformer';
 import { TaskRdo } from './rdo/task.rdo';
 import { constrainedMemory } from 'process';
 import { SortOrder } from 'src/common/constants/app.constant';
+import { ReorderTaskDto } from './dto/reorder-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -36,6 +37,10 @@ export class TasksService {
     task.orderIndex = orderIndexExists ? orderIndexExists.orderIndex + 1 : 0
     await task.save()
     return plainToInstance(TaskRdo, task);
+  }
+
+  async reorder(dto: ReorderTaskDto[]) {
+    
   }
 
   findAll() {
