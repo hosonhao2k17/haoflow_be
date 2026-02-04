@@ -48,5 +48,8 @@ export enum ErrorCode {
   MAIL_SUBJECT = 'mail.send.subject',
 
   // ===== Task Category
-  TASK_CATEGORY_NOT_FOUND = 'task-category.error.not_found'
+  TASK_CATEGORY_NOT_FOUND = 'task_category.error.not_found',
+
+  // ===== Daily plan 
+  DAILY_PLAN_NOT_FOUND = 'daily_plan.error.not_found',
 }

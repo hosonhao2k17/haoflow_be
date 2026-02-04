@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDailyPlanDto } from './dto/create-daily-plan.dto';
 import { UpdateDailyPlanDto } from './dto/update-daily-plan.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,6 +11,9 @@ import { QueryDailyPlanDto } from './dto/query-daily-plan.dto';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { requestContext } from 'src/common/context/request.context';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
+import { DailyPlanDetailRdo } from './rdo/daily-plan-detail.rdo';
+import { SortOrder } from 'src/common/constants/app.constant';
 
 @Injectable()
 export class DailyPlansService {
@@ -43,15 +46,37 @@ export class DailyPlansService {
     return new OffsetPaginatedRdo(plainToInstance(DailyPlanRdo, items), pagination)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} dailyPlan`;
+  async findOne(id: string) {
+    const context = requestContext.getStore()
+    const dailyPlan = await this.dailyPlansRepository.findOne({
+      where: {
+        createdBy: context?.userId,
+        id
+      },
+      relations: {
+        tasks: {
+          category: true
+        },
+        timeBlock: true
+      },
+      order: {
+        tasks: {
+          orderIndex: SortOrder.DESC
+        }
+      }
+    })
+    if(!dailyPlan) {
+      throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
+    }
+
+    return plainToInstance(DailyPlanDetailRdo, dailyPlan)
   }
 
-  update(id: number, updateDailyPlanDto: UpdateDailyPlanDto) {
+  update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
     return `This action updates a #${id} dailyPlan`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} dailyPlan`;
   }
 }

@@ -1,9 +1,9 @@
-import { Expose, Type } from "class-transformer";
+import { Exclude, Expose, Type } from "class-transformer";
 import { TaskCategoryRdo } from "src/api/task-categories/rdo/task-catgory.rdo";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 
-
-export class TaskRdo extends BaseRdo{
+@Exclude()
+export class TaskRdo {
 
     @Expose()
     id: string;

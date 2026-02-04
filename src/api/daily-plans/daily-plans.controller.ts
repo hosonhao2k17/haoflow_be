@@ -22,17 +22,20 @@ export class DailyPlansController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
-    return this.dailyPlansService.findOne(+id);
+    return this.dailyPlansService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateDailyPlanDto: UpdateDailyPlanDto) {
-    return this.dailyPlansService.update(+id, updateDailyPlanDto);
+    return this.dailyPlansService.update(id, updateDailyPlanDto);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
-    return this.dailyPlansService.remove(+id);
+    return this.dailyPlansService.remove(id);
   }
 }
