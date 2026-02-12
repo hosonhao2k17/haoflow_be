@@ -15,6 +15,7 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.enableCors();
   //Handle cookie
   app.use(cookieParser());
   //Transform response interceptor

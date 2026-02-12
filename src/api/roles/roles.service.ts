@@ -34,6 +34,7 @@ export class RolesService {
   async findAll(query: QueryRoleDto): Promise<OffsetPaginatedRdo<RoleRdo>> {
     const queryBuilder = this.rolesRepository
     .createQueryBuilder(query.getAlias())
+    .leftJoin(`${query.getAlias()}.permissions`,'permissions')
     query.handleQueryBuilder(queryBuilder)
     const [list, totalRecords] = await queryBuilder.getManyAndCount()
     
