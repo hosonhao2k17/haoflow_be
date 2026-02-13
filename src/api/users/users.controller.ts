@@ -11,6 +11,8 @@ import { User } from 'src/decorators/user.decorator';
 import { Action, Subject } from 'src/decorators/permission.decorator';
 import { PermissionAction, PermissionSubject } from 'src/common/constants/app.constant';
 import { PermissionGuard } from 'src/guards/permission.guard';
+import { Public } from 'src/decorators/public.decorator';
+import { UpdateMultiUserDto } from './dto/update-multi-user.dto';
 
 @Controller('users')
 @UseGuards(PermissionGuard)
@@ -50,6 +52,12 @@ export class UsersController {
   @Action(PermissionAction.READ)
   findOne(@Param('id') id: string) :Promise<UserRdo> {
     return this.usersService.findOne(id);
+  }
+
+  @Patch('multi')
+  @ApiBearerAuth()
+  updateMulti(@Body() dto: UpdateMultiUserDto): Promise<void> {
+    return this.usersService.updateMulti(dto)
   }
 
   @Patch(':id')

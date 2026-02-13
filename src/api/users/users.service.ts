@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationException } from 'src/exceptions/validation.exception';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRdo } from './rdo/user.rdo';
@@ -21,6 +21,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { SessionEntity } from './entities/session.entity';
 import { ConfigService } from '@nestjs/config';
 import ms, { StringValue } from 'ms';
+import { UpdateMultiUserDto } from './dto/update-multi-user.dto';
 @Injectable()
 export class UsersService {
 
@@ -86,6 +87,19 @@ export class UsersService {
       throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
     }
     return plainToInstance(UserRdo, user)
+  }
+
+  async updateMulti(dto: UpdateMultiUserDto): Promise<void> {
+    const {ids, ...update} = dto;
+    const users = await this.usersRepository.findBy({id: In(ids)});
+    if(users.length !== ids.length) {
+      throw new ValidationException(ErrorCode.SOME_USER_NOT_FOUND)
+    }
+    for(const item of users) {
+      
+      Object.assign(item, update)
+    } 
+    await this.usersRepository.save(users)
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
