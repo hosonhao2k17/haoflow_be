@@ -15,13 +15,13 @@ import { LoadMoreUserDto } from './dto/load-more-user.dto';
 import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
 import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
-import { CurrentUserRdo } from './rdo/current-user.rdo';
 import { RolesService } from '../roles/roles.service';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { SessionEntity } from './entities/session.entity';
 import { ConfigService } from '@nestjs/config';
 import ms, { StringValue } from 'ms';
 import { UpdateMultiUserDto } from './dto/update-multi-user.dto';
+import { UserDetailRdo } from './rdo/user-detail.rdo';
 @Injectable()
 export class UsersService {
 
@@ -71,22 +71,37 @@ export class UsersService {
   }
 
   async findAll(queryUserDto: QueryUserDto): Promise<OffsetPaginatedRdo<UserRdo>> {
-    const queryBuilder = this.usersRepository.createQueryBuilder('user');
-     queryUserDto.handleQueryBuilder(queryBuilder);
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder(queryUserDto.getAlias())
+      .leftJoinAndSelect('user.role','role')
+      .loadRelationCountAndMap(
+        'role.totalPermission',
+        'role.permissions'
+      )
+    queryUserDto.handleQueryBuilder(queryBuilder)
+     
 
-     const [list, totalRecords] = await queryBuilder.getManyAndCount()
-         
+    const [list, totalRecords] = await queryBuilder.getManyAndCount()
     const pagination = new OffsetPaginationRdo(totalRecords, queryUserDto);
 
     return new OffsetPaginatedRdo(plainToInstance(UserRdo, list), pagination);
   }
 
-  async findOne(id: string) :Promise<UserRdo> {
-    const user = await this.usersRepository.findOneBy({id});
+  async findOne(id: string) :Promise<UserDetailRdo> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        role: {
+          permissions: true
+        }
+      }
+    });
     if(!user) {
       throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
     }
-    return plainToInstance(UserRdo, user)
+    return plainToInstance(UserDetailRdo, user)
   }
 
   async updateMulti(dto: UpdateMultiUserDto): Promise<void> {
@@ -122,7 +137,7 @@ export class UsersService {
     return this.usersRepository.findOneBy({email})
   }
 
-  async getCurrentUser(id: string) {
+  async getCurrentUser(id: string) :Promise<UserDetailRdo> {
     const user = await this.usersRepository.findOne({
       where: {id},
       relations: {
@@ -131,6 +146,6 @@ export class UsersService {
         }
       }
     })
-    return plainToInstance(CurrentUserRdo, user)
+    return plainToInstance(UserDetailRdo, user)
   }
 }

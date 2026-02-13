@@ -13,6 +13,7 @@ import { PermissionAction, PermissionSubject } from 'src/common/constants/app.co
 import { PermissionGuard } from 'src/guards/permission.guard';
 import { Public } from 'src/decorators/public.decorator';
 import { UpdateMultiUserDto } from './dto/update-multi-user.dto';
+import { UserDetailRdo } from './rdo/user-detail.rdo';
 
 @Controller('users')
 @UseGuards(PermissionGuard)
@@ -50,7 +51,7 @@ export class UsersController {
   @Get(':id')
   @ApiBearerAuth()
   @Action(PermissionAction.READ)
-  findOne(@Param('id') id: string) :Promise<UserRdo> {
+  findOne(@Param('id') id: string) :Promise<UserDetailRdo> {
     return this.usersService.findOne(id);
   }
 
