@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, ApiPropertyOptions } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsStrongPassword, IsUrl, IsUUID, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
 import { IBooleanFiledOptions, IDateFieldOptions, IEmailFieldOptions, IEnumFieldOptions, INumberFieldOptions, IPasswordFieldOptions, IStringFieldOptions, IurlFieldOptions, IUuidFieldOptions } from "src/common/interfaces/field.interface";
 import { IsNullable } from "./validators/is-nullable.decorator";
@@ -305,7 +305,7 @@ export function DateField(options: IDateFieldOptions = {}) {
 
 export function BooleanField(options: IBooleanFiledOptions = {})  {
 
-    const decorators = [IsBoolean({each: options.each})];
+    const decorators = [Transform(({value}) => value === "true"),IsBoolean({each: options.each})];
     if(options.nullable) {
         decorators.push(IsNullable({each: options.each}))
     } else {

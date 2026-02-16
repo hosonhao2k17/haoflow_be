@@ -2,7 +2,7 @@ import { Gender, SortOrder, UserStatus } from "src/common/constants/app.constant
 import { OffsetPaginationDto } from "src/common/dto/offset-pagination.dto";
 import { ISearch } from "src/common/interfaces/search.interface";
 import { ISort } from "src/common/interfaces/sort.interface";
-import { EnumField, StringField, UuidField } from "src/decorators/field.decorator";
+import { BooleanField, EnumField, StringField, UuidField } from "src/decorators/field.decorator";
 
 import { plainToInstance, Transform, Type } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
@@ -28,6 +28,9 @@ export class QueryUserDto extends OffsetPaginationDto {
     @UuidField({options: true})
     roleId?: string;
 
+    @BooleanField({options: true})
+    verified?: boolean;
+
     @StringField({options: true})
     createdBy?: string;
 
@@ -36,6 +39,7 @@ export class QueryUserDto extends OffsetPaginationDto {
     
 
     handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>): void {
+        super.handleQueryBuilder(queryBuilder)
         if(this.keyword) {
             queryBuilder.andWhere(`${this.alias}.fullName LIKE :keyword`,{keyword: `%${this.keyword}%`})
         }
@@ -47,6 +51,9 @@ export class QueryUserDto extends OffsetPaginationDto {
         }
         if(this.roleId) {
             queryBuilder.andWhere(`${this.alias}.roleId = :roleId`,{roleId: this.roleId})
+        }
+        if(this.verified !== undefined) {
+            queryBuilder.andWhere(`${this.alias}.verified = :verified`,{verified: this.verified})
         }
         
         if(this.createdBy) {

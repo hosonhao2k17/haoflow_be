@@ -22,6 +22,9 @@ export class UserDetailRdo extends BaseRdo {
     gender?: Gender;
 
     @Expose()
+    verified: boolean;
+
+    @Expose()
     birthDate?: Date;
 
     @Expose()
