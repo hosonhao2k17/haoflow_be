@@ -47,3 +47,5 @@ export enum TaskStatus {
     DONE = 'done',
     SKIPPED = 'skipped'
 }
+
+export const CLOUDINARY = 'cloudinary'

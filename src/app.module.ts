@@ -21,6 +21,7 @@ import { TaskCategoryEntity } from './api/task-categories/entities/task-category
 import { DailyPlansModule } from './api/daily-plans/daily-plans.module';
 import { DailyPlanEntity } from './api/daily-plans/entities/daily-plan.entity';
 import { TimeBlockEntity } from './api/daily-plans/entities/time-block.entity';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 @Module({
   imports: [
     RolesModule,
@@ -75,7 +76,8 @@ import { TimeBlockEntity } from './api/daily-plans/entities/time-block.entity';
       ]
       
     }),
-    MailModule
+    MailModule,
+    CloudinaryModule
   ],
   controllers: [],
   providers: [],
