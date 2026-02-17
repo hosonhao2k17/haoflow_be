@@ -9,11 +9,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { MailModule } from 'src/mail/mail.module';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { RolesModule } from '../roles/roles.module';
 
 @Module({
   imports: [
     UsersModule,
     MailModule,
+    RolesModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({

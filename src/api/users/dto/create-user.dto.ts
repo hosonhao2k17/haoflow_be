@@ -22,7 +22,7 @@ export class CreateUserDto {
     status?: UserStatus;
 
     @EnumField(RoleName)
-    roleName: RoleName
+    roleId: string;
 
     @DateField({options: true})
     birthDate?: Date;

@@ -17,6 +17,7 @@ import { createCacheKey } from 'src/utils/cache';
 import { CacheKey } from 'src/common/constants/cache.constant';
 import { VerifyDto } from './dto/verify.dto';
 import { PayloadType } from './types/payload.type';
+import { RolesService } from '../roles/roles.service';
 @Injectable()
 export class AuthService {
 
@@ -25,6 +26,7 @@ export class AuthService {
         private jwtService: JwtService,
         private configService: ConfigService,
         private mailService: MailService,
+        private rolesService:RolesService,
         @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) {}
 
@@ -65,10 +67,10 @@ export class AuthService {
 
     async register(registerDto: RegisterDto) :Promise<void> {
         
-     
+        const role = await this.rolesService.getRoleByName(RoleName.USER)
         const user = await this.usersService.create({
             ...registerDto,
-            roleName: RoleName.USER
+            roleId: role.id
         })
 
         const token = await this.generateEmailVerificationToken(user.id);
