@@ -16,4 +16,9 @@ export class UploadsService {
             url: result.secure_url
         })
     }
+
+    async uploadMulti(files: Express.Multer.File[]): Promise<UploadRdo[]> {
+        const results = await this.cloudinaryService.uploadMulti(files);
+        return results.map((item) => plainToInstance(UploadRdo, item))
+    }
 }

@@ -39,13 +39,10 @@ export class CloudinaryService {
     async uploadMulti(
         files: Express.Multer.File[],
         folder: string = 'uploads'
-    ) {
+    ): Promise<UploadApiResponse[]> {
         const results = await Promise.all(
             files.map((file) => this.uploadSingle(file, folder))
         )
-        return results.map((result) => ({
-            url: result.secure_url,
-            publicId: result.public_id,
-        }));
+        return results
     }
 }
