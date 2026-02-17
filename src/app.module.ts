@@ -22,6 +22,7 @@ import { DailyPlansModule } from './api/daily-plans/daily-plans.module';
 import { DailyPlanEntity } from './api/daily-plans/entities/daily-plan.entity';
 import { TimeBlockEntity } from './api/daily-plans/entities/time-block.entity';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { UploadsModule } from './api/uploads/uploads.module';
 @Module({
   imports: [
     RolesModule,
@@ -30,6 +31,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     TasksModule,
     TaskCategoriesModule,
     DailyPlansModule,
+    UploadsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
