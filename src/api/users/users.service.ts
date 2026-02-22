@@ -22,6 +22,8 @@ import { ConfigService } from '@nestjs/config';
 import ms, { StringValue } from 'ms';
 import { UpdateMultiUserDto } from './dto/update-multi-user.dto';
 import { UserDetailRdo } from './rdo/user-detail.rdo';
+import { CreateVerifyDto } from './dto/create-verify.dto';
+import { VerifyEntity } from './entities/verify.entity';
 @Injectable()
 export class UsersService {
 
@@ -29,9 +31,24 @@ export class UsersService {
     @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
     private rolesService: RolesService,
     @InjectRepository(SessionEntity) private sessionRepository: Repository<SessionEntity>,
-    private configSerive: ConfigService
+    private configSerive: ConfigService,
+    @InjectRepository(VerifyEntity) private verifiesRepository: Repository<VerifyEntity>
   ) {
 
+  }
+
+  async createVerify(dto: CreateVerifyDto) :Promise<void> {
+    await this.verifiesRepository.create({
+      ...dto,
+      user: {
+        id: dto.userId
+      }
+    }).save();
+
+  }
+
+  async findVerifiedByUserId(userId: string) {
+    return this.verifiesRepository.findOneBy({user: {id: userId},used: true})
   }
 
   async create(createUserDto: CreateUserDto) :Promise<UserRdo> {

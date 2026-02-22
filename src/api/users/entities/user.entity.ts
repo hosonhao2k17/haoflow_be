@@ -4,6 +4,7 @@ import { AbstractEntity } from "src/database/entities/abstract.entity";
 import { comparePassword, hashPassword } from "src/utils/password";
 import { BeforeInsert, Column, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SessionEntity } from "./session.entity";
+import { VerifyEntity } from "./verify.entity";
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
@@ -63,6 +64,9 @@ export class UserEntity extends AbstractEntity {
 
     @DeleteDateColumn()
     deletedAt: Date;
+
+    @OneToMany(() => VerifyEntity, (verify) => verify.user )
+    verifies: VerifyEntity[];
 
     @BeforeInsert()
     async hashPasswordBeforeInsert(): Promise<void> {

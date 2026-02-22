@@ -18,6 +18,7 @@ import { CacheKey } from 'src/common/constants/cache.constant';
 import { VerifyDto } from './dto/verify.dto';
 import { PayloadType } from './types/payload.type';
 import { RolesService } from '../roles/roles.service';
+import { ValidationException } from 'src/exceptions/validation.exception';
 @Injectable()
 export class AuthService {
 
@@ -97,11 +98,28 @@ export class AuthService {
     async verify(verifyDto: VerifyDto) {
         const {token} = verifyDto;
         const payload = await this.verfifyEmailVerificationToken(token);
-        await this.usersService.update(payload.id, {verified: true})
+        await Promise.all([
+            this.usersService.update(payload.id, {verified: true}),
+            this.usersService.createVerify({
+                userId: payload.id,
+                token,
+                expiresAt: new Date(payload.iat * 1000),
+                used: true
+            })
+        ])
     }
 
-    verfifyEmailVerificationToken(token: string) :Promise<PayloadType> {
-        return this.jwtService.verifyAsync<PayloadType>(token, {secret: this.configService.get('JWT_VERIFY_SECRET')})
+    async verfifyEmailVerificationToken(token: string) :Promise<PayloadType> {
+        const payload = await this.jwtService.verifyAsync<PayloadType>(token, 
+            {
+                secret: this.configService.get('JWT_VERIFY_SECRET')
+            }
+        )
+        const verify = await this.usersService.findVerifiedByUserId(payload.id);
+        if(verify) {
+            throw new UnauthorizedException(ErrorCode.VERIFIED_USER);
+        }
+        return payload;
     }
 
     generateAccessToken(id: string, sessionId: string) :Promise<string> {

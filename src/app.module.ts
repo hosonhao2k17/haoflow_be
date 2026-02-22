@@ -23,6 +23,7 @@ import { DailyPlanEntity } from './api/daily-plans/entities/daily-plan.entity';
 import { TimeBlockEntity } from './api/daily-plans/entities/time-block.entity';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UploadsModule } from './api/uploads/uploads.module';
+import { VerifyEntity } from './api/users/entities/verify.entity';
 @Module({
   imports: [
     RolesModule,
@@ -44,7 +45,7 @@ import { UploadsModule } from './api/uploads/uploads.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity, DailyPlanEntity, TimeBlockEntity],
+        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity, DailyPlanEntity, TimeBlockEntity, VerifyEntity],
         synchronize: true
       }),
       inject: [ConfigService],

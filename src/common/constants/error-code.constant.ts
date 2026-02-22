@@ -44,6 +44,7 @@ export enum ErrorCode {
   NOT_VERIFY = 'auth.error.not_verify',
   SESSION_BLACKLIST = 'auth.error.session_blacklist',
   NOT_ENOUGH_PERMISSION = 'auth.error.not_enough_permission',
+  VERIFIED_USER = 'auth.error.verified_user',
 
   // ===== Mail =====
   MAIL_SUBJECT = 'mail.send.subject',
