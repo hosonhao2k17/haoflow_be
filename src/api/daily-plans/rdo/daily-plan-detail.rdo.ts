@@ -6,7 +6,4 @@ import { Expose, Type } from "class-transformer";
 
 export class DailyPlanDetailRdo extends DailyPlanRdo {
 
-    @Expose()
-    @Type(() => TaskRdo)
-    tasks: TaskRdo[];
 }

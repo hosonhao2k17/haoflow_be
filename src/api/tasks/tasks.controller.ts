@@ -21,22 +21,14 @@ export class TasksController {
     return this.tasksService.reorder(dto)
   }
 
-  @Get()
-  findAll() {
-    return this.tasksService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
-  }
-
   @Patch(':id')
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
+    return this.tasksService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.tasksService.remove(+id);
   }

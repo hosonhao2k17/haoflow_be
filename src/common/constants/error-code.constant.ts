@@ -52,6 +52,9 @@ export enum ErrorCode {
   // ===== Task Category
   TASK_CATEGORY_NOT_FOUND = 'task_category.error.not_found',
 
+  // ===== Task ===== 
+  TASK_NOT_FOUND = 'task.error._not_found',
+
   // ===== Daily plan 
   DAILY_PLAN_NOT_FOUND = 'daily_plan.error.not_found',
 }

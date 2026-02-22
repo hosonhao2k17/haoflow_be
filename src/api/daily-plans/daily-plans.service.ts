@@ -36,6 +36,7 @@ export class DailyPlansService {
     const context = requestContext.getStore()
     const queryBuilder = this.dailyPlansRepository
       .createQueryBuilder(alias)
+      .leftJoinAndSelect(`${alias}.tasks`,'tasks')
       .leftJoinAndSelect(`${alias}.timeBlock`,'timeBlock')
       .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId})
 

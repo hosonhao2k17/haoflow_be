@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,8 @@ import { TaskRdo } from './rdo/task.rdo';
 import { constrainedMemory } from 'process';
 import { SortOrder } from 'src/common/constants/app.constant';
 import { ReorderTaskDto } from './dto/reorder-task.dto';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
+import { requestContext } from 'src/common/context/request.context';
 
 @Injectable()
 export class TasksService {
@@ -43,16 +45,16 @@ export class TasksService {
     
   }
 
-  findAll() {
-    return `This action returns all tasks`;
-  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
-  }
-
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async update(id: string, updateTaskDto: UpdateTaskDto) :Promise<TaskRdo> {
+    const context = requestContext.getStore()
+    const task = await this.tasksRepository.findOneBy({id, createdBy: context?.userId});
+    if(!task) {
+      throw new NotFoundException(ErrorCode.TASK_NOT_FOUND)
+    }
+    Object.assign(task, updateTaskDto);
+    await task.save()
+    return plainToInstance(TaskRdo, task)
   }
 
   remove(id: number) {

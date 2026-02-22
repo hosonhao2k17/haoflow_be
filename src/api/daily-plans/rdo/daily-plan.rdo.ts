@@ -19,6 +19,10 @@ export class DailyPlanRdo extends BaseRdo {
     date: Date;
 
     @Expose()
+    @Type(() => TaskRdo)
+    tasks: TaskRdo[];
+
+    @Expose()
     @Type(() => TimeBlockRdo)
     timeBlock: TimeBlockRdo;
 }
