@@ -51,3 +51,7 @@ export interface IDateFieldOptions extends IFieldOptions {
 export interface IBooleanFiledOptions extends IFieldOptions {
     swaggerOptions?: ApiPropertyOptions
 }
+
+export interface IMilitaryTimeOptions extends IFieldOptions {
+    swaggerOptions?: ApiPropertyOptions;
+}

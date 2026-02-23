@@ -1,12 +1,12 @@
-import { DateField, StringField } from "src/decorators/field.decorator";
+import { MilitaryTimeField, StringField } from "src/decorators/field.decorator";
 
 
 
 export class CreateTimeBlockDto {
 
-    @StringField()
+    @MilitaryTimeField()
     startTime: string;
 
-    @StringField()
+    @MilitaryTimeField()
     endTime: string;
 }
