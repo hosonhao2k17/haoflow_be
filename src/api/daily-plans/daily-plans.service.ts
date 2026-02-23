@@ -70,9 +70,13 @@ export class DailyPlansService {
       }
     }
 
-    dailyPlans.forEach(plan => {
-      plan.tasks = taskMap.get(plan.id) ?? [];
-    });
+    const results = await Promise.all(
+      dailyPlans.map(async (plan) => ({
+        ...plan,
+        tasks: taskMap.get(plan.id) ?? [],
+        summary: await this.tasksService.getSummaryTask(plan.id),
+      }))
+    );
 
     const pagination = new CursorPaginationRdo(
       queryDailyPlanDto.limit,
@@ -81,7 +85,7 @@ export class DailyPlansService {
       total
     );
 
-    return new CursorPaginatedRdo(plainToInstance(DailyPlanRdo, dailyPlans), pagination)
+    return new CursorPaginatedRdo(plainToInstance(DailyPlanRdo, results), pagination)
   }
 
   async findOne(id: string) {
