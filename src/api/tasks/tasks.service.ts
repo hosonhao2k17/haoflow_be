@@ -3,7 +3,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from './entities/task.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { DailyPlanEntity } from '../daily-plans/entities/daily-plan.entity';
 import { plainToInstance } from 'class-transformer';
 import { TaskRdo } from './rdo/task.rdo';
@@ -12,6 +12,7 @@ import { SortOrder } from 'src/common/constants/app.constant';
 import { ReorderTaskDto } from './dto/reorder-task.dto';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { requestContext } from 'src/common/context/request.context';
+import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -57,7 +58,26 @@ export class TasksService {
     return plainToInstance(TaskRdo, task)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async findOne(id: string) :Promise<TaskRdo> {
+    const context = requestContext.getStore()
+    const task = await this.tasksRepository.findOneBy({id, createdBy: context?.userId});
+    if(!task) {
+      throw new NotFoundException(ErrorCode.TASK_NOT_FOUND)
+    }
+    return plainToInstance(TaskRdo, task)
+  }
+
+  async remove(id: string) :Promise<void> {
+    await this.findOne(id);
+    await this.tasksRepository.delete(id)
+  }
+
+  async removeMulti(dto: RemoveMultiTaskDto): Promise<void> {
+    const tasks = await this.tasksRepository.find({
+      where: {
+        id: In(dto.ids)
+      }
+    })
+    await this.tasksRepository.remove(tasks);
   }
 }

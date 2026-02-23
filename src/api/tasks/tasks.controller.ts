@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { ReorderTaskDto } from './dto/reorder-task.dto';
+import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -28,8 +29,16 @@ export class TasksController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
-    return this.tasksService.remove(+id);
+  remove(@Param('id') id: string) :Promise<void> {
+    return this.tasksService.remove(id);
+  }
+
+  @Delete()
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  removeMulti(@Body() dto: RemoveMultiTaskDto) :Promise<void> {
+    return this.tasksService.removeMulti(dto)
   }
 }
