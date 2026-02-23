@@ -19,6 +19,8 @@ import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 import { TaskEntity } from '../tasks/entities/task.entity';
 import { TasksService } from '../tasks/tasks.service';
+import { RangeRdo } from 'src/common/rdo/range.rdo';
+import { RangedRdo } from 'src/common/rdo/ranged.rdo';
 
 @Injectable()
 export class DailyPlansService {
@@ -78,14 +80,13 @@ export class DailyPlansService {
       }))
     );
 
-    const pagination = new CursorPaginationRdo(
-      queryDailyPlanDto.limit,
-      getAfterCursor(dailyPlans),
-      getBeforeCursor(dailyPlans),
-      total
+    const range = new RangeRdo(
+      queryDailyPlanDto.startDate,
+      queryDailyPlanDto.endDate,
+      queryDailyPlanDto.limit
     );
 
-    return new CursorPaginatedRdo(plainToInstance(DailyPlanRdo, results), pagination)
+    return new RangedRdo(plainToInstance(DailyPlanRdo, results), range)
   }
 
   async findOne(id: string) {
