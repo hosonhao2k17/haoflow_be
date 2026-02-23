@@ -8,9 +8,13 @@ export class TimeBlockEntity extends AbstractEntity{
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
-    startTime: Date;
+    @Column({
+        type: 'time'
+    })
+    startTime: string;
 
-    @Column()
-    endTime: Date;
+    @Column({
+        type: 'time'
+    })
+    endTime: string;
 }

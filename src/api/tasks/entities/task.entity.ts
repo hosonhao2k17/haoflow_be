@@ -26,14 +26,14 @@ export class TaskEntity extends AbstractEntity {
     priority: Priority;
 
     @Column({
-        type: 'date'
+        type: 'time'
     })
-    startTime: Date;
+    startTime: string;
 
     @Column({
-        type: 'date'
+        type: 'time'
     })
-    endTime: Date;
+    endTime: string;
 
     @Column({
         type: 'int',

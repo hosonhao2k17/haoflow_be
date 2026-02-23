@@ -13,11 +13,11 @@ export class CreateTaskDto {
     @EnumField(Priority, {options: true})
     priority?: Priority;
 
-    @DateField()
-    startTime: Date;
+    @StringField()
+    startTime: string;
 
-    @DateField()
-    endTime: Date;
+    @StringField()
+    endTime: string;
 
     @UuidField()
     categoryId: string;
