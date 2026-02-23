@@ -8,11 +8,12 @@ import { DailyPlanEntity } from '../daily-plans/entities/daily-plan.entity';
 import { plainToInstance } from 'class-transformer';
 import { TaskRdo } from './rdo/task.rdo';
 import { constrainedMemory } from 'process';
-import { SortOrder } from 'src/common/constants/app.constant';
+import { SortOrder, TaskStatus } from 'src/common/constants/app.constant';
 import { ReorderTaskDto } from './dto/reorder-task.dto';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { requestContext } from 'src/common/context/request.context';
 import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
+import { SummaryTaskRdo } from './rdo/summary-task.rdo';
 
 @Injectable()
 export class TasksService {
@@ -36,6 +37,29 @@ export class TasksService {
 
   async reorder(dto: ReorderTaskDto[]) {
     
+  }
+
+  async getSummaryTask(dailyPlanId: string): Promise<SummaryTaskRdo> {
+    const tasks = await this.tasksRepository.find({
+      where: { dailyPlanId },
+    });
+
+    const totalTask = tasks.length;
+
+    const completedTasks = tasks.filter(
+      (item) => item.status === TaskStatus.DONE,
+    ).length;
+
+    const progressPercent =
+      totalTask === 0
+        ? 0
+        : Math.round((completedTasks / totalTask) * 100);
+
+    return plainToInstance(SummaryTaskRdo, {
+      totalTask,
+      completedTasks,
+      progressPercent,
+    });
   }
 
 

@@ -18,6 +18,7 @@ import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
 import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 import { TaskEntity } from '../tasks/entities/task.entity';
+import { TasksService } from '../tasks/tasks.service';
 
 @Injectable()
 export class DailyPlansService {
@@ -25,7 +26,8 @@ export class DailyPlansService {
   constructor(
     @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>,
     @InjectRepository(TimeBlockEntity) private timeBlocksRepository: Repository<TimeBlockEntity>,
-    @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>
+    @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>,
+    private tasksService: TasksService
   ) {}
   async create(createDailyPlanDto: CreateDailyPlanDto) :Promise<DailyPlanRdo> {
     const timeBlock = await this.timeBlocksRepository.create(createDailyPlanDto.timeBlock).save()

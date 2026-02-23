@@ -9,5 +9,6 @@ import { DailyPlanEntity } from '../daily-plans/entities/daily-plan.entity';
   imports: [TypeOrmModule.forFeature([TaskEntity, DailyPlanEntity])],
   controllers: [TasksController],
   providers: [TasksService],
+  exports: [TasksService]
 })
 export class TasksModule {}

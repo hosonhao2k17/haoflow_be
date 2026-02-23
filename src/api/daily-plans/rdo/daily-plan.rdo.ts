@@ -19,6 +19,15 @@ export class DailyPlanRdo extends BaseRdo {
     date: Date;
 
     @Expose()
+    totalTasks: number;
+
+    @Expose()
+    completedTask: number;
+
+    @Expose()
+    progressPercent;
+
+    @Expose()
     @Type(() => TaskRdo)
     tasks: TaskRdo[];
 

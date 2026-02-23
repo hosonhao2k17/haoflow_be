@@ -7,18 +7,18 @@ export class CursorPaginationRdo {
     limit: number;
 
     @Expose()
-    afterCursor: string;
+    afterCursor: string | null;
 
     @Expose()
-    beforeCursor: string;
+    beforeCursor: string | null;
 
     @Expose()
     totalRecords: number;
 
     constructor(
         limit: number,
-        afterCursor: string,
-        beforeCursor: string,
+        afterCursor: string | null,
+        beforeCursor: string | null,
         totalRecords: number
     ) {
         this.limit = limit;
