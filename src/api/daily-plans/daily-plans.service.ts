@@ -14,6 +14,9 @@ import { requestContext } from 'src/common/context/request.context';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { DailyPlanDetailRdo } from './rdo/daily-plan-detail.rdo';
 import { SortOrder } from 'src/common/constants/app.constant';
+import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
+import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
+import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 
 @Injectable()
 export class DailyPlansService {
@@ -42,9 +45,14 @@ export class DailyPlansService {
 
     queryDailyPlanDto.handleQueryBuilder(queryBuilder);
     const [items, total] = await queryBuilder.getManyAndCount();
-    const pagination = new OffsetPaginationRdo(total, queryDailyPlanDto);
+    const pagination = new CursorPaginationRdo(
+      queryDailyPlanDto.limit,
+      getAfterCursor(items),
+      getBeforeCursor(items),
+      total
+    );
 
-    return new OffsetPaginatedRdo(plainToInstance(DailyPlanRdo, items), pagination)
+    return new CursorPaginatedRdo(plainToInstance(DailyPlanRdo, items), pagination)
   }
 
   async findOne(id: string) {
