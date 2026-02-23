@@ -52,16 +52,13 @@ export class DailyPlansService {
         },
         status: TaskStatus.TODO
       },
-      relations: {
-        dailyPlan: true
-      },
       order: {
         orderIndex: 'DESC'
       }
     })
     const taskMap = new Map<string, any[]>();
     for (const task of tasks) {
-      const planId = task.dailyPlan.id;
+      const planId = task.dailyPlanId;
       if (!taskMap.has(planId)) {
         taskMap.set(planId, []);
       }

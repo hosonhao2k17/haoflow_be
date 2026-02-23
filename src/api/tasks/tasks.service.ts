@@ -22,17 +22,9 @@ export class TasksService {
     @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
-    const task = this.tasksRepository.create({
-      ...createTaskDto,
-      category: {
-        id: createTaskDto.categoryId
-      },
-      dailyPlan: {
-        id: createTaskDto.dailyPlanId
-      }
-    });
+    const task = this.tasksRepository.create(createTaskDto);
     const orderIndexExists = await this.tasksRepository.findOne({
-      where: {dailyPlan: {id: createTaskDto.dailyPlanId}},
+      where: {dailyPlanId: createTaskDto.dailyPlanId},
       order: {
         orderIndex: SortOrder.DESC
       }

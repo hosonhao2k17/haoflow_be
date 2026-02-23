@@ -52,12 +52,7 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) :Promise<UserRdo> {
-    const user = await this.usersRepository.create({
-      ...createUserDto,
-      role: {
-        id: createUserDto.roleId
-      }
-    }).save();
+    const user = await this.usersRepository.create(createUserDto).save();
 
     return plainToInstance(UserRdo, user)
   }

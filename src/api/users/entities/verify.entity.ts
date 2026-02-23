@@ -9,6 +9,9 @@ export class VerifyEntity extends AbstractEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column()
+    userId: string;
+
     @ManyToOne(() => UserEntity, (user) => user.verifies)
     user: UserEntity;
 

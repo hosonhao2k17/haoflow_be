@@ -54,6 +54,9 @@ export class UserEntity extends AbstractEntity {
     })
     verified: boolean;
 
+    @Column()
+    roleId: string;
+
     @ManyToOne(() => RoleEntity, (role) => role.users, {
         nullable: false
     })

@@ -15,6 +15,9 @@ export class SessionEntity extends AbstractEntity {
     })
     expiresAt: Date;
 
+    @Column()
+    userId: string;
+
     @ManyToOne(() => UserEntity, (user) => user.sessions)
     user: UserEntity;
 

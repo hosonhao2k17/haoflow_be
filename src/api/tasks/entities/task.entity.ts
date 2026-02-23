@@ -48,6 +48,12 @@ export class TaskEntity extends AbstractEntity {
     })
     status: TaskStatus;
 
+    @Column()
+    categoryId: string;
+
+    @Column()
+    dailyPlanId: string;
+
     @ManyToOne(() => TaskCategoryEntity, (taskCategory) => taskCategory.tasks)
     category: TaskCategoryEntity;
 
