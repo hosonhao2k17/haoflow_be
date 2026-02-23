@@ -10,8 +10,8 @@ export class CreateTaskDto {
     @StringField() 
     description?: string;
 
-    @EnumField(Priority)
-    priority: Priority;
+    @EnumField(Priority, {options: true})
+    priority?: Priority;
 
     @DateField()
     startTime: Date;

@@ -3,7 +3,7 @@ import { CreateDailyPlanDto } from './dto/create-daily-plan.dto';
 import { UpdateDailyPlanDto } from './dto/update-daily-plan.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DailyPlanEntity } from './entities/daily-plan.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TimeBlockEntity } from './entities/time-block.entity';
 import { plainToInstance } from 'class-transformer';
 import { DailyPlanRdo } from './rdo/daily-plan.rdo';
@@ -13,17 +13,19 @@ import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { requestContext } from 'src/common/context/request.context';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { DailyPlanDetailRdo } from './rdo/daily-plan-detail.rdo';
-import { SortOrder } from 'src/common/constants/app.constant';
+import { SortOrder, TaskStatus } from 'src/common/constants/app.constant';
 import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
 import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
+import { TaskEntity } from '../tasks/entities/task.entity';
 
 @Injectable()
 export class DailyPlansService {
 
   constructor(
     @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>,
-    @InjectRepository(TimeBlockEntity) private timeBlocksRepository: Repository<TimeBlockEntity>
+    @InjectRepository(TimeBlockEntity) private timeBlocksRepository: Repository<TimeBlockEntity>,
+    @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>
   ) {}
   async create(createDailyPlanDto: CreateDailyPlanDto) :Promise<DailyPlanRdo> {
     const timeBlock = await this.timeBlocksRepository.create(createDailyPlanDto.timeBlock).save()
@@ -33,26 +35,54 @@ export class DailyPlansService {
     }).save();
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
-
+  //Mỗi card trả về 5 rows tasks chưa hoàn thành
   async findAll(queryDailyPlanDto: QueryDailyPlanDto) {
     const alias = queryDailyPlanDto.getAlias();
     const context = requestContext.getStore()
     const queryBuilder = this.dailyPlansRepository
       .createQueryBuilder(alias)
-      .leftJoinAndSelect(`${alias}.tasks`,'tasks')
       .leftJoinAndSelect(`${alias}.timeBlock`,'timeBlock')
       .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId})
-
     queryDailyPlanDto.handleQueryBuilder(queryBuilder);
-    const [items, total] = await queryBuilder.getManyAndCount();
+    const [dailyPlans, total] = await queryBuilder.getManyAndCount();
+    const tasks = await this.tasksRepository.find({
+      where: {
+        dailyPlan: {
+          id: In(dailyPlans.map((item) => item.id))
+        },
+        status: TaskStatus.TODO
+      },
+      relations: {
+        dailyPlan: true
+      },
+      order: {
+        orderIndex: 'DESC'
+      }
+    })
+    const taskMap = new Map<string, any[]>();
+    for (const task of tasks) {
+      const planId = task.dailyPlan.id;
+      if (!taskMap.has(planId)) {
+        taskMap.set(planId, []);
+      }
+      const list = taskMap.get(planId)!;
+      if (list.length < 5) {
+        list.push(task);
+      }
+    }
+
+    dailyPlans.forEach(plan => {
+      plan.tasks = taskMap.get(plan.id) ?? [];
+    });
+
     const pagination = new CursorPaginationRdo(
       queryDailyPlanDto.limit,
-      getAfterCursor(items),
-      getBeforeCursor(items),
+      getAfterCursor(dailyPlans),
+      getBeforeCursor(dailyPlans),
       total
     );
 
-    return new CursorPaginatedRdo(plainToInstance(DailyPlanRdo, items), pagination)
+    return new CursorPaginatedRdo(plainToInstance(DailyPlanRdo, dailyPlans), pagination)
   }
 
   async findOne(id: string) {

@@ -4,9 +4,10 @@ import { DailyPlansController } from './daily-plans.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DailyPlanEntity } from './entities/daily-plan.entity';
 import { TimeBlockEntity } from './entities/time-block.entity';
+import { TaskEntity } from '../tasks/entities/task.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DailyPlanEntity, TimeBlockEntity])],
+  imports: [TypeOrmModule.forFeature([DailyPlanEntity, TimeBlockEntity, TaskEntity])],
   controllers: [DailyPlansController],
   providers: [DailyPlansService],
 })

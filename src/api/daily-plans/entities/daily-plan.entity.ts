@@ -23,7 +23,7 @@ export class DailyPlanEntity extends AbstractEntity {
     date: Date;
 
     @OneToMany(() => TaskEntity, (tasks) => tasks.dailyPlan)
-    tasks: TaskEntity;
+    tasks: TaskEntity[];
 
     @OneToOne(() => TimeBlockEntity)
     @JoinColumn()

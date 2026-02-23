@@ -31,6 +31,6 @@ export abstract class AbstractQueryDto implements ISort {
     handleQueryBuilder<T extends ObjectLiteral>(
         queryBuilder: SelectQueryBuilder<T>,
     ) {
-        queryBuilder.orderBy(`${this.alias}.${this.sortBy}`,this.sortOrder)
+        queryBuilder.addOrderBy(`${this.alias}.${this.sortBy}`,this.sortOrder)
     }
 }
