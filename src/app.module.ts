@@ -24,6 +24,7 @@ import { TimeBlockEntity } from './api/daily-plans/entities/time-block.entity';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UploadsModule } from './api/uploads/uploads.module';
 import { VerifyEntity } from './api/users/entities/verify.entity';
+import { AiModule } from './api/ai/ai.module';
 @Module({
   imports: [
     RolesModule,
@@ -33,6 +34,7 @@ import { VerifyEntity } from './api/users/entities/verify.entity';
     TaskCategoriesModule,
     DailyPlansModule,
     UploadsModule,
+    AiModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
