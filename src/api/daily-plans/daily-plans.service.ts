@@ -117,7 +117,11 @@ export class DailyPlansService {
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} dailyPlan`;
+  async remove(id: string) {
+    const dailyPlan = await this.dailyPlansRepository.findOneBy({id});
+    if(!dailyPlan) {
+      throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
+    }
+    await this.dailyPlansRepository.delete(id)
   }
 }
