@@ -14,13 +14,15 @@ import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { requestContext } from 'src/common/context/request.context';
 import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 import { SummaryTaskRdo } from './rdo/summary-task.rdo';
+import { AiService } from '../ai/ai.service';
 
 @Injectable()
 export class TasksService {
 
   constructor(
     @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>,
-    @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>
+    @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>,
+    private aiService: AiService
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
     const task = this.tasksRepository.create(createTaskDto);
@@ -72,6 +74,15 @@ export class TasksService {
     Object.assign(task, updateTaskDto);
     await task.save()
     return plainToInstance(TaskRdo, task)
+  }
+  
+  async evaluateTask(id: string) {
+    const context = requestContext.getStore()
+    const task = await this.tasksRepository.findOneBy({id});
+    if(!task) {
+      throw new NotFoundException(ErrorCode.TASK_NOT_FOUND)
+    }
+    
   }
 
   async findOne(id: string) :Promise<TaskRdo> {

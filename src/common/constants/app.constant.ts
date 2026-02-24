@@ -49,3 +49,5 @@ export enum TaskStatus {
 }
 
 export const CLOUDINARY = 'cloudinary'
+
+export const AI = 'ai'

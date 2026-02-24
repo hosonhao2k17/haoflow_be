@@ -16,6 +16,12 @@ export class TasksController {
     return this.tasksService.create(createTaskDto);
   }
 
+  @Post(':id/ai-evaluate')
+  @ApiBearerAuth()
+  evaluateTask(@Param('id') id: string) {
+    return this.tasksService.evaluateTask(id)
+  }
+
   @Patch('reorder')
   @ApiBearerAuth()
   reorder(@Body() dto: ReorderTaskDto[]) {

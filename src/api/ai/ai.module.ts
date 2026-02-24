@@ -1,9 +1,23 @@
 import { Module } from '@nestjs/common';
 import { AiService } from './ai.service';
-import { AiController } from './ai.controller';
+import { AI } from 'src/common/constants/app.constant';
+import { ConfigService } from '@nestjs/config';
+import { GoogleGenAI } from '@google/genai';
 
 @Module({
-  controllers: [AiController],
-  providers: [AiService],
+  providers: [
+    AiService,
+    {
+      provide: AI,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+
+        return new GoogleGenAI({
+          apiKey: configService.get('AI_API_KEY')
+        })
+      }
+    }
+  ],
+  exports: [AiService]
 })
 export class AiModule {}

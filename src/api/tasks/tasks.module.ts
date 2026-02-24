@@ -4,9 +4,10 @@ import { TasksController } from './tasks.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TaskEntity } from './entities/task.entity';
 import { DailyPlanEntity } from '../daily-plans/entities/daily-plan.entity';
+import { AiModule } from '../ai/ai.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TaskEntity, DailyPlanEntity])],
+  imports: [TypeOrmModule.forFeature([TaskEntity, DailyPlanEntity]), AiModule],
   controllers: [TasksController],
   providers: [TasksService],
   exports: [TasksService]
