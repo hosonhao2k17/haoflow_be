@@ -115,8 +115,18 @@ export class DailyPlansService {
     return plainToInstance(DailyPlanDetailRdo, dailyPlan)
   }
 
-  update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
-    return `This action updates a #${id} dailyPlan`;
+  async update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
+    const {timeBlock, ...data} = updateDailyPlanDto;
+    const dailyPlan = await this.dailyPlansRepository.findOneBy({id});
+    if(!dailyPlan) {
+      throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
+    }
+    Object.assign(dailyPlan, {
+      ...data,
+      timeBlock
+    });
+    await dailyPlan.save()
+    return plainToInstance(DailyPlanRdo, dailyPlan)
   }
 
   remove(id: string) {
