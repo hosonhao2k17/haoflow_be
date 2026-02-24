@@ -4,7 +4,6 @@ import { UpdateDailyPlanDto } from './dto/update-daily-plan.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DailyPlanEntity } from './entities/daily-plan.entity';
 import { In, Repository } from 'typeorm';
-import { TimeBlockEntity } from './entities/time-block.entity';
 import { plainToInstance } from 'class-transformer';
 import { DailyPlanRdo } from './rdo/daily-plan.rdo';
 import { QueryDailyPlanDto } from './dto/query-daily-plan.dto';
@@ -27,16 +26,11 @@ export class DailyPlansService {
 
   constructor(
     @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>,
-    @InjectRepository(TimeBlockEntity) private timeBlocksRepository: Repository<TimeBlockEntity>,
     @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>,
     private tasksService: TasksService
   ) {}
   async create(createDailyPlanDto: CreateDailyPlanDto) :Promise<DailyPlanRdo> {
-    const timeBlock = await this.timeBlocksRepository.create(createDailyPlanDto.timeBlock).save()
-    const dailyPlan = await this.dailyPlansRepository.create({
-      ...createDailyPlanDto,
-      timeBlock
-    }).save();
+    const dailyPlan = await this.dailyPlansRepository.create(createDailyPlanDto).save();
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
   //Mỗi card trả về 5 rows tasks chưa hoàn thành
@@ -45,7 +39,6 @@ export class DailyPlansService {
     const context = requestContext.getStore()
     const queryBuilder = this.dailyPlansRepository
       .createQueryBuilder(alias)
-      .leftJoinAndSelect(`${alias}.timeBlock`,'timeBlock')
       .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId})
     queryDailyPlanDto.handleQueryBuilder(queryBuilder);
     const [dailyPlans, total] = await queryBuilder.getManyAndCount();
@@ -99,8 +92,7 @@ export class DailyPlansService {
       relations: {
         tasks: {
           category: true
-        },
-        timeBlock: true
+        }
       },
       order: {
         tasks: {
@@ -116,15 +108,11 @@ export class DailyPlansService {
   }
 
   async update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
-    const {timeBlock, ...data} = updateDailyPlanDto;
     const dailyPlan = await this.dailyPlansRepository.findOneBy({id});
     if(!dailyPlan) {
       throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
     }
-    Object.assign(dailyPlan, {
-      ...data,
-      timeBlock
-    });
+    Object.assign(dailyPlan, updateDailyPlanDto);
     await dailyPlan.save()
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }

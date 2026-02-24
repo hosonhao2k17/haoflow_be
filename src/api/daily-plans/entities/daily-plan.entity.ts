@@ -24,6 +24,15 @@ export class DailyPlanEntity extends AbstractEntity {
 
     @OneToMany(() => TaskEntity, (tasks) => tasks.dailyPlan)
     tasks: TaskEntity[];
+    @Column({
+        type: 'time'
+    })
+    startTime: string;
+
+    @Column({
+        type: 'time'
+    })
+    endTime: string;
 
     @OneToOne(() => TimeBlockEntity)
     @JoinColumn()

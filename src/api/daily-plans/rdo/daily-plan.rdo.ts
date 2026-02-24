@@ -1,6 +1,5 @@
 import { Exclude, Expose, Type } from "class-transformer";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
-import { TimeBlockRdo } from "./time-block.rdo";
 import { TaskRdo } from "src/api/tasks/rdo/task.rdo";
 import { SummaryTaskRdo } from "src/api/tasks/rdo/summary-task.rdo";
 
@@ -27,6 +26,8 @@ export class DailyPlanRdo extends BaseRdo {
     tasks: TaskRdo[];
 
     @Expose()
-    @Type(() => TimeBlockRdo)
-    timeBlock: TimeBlockRdo;
+    startTime: string;
+
+    @Expose()
+    endTime: string;
 }
