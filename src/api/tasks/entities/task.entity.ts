@@ -36,12 +36,6 @@ export class TaskEntity extends AbstractEntity {
     endTime: string;
 
     @Column({
-        type: 'int',
-        default: 0
-    })
-    orderIndex: number;
-
-    @Column({
         type: 'enum',
         enum: TaskStatus,
         default: TaskStatus.TODO

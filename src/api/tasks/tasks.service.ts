@@ -27,12 +27,8 @@ export class TasksService {
   async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
     const task = this.tasksRepository.create(createTaskDto);
     const orderIndexExists = await this.tasksRepository.findOne({
-      where: {dailyPlanId: createTaskDto.dailyPlanId},
-      order: {
-        orderIndex: SortOrder.DESC
-      }
+      where: {dailyPlanId: createTaskDto.dailyPlanId}
     })
-    task.orderIndex = orderIndexExists ? orderIndexExists.orderIndex + 1 : 0
     await task.save()
     return plainToInstance(TaskRdo, task);
   }

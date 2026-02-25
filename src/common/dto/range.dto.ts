@@ -17,12 +17,13 @@ export class RangeDto extends AbstractQueryDto {
     limit: 1000;
 
     handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>): void {
+        super.handleQueryBuilder(queryBuilder)
         queryBuilder.limit(this.limit);
         if(this.startDate) {
-            queryBuilder.andWhere(`${this.alias}.createdAt > :startDate`,{startDate: this.startDate})
+            queryBuilder.andWhere(`${this.alias}.date >= :startDate`,{startDate: this.startDate})
         }
         if(this.endDate) {
-            queryBuilder.andWhere(`${this.alias}.createdAt < :endDate`,{endDate: this.endDate})
+            queryBuilder.andWhere(`${this.alias}.date <= :endDate`,{endDate: this.endDate})
         }
     }
 }

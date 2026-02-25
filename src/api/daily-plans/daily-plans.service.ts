@@ -50,7 +50,7 @@ export class DailyPlansService {
         status: TaskStatus.TODO
       },
       order: {
-        orderIndex: 'DESC'
+        startTime: SortOrder.ASC
       }
     })
     const taskMap = new Map<string, any[]>();
@@ -96,15 +96,18 @@ export class DailyPlansService {
       },
       order: {
         tasks: {
-          orderIndex: SortOrder.DESC
+          startTime: SortOrder.ASC
         }
       }
     })
     if(!dailyPlan) {
       throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
     }
-
-    return plainToInstance(DailyPlanDetailRdo, dailyPlan)
+    const summary =  await this.tasksService.getSummaryTask(dailyPlan.id)
+    return plainToInstance(DailyPlanDetailRdo, {
+      ...dailyPlan,
+      summary
+    })
   }
 
   async update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
