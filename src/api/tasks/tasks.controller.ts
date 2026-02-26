@@ -36,12 +36,6 @@ export class TasksController {
     return this.tasksService.currentTask()
   }
 
-  @Patch('reorder')
-  @ApiBearerAuth()
-  reorder(@Body() dto: ReorderTaskDto[]) {
-    return this.tasksService.reorder(dto)
-  }
-
   @Patch(':id')
   @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {

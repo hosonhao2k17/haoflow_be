@@ -45,10 +45,6 @@ export class TasksService {
     return new OffsetPaginatedRdo(plainToInstance(TaskRdo, items), pagination);
   }
 
-  async reorder(dto: ReorderTaskDto[]) {
-    
-  }
-
   async currentTask() :Promise<TaskRdo> {
     const now = new Date()
     const currentTime = now.toTimeString().slice(0, 8);
