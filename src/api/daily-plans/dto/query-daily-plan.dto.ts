@@ -1,3 +1,4 @@
+import { SortOrder } from "src/common/constants/app.constant";
 import { RangeDto } from "src/common/dto/range.dto";
 import { StringField } from "src/decorators/field.decorator";
 import { ObjectLiteral, SelectQueryBuilder } from "typeorm";
@@ -8,6 +9,12 @@ export class QueryDailyPlanDto extends RangeDto {
 
     @StringField({options: true})
     keyword?: string;
+
+    @StringField({options: true})
+    sortBy?: string = 'date';
+
+    @StringField({options: true})
+    sortOrder?: SortOrder = SortOrder.ASC
 
     handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>): void {
         super.handleQueryBuilder(queryBuilder);

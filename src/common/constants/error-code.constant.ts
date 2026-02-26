@@ -57,4 +57,5 @@ export enum ErrorCode {
 
   // ===== Daily plan 
   DAILY_PLAN_NOT_FOUND = 'daily_plan.error.not_found',
+  DAILY_PLAN_EXISTS = 'daily_plan.error.exists'
 }

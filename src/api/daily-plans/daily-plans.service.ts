@@ -20,6 +20,7 @@ import { TaskEntity } from '../tasks/entities/task.entity';
 import { TasksService } from '../tasks/tasks.service';
 import { RangeRdo } from 'src/common/rdo/range.rdo';
 import { RangedRdo } from 'src/common/rdo/ranged.rdo';
+import { ValidationException } from 'src/exceptions/validation.exception';
 
 @Injectable()
 export class DailyPlansService {
@@ -30,6 +31,15 @@ export class DailyPlansService {
     private tasksService: TasksService
   ) {}
   async create(createDailyPlanDto: CreateDailyPlanDto) :Promise<DailyPlanRdo> {
+    //unique dailyplan with userId and date
+    const context = requestContext.getStore()
+    const isExists = await this.dailyPlansRepository.findOneBy({
+      date: createDailyPlanDto.date,
+      createdBy: context?.userId
+    })
+    if(!isExists) {
+      throw new ValidationException(ErrorCode.DAILY_PLAN_EXISTS)
+    }
     const dailyPlan = await this.dailyPlansRepository.create(createDailyPlanDto).save();
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
