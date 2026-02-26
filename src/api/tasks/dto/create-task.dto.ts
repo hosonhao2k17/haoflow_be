@@ -7,7 +7,7 @@ export class CreateTaskDto {
     @StringField()
     todo: string;
 
-    @StringField() 
+    @StringField({options: true}) 
     description?: string;
 
     @EnumField(Priority, {options: true})
@@ -19,8 +19,8 @@ export class CreateTaskDto {
     @MilitaryTimeField()
     endTime: string;
 
-    @UuidField()
-    categoryId: string;
+    @UuidField({options: true})
+    categoryId?: string;
 
     @UuidField()
     dailyPlanId: string;
