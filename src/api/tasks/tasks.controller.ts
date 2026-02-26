@@ -5,6 +5,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { ReorderTaskDto } from './dto/reorder-task.dto';
 import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
+import { TaskRdo } from './rdo/task.rdo';
 
 @Controller('tasks')
 export class TasksController {
@@ -20,6 +21,12 @@ export class TasksController {
   @ApiBearerAuth()
   evaluateTask(@Param('id') id: string) {
     return this.tasksService.evaluateTask(id)
+  }
+
+  @Get('current')
+  @ApiBearerAuth()
+  currentTask() :Promise<TaskRdo> {
+    return this.tasksService.currentTask()
   }
 
   @Patch('reorder')

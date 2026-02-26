@@ -3,7 +3,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from './entities/task.entity';
-import { In, Repository } from 'typeorm';
+import { Equal, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { DailyPlanEntity } from '../daily-plans/entities/daily-plan.entity';
 import { plainToInstance } from 'class-transformer';
 import { TaskRdo } from './rdo/task.rdo';
@@ -35,6 +35,26 @@ export class TasksService {
 
   async reorder(dto: ReorderTaskDto[]) {
     
+  }
+
+  async currentTask() :Promise<TaskRdo> {
+    const now = new Date()
+    const currentTime = now.toTimeString().slice(0, 8);
+    const currentDate = now.toISOString().split("T")[0];
+    const context = requestContext.getStore()
+    const task = await this.tasksRepository.findOne({
+      where: {
+        startTime: LessThanOrEqual(currentTime),
+        endTime: MoreThanOrEqual(currentTime),
+        dailyPlan: {
+          date: currentDate,
+          createdBy: context?.userId
+        },
+        
+      }
+    });
+    
+    return plainToInstance(TaskRdo, task)
   }
 
   async getSummaryTask(dailyPlanId: string): Promise<SummaryTaskRdo> {

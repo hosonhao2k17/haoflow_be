@@ -7,7 +7,7 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateDailyPlanDto {
 
     @DateField()
-    date: Date;
+    date: string;
 
     @StringField()
     title: string;

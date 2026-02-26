@@ -20,7 +20,7 @@ export class DailyPlanEntity extends AbstractEntity {
     @Column({
         type: 'date'
     })
-    date: Date;
+    date: string;
 
     @OneToMany(() => TaskEntity, (tasks) => tasks.dailyPlan)
     tasks: TaskEntity[];
