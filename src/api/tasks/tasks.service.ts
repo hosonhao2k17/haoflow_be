@@ -15,6 +15,9 @@ import { requestContext } from 'src/common/context/request.context';
 import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 import { SummaryTaskRdo } from './rdo/summary-task.rdo';
 import { AiService } from '../ai/ai.service';
+import { QueryTaskDto } from './dto/query-task.dto';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 
 @Injectable()
 export class TasksService {
@@ -26,11 +29,20 @@ export class TasksService {
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
     const task = this.tasksRepository.create(createTaskDto);
-    const orderIndexExists = await this.tasksRepository.findOne({
-      where: {dailyPlanId: createTaskDto.dailyPlanId}
-    })
     await task.save()
     return plainToInstance(TaskRdo, task);
+  }
+
+  async findAll(queryTaskDto: QueryTaskDto) {
+
+    const queryBuilder = this.tasksRepository.createQueryBuilder(queryTaskDto.getAlias())
+    queryTaskDto.handleQueryBuilder(queryBuilder);
+
+    const [items, total] = await queryBuilder.getManyAndCount();
+
+    const pagination = new OffsetPaginationRdo(total, queryTaskDto);
+
+    return new OffsetPaginatedRdo(plainToInstance(TaskRdo, items), pagination);
   }
 
   async reorder(dto: ReorderTaskDto[]) {

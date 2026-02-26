@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Query } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -6,6 +6,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { ReorderTaskDto } from './dto/reorder-task.dto';
 import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 import { TaskRdo } from './rdo/task.rdo';
+import { QueryTaskDto } from './dto/query-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -21,6 +22,12 @@ export class TasksController {
   @ApiBearerAuth()
   evaluateTask(@Param('id') id: string) {
     return this.tasksService.evaluateTask(id)
+  }
+
+  @Get()
+  @ApiBearerAuth()
+  findAll(@Query() queryTaskDto: QueryTaskDto) {
+    return this.tasksService.findAll(queryTaskDto)
   }
 
   @Get('current')
