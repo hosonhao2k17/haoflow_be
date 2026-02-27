@@ -1,10 +1,10 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { UserRdo } from "./user.rdo";
 import { Gender, UserStatus } from "src/common/constants/app.constant";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 import { RoleRdo } from "src/api/roles/rdo/role.rdo";
 
-
+@Exclude()
 export class UserDetailRdo extends BaseRdo {
     @Expose()
     id: string;

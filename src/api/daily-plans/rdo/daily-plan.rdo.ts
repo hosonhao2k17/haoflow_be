@@ -22,10 +22,6 @@ export class DailyPlanRdo extends BaseRdo {
     summary: SummaryTaskRdo;
 
     @Expose()
-    @Type(() => TaskRdo)
-    tasks: TaskRdo[];
-
-    @Expose()
     startTime: string;
 
     @Expose()

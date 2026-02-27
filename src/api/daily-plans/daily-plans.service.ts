@@ -43,7 +43,6 @@ export class DailyPlansService {
     const dailyPlan = await this.dailyPlansRepository.create(createDailyPlanDto).save();
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
-  //Mỗi card trả về 5 rows tasks chưa hoàn thành
   async findAll(queryDailyPlanDto: QueryDailyPlanDto) {
     const alias = queryDailyPlanDto.getAlias();
     const context = requestContext.getStore()
@@ -52,33 +51,9 @@ export class DailyPlansService {
       .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId})
     queryDailyPlanDto.handleQueryBuilder(queryBuilder);
     const [dailyPlans, total] = await queryBuilder.getManyAndCount();
-    const tasks = await this.tasksRepository.find({
-      where: {
-        dailyPlan: {
-          id: In(dailyPlans.map((item) => item.id))
-        },
-        status: TaskStatus.TODO
-      },
-      order: {
-        startTime: SortOrder.ASC
-      }
-    })
-    const taskMap = new Map<string, any[]>();
-    for (const task of tasks) {
-      const planId = task.dailyPlanId;
-      if (!taskMap.has(planId)) {
-        taskMap.set(planId, []);
-      }
-      const list = taskMap.get(planId)!;
-      if (list.length < 5) {
-        list.push(task);
-      }
-    }
 
     const results = await Promise.all(
       dailyPlans.map(async (plan) => ({
-        ...plan,
-        tasks: taskMap.get(plan.id) ?? [],
         summary: await this.tasksService.getSummaryTask(plan.id),
       }))
     );
