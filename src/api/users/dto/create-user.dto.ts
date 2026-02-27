@@ -12,8 +12,8 @@ export class CreateUserDto {
     @UrlField({options: true})
     avatar?: string;
 
-    @PasswordField()
-    password: string;
+    @PasswordField({options: true})
+    password?: string;
 
     @EnumField(Gender,{options: true})
     gender?: Gender;

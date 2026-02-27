@@ -19,6 +19,9 @@ import { VerifyDto } from './dto/verify.dto';
 import { PayloadType } from './types/payload.type';
 import { RolesService } from '../roles/roles.service';
 import { ValidationException } from 'src/exceptions/validation.exception';
+import { GoogleProfile } from './types/google-profile.interface';
+import { Provider } from 'src/common/constants/provider.constant';
+import { UserEntity } from '../users/entities/user.entity';
 @Injectable()
 export class AuthService {
 
@@ -34,7 +37,7 @@ export class AuthService {
 
     async login(loginDto: LoginDto) {
         const {email, password} = loginDto;
-        const user = await this.usersService.getUserByEmail(email);
+        const user = await this.usersService.getUserByEmail(email) as UserEntity;
         if(!user || ! await user.comparePassword(password)) {
             throw new UnauthorizedException(ErrorCode.INVALID_LOGIN)
         }
@@ -58,6 +61,34 @@ export class AuthService {
             userId: user.id
 
         })
+    }
+
+    async loginGoogle(profile: GoogleProfile): Promise<string> {
+        const role = await this.rolesService.getRoleByName(RoleName.USER)
+        let user = await this.usersService.getUserByEmail(profile.email);
+        if(!user) {
+            user = await this.usersService.create({
+                fullName: profile.fullName,
+                email: profile.email,
+                avatar: profile.avatar,
+                verified: true,
+                roleId: role.id
+            })
+            await this.usersService.createProvider({
+                provider: Provider.GOOGLE,
+                providerId: profile.googleId,
+                userId: user.id
+            })
+        } else if(! await this.usersService.getProviderByUserId(user.id)) {
+            await this.usersService.createProvider({
+                provider: Provider.GOOGLE,
+                providerId: profile.googleId,
+                userId: user.id
+            })
+        }
+        const session = await this.usersService.createSession(user.id)
+        const accessToken = await this.generateAccessToken(user.id, session.id)
+        return accessToken
     }
 
     async logout(sessionId: string) {

@@ -25,6 +25,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UploadsModule } from './api/uploads/uploads.module';
 import { VerifyEntity } from './api/users/entities/verify.entity';
 import { AiModule } from './api/ai/ai.module';
+import { ProviderEntity } from './api/users/entities/provider.entity';
 @Module({
   imports: [
     RolesModule,
@@ -47,7 +48,7 @@ import { AiModule } from './api/ai/ai.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity, DailyPlanEntity, TimeBlockEntity, VerifyEntity],
+        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity, DailyPlanEntity, TimeBlockEntity, VerifyEntity, ProviderEntity],
         synchronize: true
       }),
       inject: [ConfigService],

@@ -24,6 +24,8 @@ import { UpdateMultiUserDto } from './dto/update-multi-user.dto';
 import { UserDetailRdo } from './rdo/user-detail.rdo';
 import { CreateVerifyDto } from './dto/create-verify.dto';
 import { VerifyEntity } from './entities/verify.entity';
+import { CreateProviderDto } from './dto/create-provider.dto';
+import { ProviderEntity } from './entities/provider.entity';
 @Injectable()
 export class UsersService {
 
@@ -32,7 +34,8 @@ export class UsersService {
     private rolesService: RolesService,
     @InjectRepository(SessionEntity) private sessionRepository: Repository<SessionEntity>,
     private configSerive: ConfigService,
-    @InjectRepository(VerifyEntity) private verifiesRepository: Repository<VerifyEntity>
+    @InjectRepository(VerifyEntity) private verifiesRepository: Repository<VerifyEntity>,
+    @InjectRepository(ProviderEntity) private providersRepository: Repository<ProviderEntity>
   ) {
 
   }
@@ -45,6 +48,14 @@ export class UsersService {
       }
     }).save();
 
+  }
+
+  async createProvider(dto: CreateProviderDto) {
+    return this.providersRepository.create(dto).save()
+  }
+
+  async getProviderByUserId(userId: string) {
+    return this.providersRepository.findOneBy({userId})
   }
 
   async findVerifiedByUserId(userId: string) {
@@ -146,7 +157,7 @@ export class UsersService {
     await this.usersRepository.softDelete(id)
   }
 
-  getUserByEmail(email: string) :Promise<UserEntity | null> {
+  getUserByEmail(email: string) :Promise<UserEntity | null | UserRdo> {
     return this.usersRepository.findOneBy({email})
   }
 

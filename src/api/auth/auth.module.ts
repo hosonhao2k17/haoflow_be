@@ -10,6 +10,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { MailModule } from 'src/mail/mail.module';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { RolesModule } from '../roles/roles.module';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { RolesModule } from '../roles/roles.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard
     },
-    JwtRefreshStrategy
+    JwtRefreshStrategy,
+    GoogleStrategy
   ],
 })
 export class AuthModule {}

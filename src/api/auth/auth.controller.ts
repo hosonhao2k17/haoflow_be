@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, UnauthorizedException, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req, Res, UnauthorizedException, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { LoginDto } from './dto/login.dto';
@@ -12,10 +12,16 @@ import { JwtRefreshGuard } from 'src/guards/jwt-refresh.guard';
 import { User } from 'src/decorators/user.decorator';
 import { RemoveRefresh } from 'src/decorators/remove-refresh.decorator';
 import { VerifyDto } from './dto/verify.dto';
+import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
+import { ConfigService } from '@nestjs/config';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Post('login')
   @Public()
@@ -59,5 +65,22 @@ export class AuthController {
   @ResponseMessage('Veify sucess')
   verify(@Query() verifyDto: VerifyDto) {
     return this.authService.verify(verifyDto)
+  }
+
+  @Get('google')
+  @Public()
+  @UseGuards(GoogleAuthGuard)
+  googleLogin() {
+  }
+
+  @Get('google/callback')
+  @Public()
+  @UseGuards(GoogleAuthGuard)
+  async googleCallback(@Req() req, @Res() res) {
+    const accessToken = await this.authService.loginGoogle(req.user);
+    
+    const clientUrl = this.configService.get('FE_URL');
+
+    res.redirect(`/${clientUrl}/oauth/callback?token=${accessToken}`)
   }
 }

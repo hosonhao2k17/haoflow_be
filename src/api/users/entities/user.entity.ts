@@ -5,6 +5,7 @@ import { comparePassword, hashPassword } from "src/utils/password";
 import { BeforeInsert, Column, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SessionEntity } from "./session.entity";
 import { VerifyEntity } from "./verify.entity";
+import { ProviderEntity } from "./provider.entity";
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
@@ -70,6 +71,9 @@ export class UserEntity extends AbstractEntity {
 
     @OneToMany(() => VerifyEntity, (verify) => verify.user )
     verifies: VerifyEntity[];
+
+    @OneToMany(() => ProviderEntity,(user) => user.provider)
+    providers: ProviderEntity[];
 
     @BeforeInsert()
     async hashPasswordBeforeInsert(): Promise<void> {
