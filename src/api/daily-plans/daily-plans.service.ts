@@ -50,10 +50,11 @@ export class DailyPlansService {
       .createQueryBuilder(alias)
       .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId})
     queryDailyPlanDto.handleQueryBuilder(queryBuilder);
-    const [dailyPlans, total] = await queryBuilder.getManyAndCount();
+    const dailyPlans = await queryBuilder.getMany();
 
     const results = await Promise.all(
       dailyPlans.map(async (plan) => ({
+        ...plan,
         summary: await this.tasksService.getSummaryTask(plan.id),
       }))
     );

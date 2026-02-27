@@ -26,6 +26,7 @@ import { UploadsModule } from './api/uploads/uploads.module';
 import { VerifyEntity } from './api/users/entities/verify.entity';
 import { AiModule } from './api/ai/ai.module';
 import { ProviderEntity } from './api/users/entities/provider.entity';
+import { AccountsModule } from './api/accounts/accounts.module';
 @Module({
   imports: [
     RolesModule,
@@ -36,6 +37,7 @@ import { ProviderEntity } from './api/users/entities/provider.entity';
     DailyPlansModule,
     UploadsModule,
     AiModule,
+    AccountsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
