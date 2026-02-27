@@ -27,6 +27,7 @@ import { VerifyEntity } from './api/users/entities/verify.entity';
 import { AiModule } from './api/ai/ai.module';
 import { ProviderEntity } from './api/users/entities/provider.entity';
 import { AccountsModule } from './api/accounts/accounts.module';
+import { AccountEntity } from './api/accounts/entities/account.entity';
 @Module({
   imports: [
     RolesModule,
@@ -50,7 +51,20 @@ import { AccountsModule } from './api/accounts/accounts.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        entities: [RoleEntity, PermissionEntity, RoleEntity, UserEntity, SessionEntity, TaskEntity, TaskCategoryEntity, DailyPlanEntity, TimeBlockEntity, VerifyEntity, ProviderEntity],
+        entities: [
+          RoleEntity, 
+          PermissionEntity, 
+          RoleEntity, 
+          UserEntity, 
+          SessionEntity, 
+          TaskEntity, 
+          TaskCategoryEntity, 
+          DailyPlanEntity, 
+          TimeBlockEntity, 
+          VerifyEntity, 
+          ProviderEntity,
+          AccountEntity
+        ],
         synchronize: true
       }),
       inject: [ConfigService],

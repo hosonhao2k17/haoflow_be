@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AccountEntity } from './entities/account.entity';
+import { Repository } from 'typeorm';
+import { plainToInstance } from 'class-transformer';
+import { AccountRdo } from './rdo/account.rdo';
 
 @Injectable()
 export class AccountsService {
-  create(createAccountDto: CreateAccountDto) {
-    return 'This action adds a new account';
+
+  constructor(@InjectRepository(AccountEntity) private accountsRepository: Repository<AccountEntity>) {
+
+  }
+
+  async create(createAccountDto: CreateAccountDto): Promise<AccountRdo> {
+    const account = await this.accountsRepository.create(createAccountDto).save();
+    return plainToInstance(AccountRdo, account)
   }
 
   findAll() {
