@@ -35,7 +35,9 @@ export class TasksService {
 
   async findAll(queryTaskDto: QueryTaskDto) {
 
-    const queryBuilder = this.tasksRepository.createQueryBuilder(queryTaskDto.getAlias())
+    const queryBuilder = this.tasksRepository
+      .createQueryBuilder(queryTaskDto.getAlias())
+      .leftJoinAndSelect(`${queryTaskDto.getAlias()}.category`,'category')
     queryTaskDto.handleQueryBuilder(queryBuilder);
 
     const [items, total] = await queryBuilder.getManyAndCount();

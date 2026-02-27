@@ -98,16 +98,6 @@ export class DailyPlansService {
       where: {
         createdBy: context?.userId,
         id
-      },
-      relations: {
-        tasks: {
-          category: true
-        }
-      },
-      order: {
-        tasks: {
-          startTime: SortOrder.ASC
-        }
       }
     })
     if(!dailyPlan) {
