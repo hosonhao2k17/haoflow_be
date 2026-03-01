@@ -78,7 +78,7 @@ export function NumberField(options: INumberFieldOptions = {}) {
          if(options.options) {
             decorators.push(
                 ApiPropertyOptional({
-                    type: String,
+                    type: Number,
                     ...swaggerOptions,
                     isArray: options.each
                 })
@@ -86,7 +86,7 @@ export function NumberField(options: INumberFieldOptions = {}) {
         }
         decorators.push(
             ApiProperty({
-                type: String,
+                type: Number,
                 ...swaggerOptions,
                 isArray: options.each
             })

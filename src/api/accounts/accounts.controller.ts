@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { AccountRdo } from './rdo/account.rdo';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { QueryAccountDto } from './dto/query-account.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -16,8 +17,9 @@ export class AccountsController {
   }
 
   @Get()
-  findAll() {
-    return this.accountsService.findAll();
+  @ApiBearerAuth()
+  findAll(@Query() queryAccountDto: QueryAccountDto) {
+    return this.accountsService.findAll(queryAccountDto);
   }
 
   @Get(':id')

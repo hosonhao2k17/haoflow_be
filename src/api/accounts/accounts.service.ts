@@ -6,6 +6,10 @@ import { AccountEntity } from './entities/account.entity';
 import { Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { AccountRdo } from './rdo/account.rdo';
+import { QueryAccountDto } from './dto/query-account.dto';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { requestContext } from 'src/common/context/request.context';
 
 @Injectable()
 export class AccountsService {
@@ -19,8 +23,17 @@ export class AccountsService {
     return plainToInstance(AccountRdo, account)
   }
 
-  findAll() {
-    return `This action returns all accounts`;
+  async findAll(queryDto: QueryAccountDto) {
+
+    const context = requestContext.getStore()
+    const queryBuilder = this.accountsRepository
+      .createQueryBuilder(queryDto.getAlias())
+      .andWhere({createdBy: context?.userId})
+    queryDto.handleQueryBuilder(queryBuilder);
+
+    const [items, total] = await queryBuilder.getManyAndCount();
+    const pagination = new OffsetPaginationRdo(total, queryDto);
+    return new OffsetPaginatedRdo(plainToInstance(AccountRdo, items),pagination)
   }
 
   findOne(id: number) {
