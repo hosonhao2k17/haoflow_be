@@ -38,7 +38,8 @@ export class AccountsService {
   }
 
   async findOne(id: string) :Promise<AccountRdo> {
-    const account = await this.accountsRepository.findOneBy({id});
+    const context = requestContext.getStore()
+    const account = await this.accountsRepository.findOneBy({id, createdBy: context?.userId});
     if(!account) {
       throw new NotFoundException(ErrorCode.ACCOUNT_NOT_FOUND)
     }
@@ -46,7 +47,8 @@ export class AccountsService {
   }
 
   async update(id: string, updateAccountDto: UpdateAccountDto) {
-    const account = await this.accountsRepository.findOneBy({id});
+    const context = requestContext.getStore()
+    const account = await this.accountsRepository.findOneBy({id, createdBy: context?.userId});
     if(!account) {
       throw new NotFoundException(ErrorCode.ACCOUNT_NOT_FOUND)
     }
@@ -55,7 +57,8 @@ export class AccountsService {
     return plainToInstance(AccountRdo, account)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} account`;
+  async remove(id: string) :Promise<void> {
+    await this.findOne(id);
+    await this.accountsRepository.delete(id)
   }
 }

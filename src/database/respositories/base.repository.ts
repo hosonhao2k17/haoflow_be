@@ -13,7 +13,7 @@ export class BaseRepository<T extends AbstractEntity> extends Repository<T> {
     }
 
     createQueryBuilder(alias?: string, queryRunner?: QueryRunner): SelectQueryBuilder<T> {
-        const qb = super.createQueryBuilder();
+        const qb = super.createQueryBuilder(alias,queryRunner);
         const userId = this.getUserId();
         if(userId && alias) {
             qb.andWhere(`${alias}.createdBy = :createdBy`, { createdBy: userId });

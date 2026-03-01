@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
@@ -34,9 +34,10 @@ export class AccountsController {
     return this.accountsService.update(id, updateAccountDto);
   }
 
-  @Delete(':id')
+  @Delete(':id')  
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
-    return this.accountsService.remove(+id);
+  remove(@Param('id') id: string) :Promise<void> {
+    return this.accountsService.remove(id);
   }
 }
