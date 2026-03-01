@@ -23,8 +23,8 @@ export class AccountsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountsService.findOne(+id);
+  findOne(@Param('id') id: string) :Promise<AccountRdo> {
+    return this.accountsService.findOne(id);
   }
 
   @Patch(':id')

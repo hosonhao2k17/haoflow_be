@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import { QueryAccountDto } from './dto/query-account.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { requestContext } from 'src/common/context/request.context';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
 
 @Injectable()
 export class AccountsService {
@@ -36,8 +37,12 @@ export class AccountsService {
     return new OffsetPaginatedRdo(plainToInstance(AccountRdo, items),pagination)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
+  async findOne(id: string) :Promise<AccountRdo> {
+    const account = await this.accountsRepository.findOneBy({id});
+    if(!account) {
+      throw new NotFoundException(ErrorCode.ACCOUNT_NOT_FOUND)
+    }
+    return plainToInstance(AccountRdo, account)
   }
 
   update(id: number, updateAccountDto: UpdateAccountDto) {
