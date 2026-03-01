@@ -16,10 +16,10 @@ export class CreateAccountDto {
     @StringField({
         options: true
     })
-    color: string; 
+    color?: string; 
 
     @StringField({
         options: true
     })
-    icon: string;
+    icon?: string;
 }

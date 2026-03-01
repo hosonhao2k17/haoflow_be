@@ -23,16 +23,19 @@ export class AccountsController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) :Promise<AccountRdo> {
     return this.accountsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountsService.update(+id, updateAccountDto);
+  @ApiBearerAuth()
+  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) :Promise<AccountRdo> {
+    return this.accountsService.update(id, updateAccountDto);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.accountsService.remove(+id);
   }

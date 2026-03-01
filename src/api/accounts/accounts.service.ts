@@ -45,8 +45,14 @@ export class AccountsService {
     return plainToInstance(AccountRdo, account)
   }
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
+  async update(id: string, updateAccountDto: UpdateAccountDto) {
+    const account = await this.accountsRepository.findOneBy({id});
+    if(!account) {
+      throw new NotFoundException(ErrorCode.ACCOUNT_NOT_FOUND)
+    }
+    Object.assign(account, updateAccountDto);
+    await account.save();
+    return plainToInstance(AccountRdo, account)
   }
 
   remove(id: number) {
