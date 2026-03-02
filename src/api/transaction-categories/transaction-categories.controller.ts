@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { TransactionCategoriesService } from './transaction-categories.service';
 import { CreateTransactionCategoryDto } from './dto/create-transaction-category.dto';
 import { UpdateTransactionCategoryDto } from './dto/update-transaction-category.dto';
 import { TransactionCategoryRdo } from './rdo/transaction-category.rdo';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { QueryTransactionCategoryDto } from './dto/query-transaction-category.dto';
 
 @Controller('transaction-categories')
 export class TransactionCategoriesController {
@@ -17,8 +18,8 @@ export class TransactionCategoriesController {
 
   @Get()
   @ApiBearerAuth()
-  findAll() {
-    return this.transactionCategoriesService.findAll();
+  findAll(@Query() queryDto: QueryTransactionCategoryDto) {
+    return this.transactionCategoriesService.findAll(queryDto);
   }
 
   @Get(':id')

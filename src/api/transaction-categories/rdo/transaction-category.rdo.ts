@@ -9,6 +9,9 @@ export class TransactionCategoryRdo extends BaseRdo{
     id: string;
 
     @Expose()
+    title: string;
+
+    @Expose()
     type: TransactionCategoryType;
 
     @Expose()
