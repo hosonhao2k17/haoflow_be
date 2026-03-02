@@ -56,8 +56,15 @@ export class TransactionCategoriesService {
     return plainToInstance(TransactionCategoryRdo, category)
   }
 
-  update(id: number, updateTransactionCategoryDto: UpdateTransactionCategoryDto) {
-    return `This action updates a #${id} transactionCategory`;
+  async update(id: string, updateTransactionCategoryDto: UpdateTransactionCategoryDto) {
+    const context = requestContext.getStore()
+    const category = await this.transactionCategoriesRepository.findOneBy({id, createdBy: context?.userId})
+    if(!category) {
+      throw new NotFoundException(ErrorCode.TRANSACTION_CATEGORY_NOT_FOUND)
+    }
+    Object.assign(category, updateTransactionCategoryDto)
+    await category.save()
+    return plainToInstance(TransactionCategoryRdo, category)
   }
 
   remove(id: number) {

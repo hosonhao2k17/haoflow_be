@@ -30,8 +30,8 @@ export class TransactionCategoriesController {
 
   @Patch(':id')
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateTransactionCategoryDto: UpdateTransactionCategoryDto) {
-    return this.transactionCategoriesService.update(+id, updateTransactionCategoryDto);
+  update(@Param('id') id: string, @Body() updateTransactionCategoryDto: UpdateTransactionCategoryDto) :Promise<TransactionCategoryRdo> {
+    return this.transactionCategoriesService.update(id, updateTransactionCategoryDto);
   }
 
   @Delete(':id')
