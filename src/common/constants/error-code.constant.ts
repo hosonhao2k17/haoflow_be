@@ -58,6 +58,9 @@ export enum ErrorCode {
   //===== ACCOUNT =====
   ACCOUNT_NOT_FOUND = 'account.error.not_found',
 
+  // ===== TRANSACTION =====
+  TRANSACTION_CATEGORY_NOT_FOUND = 'transaction_category.error.not_found',
+
   // ===== Daily plan 
   DAILY_PLAN_NOT_FOUND = 'daily_plan.error.not_found',
   DAILY_PLAN_EXISTS = 'daily_plan.error.exists'

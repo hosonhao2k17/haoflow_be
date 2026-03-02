@@ -24,8 +24,8 @@ export class TransactionCategoriesController {
 
   @Get(':id')
   @ApiBearerAuth()
-  findOne(@Param('id') id: string) {
-    return this.transactionCategoriesService.findOne(+id);
+  findOne(@Param('id') id: string) :Promise<TransactionCategoryRdo> {
+    return this.transactionCategoriesService.findOne(id);
   }
 
   @Patch(':id')

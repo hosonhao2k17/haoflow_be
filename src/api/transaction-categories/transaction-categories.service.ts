@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionCategoryDto } from './dto/create-transaction-category.dto';
 import { UpdateTransactionCategoryDto } from './dto/update-transaction-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +9,8 @@ import { TransactionCategoryRdo } from './rdo/transaction-category.rdo';
 import { QueryTransactionCategoryDto } from './dto/query-transaction-category.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { requestContext } from 'src/common/context/request.context';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
 
 @Injectable()
 export class TransactionCategoriesService {
@@ -38,8 +40,20 @@ export class TransactionCategoriesService {
     return new OffsetPaginatedRdo(plainToInstance(TransactionCategoryRdo, items), pagination)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transactionCategory`;
+  async findOne(id: string) :Promise<TransactionCategoryRdo> {
+    const context = requestContext.getStore()
+    const category = await this.transactionCategoriesRepository.findOne({
+      where: {id, createdBy: context?.userId},
+      relations: {
+        childrens: {
+          childrens: true
+        }
+      }
+    });
+    if(!category) {
+      throw new NotFoundException(ErrorCode.TRANSACTION_CATEGORY_NOT_FOUND)
+    }
+    return plainToInstance(TransactionCategoryRdo, category)
   }
 
   update(id: number, updateTransactionCategoryDto: UpdateTransactionCategoryDto) {
