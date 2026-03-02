@@ -51,3 +51,8 @@ export enum TaskStatus {
 export const CLOUDINARY = 'cloudinary'
 
 export const AI = 'ai'
+
+export enum TransactionCategoryType {
+    INCOME = 'income',
+    EXPENSE = 'expense'
+}

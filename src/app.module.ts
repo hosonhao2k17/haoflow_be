@@ -29,6 +29,7 @@ import { ProviderEntity } from './api/users/entities/provider.entity';
 import { AccountsModule } from './api/accounts/accounts.module';
 import { AccountEntity } from './api/accounts/entities/account.entity';
 import { TransactionCategoriesModule } from './api/transaction-categories/transaction-categories.module';
+import { TransactionCategoryEntity } from './api/transaction-categories/entities/transaction-category.entity';
 @Module({
   imports: [
     RolesModule,
@@ -65,7 +66,8 @@ import { TransactionCategoriesModule } from './api/transaction-categories/transa
           TimeBlockEntity, 
           VerifyEntity, 
           ProviderEntity,
-          AccountEntity
+          AccountEntity,
+          TransactionCategoryEntity
         ],
         synchronize: true
       }),
