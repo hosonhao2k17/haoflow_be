@@ -20,7 +20,7 @@ export class TransactionCategoryEntity extends AbstractEntity {
     @Column({nullable: true})
     color?: string;
 
-    @Column()
+    @Column({nullable: true})
     parentId: string;
 
     @ManyToOne(() => TransactionCategoryEntity, (category) => category.childrens, {nullable: true})

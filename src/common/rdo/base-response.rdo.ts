@@ -1,4 +1,4 @@
-import { Exclude, Expose } from "class-transformer";
+import { Expose } from "class-transformer";
 
 
 export class BaseRdo {
@@ -8,11 +8,5 @@ export class BaseRdo {
 
     @Expose()
     updatedAt: Date;
-
-    @Expose()
-    createdBy: string;
-
-    @Expose()
-    updatedBy: string;
 
 }
