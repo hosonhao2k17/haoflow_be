@@ -62,8 +62,9 @@ export enum ErrorCode {
   TRANSACTION_CATEGORY_NOT_FOUND = 'transaction_category.error.not_found',
   TRANSACTION_NOT_FOUND = 'transaction.error.not_found',
 
+  // ===== BUDGET ===== 
   BUDGET_MONTH_CONFLICT = 'budget.error.month_conflict',
-
+  BUDGET_NOT_FOUND = 'budget.error.not_found',
   // ===== Daily plan 
   DAILY_PLAN_NOT_FOUND = 'daily_plan.error.not_found',
   DAILY_PLAN_EXISTS = 'daily_plan.error.exists'

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -52,8 +52,21 @@ export class BudgetsService {
     return new OffsetPaginatedRdo(plainToInstance(BudgetRdo, items),pagination)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} budget`;
+  async findOne(id: string) {
+    const budget = await this.budgetsRepository.findOne({
+      where: {
+        id,
+        createdBy: requestContext.getStore()?.userId
+      },
+      relations: {
+        category: true
+      }
+    });
+    if(!budget) {
+      throw new NotFoundException(ErrorCode.BUDGET_NOT_FOUND)
+    }
+    return plainToInstance(BudgetRdo, budget)
+    
   }
 
   update(id: number, updateBudgetDto: UpdateBudgetDto) {

@@ -24,7 +24,7 @@ export class BudgetsController {
   @Get(':id')
   @ApiBearerAuth()
   findOne(@Param('id') id: string) {
-    return this.budgetsService.findOne(+id);
+    return this.budgetsService.findOne(id);
   }
 
   @Patch(':id')
