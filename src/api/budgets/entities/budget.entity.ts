@@ -15,6 +15,9 @@ export class BudgetEntity extends AbstractEntity{
     })
     amount: number;
 
+    @Column()
+    categoryId: string;
+
     @ManyToOne(() => TransactionCategoryEntity, (category) => category.budgets)
     category: TransactionCategoryEntity;
 
