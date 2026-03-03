@@ -68,3 +68,9 @@ export enum TransactionSource {
     OCR = 'ocr',
     IMPORT = 'import'
 }
+
+export enum BudgetPeriod {
+    MONTHLY = 'monthly',
+    WEEKLY = 'weekly',
+    DAILY = 'daily'
+}

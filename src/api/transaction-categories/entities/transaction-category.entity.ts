@@ -1,3 +1,4 @@
+import { BudgetEntity } from "src/api/budgets/entities/budget.entity";
 import { TransactionEntity } from "src/api/transactions/entities/transaction.entity";
 import { TransactionCategoryType } from "src/common/constants/app.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
@@ -33,6 +34,9 @@ export class TransactionCategoryEntity extends AbstractEntity {
 
     @OneToMany(() => TransactionEntity, (transaction) => transaction.category)
     transactions: TransactionEntity[];
+
+    @OneToMany(() => BudgetEntity, (budget) => budget.category)
+    budgets: BudgetEntity[]
 
     @OneToMany(() => TransactionCategoryEntity, (categories) => categories.parent)
     childrens: TransactionCategoryEntity[];

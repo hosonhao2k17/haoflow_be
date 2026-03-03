@@ -32,6 +32,8 @@ import { TransactionCategoriesModule } from './api/transaction-categories/transa
 import { TransactionCategoryEntity } from './api/transaction-categories/entities/transaction-category.entity';
 import { TransactionsModule } from './api/transactions/transactions.module';
 import { TransactionEntity } from './api/transactions/entities/transaction.entity';
+import { BudgetsModule } from './api/budgets/budgets.module';
+import { BudgetEntity } from './api/budgets/entities/budget.entity';
 @Module({
   imports: [
     RolesModule,
@@ -45,6 +47,7 @@ import { TransactionEntity } from './api/transactions/entities/transaction.entit
     AccountsModule,
     TransactionCategoriesModule,
     TransactionsModule,
+    BudgetsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -71,7 +74,8 @@ import { TransactionEntity } from './api/transactions/entities/transaction.entit
           ProviderEntity,
           AccountEntity,
           TransactionCategoryEntity,
-          TransactionEntity
+          TransactionEntity,
+          BudgetEntity
         ],
         synchronize: true
       }),
