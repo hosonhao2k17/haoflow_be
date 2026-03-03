@@ -44,7 +44,7 @@ export class TransactionEntity extends AbstractEntity {
     @Column({
         nullable: true
     })
-    merchant: string;
+    merchant?: string;
 
     @Column()
     transactionDate: Date;
