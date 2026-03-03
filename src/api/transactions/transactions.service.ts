@@ -11,16 +11,29 @@ import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
 import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
+import { TransactionCategoriesService } from '../transaction-categories/transaction-categories.service';
+import { AccountsService } from '../accounts/accounts.service';
 
 @Injectable()
 export class TransactionsService {
 
   constructor(
-    @InjectRepository(TransactionEntity) private transactionsRepository: Repository<TransactionEntity>
+    @InjectRepository(TransactionEntity) private transactionsRepository: Repository<TransactionEntity>,
+    private transactionCategoriesService: TransactionCategoriesService,
+    private accountsService: AccountsService
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto) :Promise<TransactionRdo> {
-    const transaction = await this.transactionsRepository.create(createTransactionDto).save()
+    const {categoryId, accountId, ...rest} = createTransactionDto
+    const [category, account] = await Promise.all([
+      this.transactionCategoriesService.findOne(categoryId),
+      this.accountsService.findOne(accountId)
+    ])
+    const transaction = await this.transactionsRepository.create({
+      ...rest,
+      category,
+      account
+    }).save()
     return plainToInstance(TransactionRdo, transaction)
   }
 
@@ -59,8 +72,31 @@ export class TransactionsService {
     return plainToInstance(TransactionRdo, transaction)
   }
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
+  async update(id: string, updateTransactionDto: UpdateTransactionDto) {
+    const {categoryId, accountId, ...data} = updateTransactionDto;
+    const transaction = await this.transactionsRepository.findOne({
+      where: {
+        id 
+      },
+      relations: {
+        category: true,
+        account: true
+      }
+    });
+    if(!transaction) {
+      throw new NotFoundException(ErrorCode.TRANSACTION_NOT_FOUND)
+    }
+    const [category, account] = await Promise.all([
+      categoryId ? this.transactionCategoriesService.findOne(categoryId) : transaction.category,
+      accountId ? this.accountsService.findOne(accountId) : transaction.account
+    ])
+    Object.assign(transaction, {
+      ...data,
+      category,
+      account
+    })
+    await transaction.save()
+    return plainToInstance(TransactionRdo, transaction)
   }
 
   remove(id: number) {

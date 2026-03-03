@@ -25,14 +25,14 @@ export class TransactionsController {
 
   @Get(':id')
   @ApiBearerAuth()
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string) :Promise<TransactionRdo> {
     return this.transactionsService.findOne(id);
   }
 
   @Patch(':id')
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto) {
-    return this.transactionsService.update(+id, updateTransactionDto);
+  update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto): Promise<TransactionRdo>{
+    return this.transactionsService.update(id, updateTransactionDto);
   }
 
   @Delete(':id')

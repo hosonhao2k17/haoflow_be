@@ -8,5 +8,6 @@ import { TransactionCategoryEntity } from './entities/transaction-category.entit
   imports: [TypeOrmModule.forFeature([TransactionCategoryEntity])],
   controllers: [TransactionCategoriesController],
   providers: [TransactionCategoriesService],
+  exports: [TransactionCategoriesService]
 })
 export class TransactionCategoriesModule {}
