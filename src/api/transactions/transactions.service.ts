@@ -13,6 +13,7 @@ import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { TransactionCategoriesService } from '../transaction-categories/transaction-categories.service';
 import { AccountsService } from '../accounts/accounts.service';
+import { requestContext } from 'src/common/context/request.context';
 
 @Injectable()
 export class TransactionsService {
@@ -42,6 +43,7 @@ export class TransactionsService {
       .createQueryBuilder(queryTransactionDto.getAlias())
       .leftJoinAndSelect(`${queryTransactionDto.getAlias()}.category`,"category")
       .leftJoinAndSelect(`${queryTransactionDto.getAlias()}.account`,"account")
+      .andWhere(`${queryTransactionDto.getAlias()}.createdBy = :createdBy`,{createdBy: requestContext.getStore()?.userId})
 
     queryTransactionDto.handleQueryBuilder(queryBuilder);
     const [items, total] =  await queryBuilder.getManyAndCount();
@@ -59,7 +61,8 @@ export class TransactionsService {
   async findOne(id: string) {
     const transaction = await this.transactionsRepository.findOne({
       where: {
-        id 
+        id,
+        createdBy: requestContext.getStore()?.userId
       },
       relations: {
         category: true,
@@ -76,7 +79,8 @@ export class TransactionsService {
     const {categoryId, accountId, ...data} = updateTransactionDto;
     const transaction = await this.transactionsRepository.findOne({
       where: {
-        id 
+        id,
+        createdBy: requestContext.getStore()?.userId
       },
       relations: {
         category: true,
