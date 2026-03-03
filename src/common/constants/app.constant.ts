@@ -74,3 +74,9 @@ export enum BudgetPeriod {
     WEEKLY = 'weekly',
     DAILY = 'daily'
 }
+
+export enum ReceiptStatus {
+    PENDING = 'pending',
+    DONE = 'done',
+    FAILED = 'failed'
+}
