@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { BudgetsService } from './budgets.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { QueryBudgetDto } from './dto/query-budget.dto';
+import { BudgetRdo } from './rdo/budget.rdo';
 
 @Controller('budgets')
 export class BudgetsController {
@@ -29,13 +30,14 @@ export class BudgetsController {
 
   @Patch(':id')
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateBudgetDto: UpdateBudgetDto) {
-    return this.budgetsService.update(+id, updateBudgetDto);
+  update(@Param('id') id: string, @Body() updateBudgetDto: UpdateBudgetDto) :Promise<BudgetRdo> {
+    return this.budgetsService.update(id, updateBudgetDto);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   remove(@Param('id') id: string) {
-    return this.budgetsService.remove(+id);
+    return this.budgetsService.remove(id);
   }
 }

@@ -25,12 +25,8 @@ export class BudgetsService {
   async create(createBudgetDto: CreateBudgetDto): Promise<BudgetRdo> {
     const {categoryId, ...rest} = createBudgetDto
     const category = await this.transactionCategoriesService.findOne(categoryId)
-    const isExistsMonth = await this.budgetsRepository.findOneBy({
-      month: createBudgetDto.month,
-      createdBy: requestContext.getStore()?.userId,
-      categoryId
-    })
-    if(isExistsMonth) {
+    const isExists = await this.isExistsMonth(createBudgetDto.month, categoryId)
+    if(isExists) {
       throw new ConflictException(ErrorCode.BUDGET_MONTH_CONFLICT)
     }
     const budget = await this.budgetsRepository.create({
@@ -39,6 +35,15 @@ export class BudgetsService {
     }).save()
 
     return plainToInstance(BudgetRdo, budget);
+  }
+
+  private isExistsMonth(month: Date , categoryId: string) {
+    return this.budgetsRepository.findOneBy({
+      month,
+      createdBy: requestContext.getStore()?.userId,
+      categoryId
+    })
+    
   }
 
   async findAll(queryBudgetDto: QueryBudgetDto) :Promise<OffsetPaginatedRdo<BudgetRdo>> {
@@ -62,6 +67,8 @@ export class BudgetsService {
         category: true
       }
     });
+    
+
     if(!budget) {
       throw new NotFoundException(ErrorCode.BUDGET_NOT_FOUND)
     }
@@ -69,11 +76,34 @@ export class BudgetsService {
     
   }
 
-  update(id: number, updateBudgetDto: UpdateBudgetDto) {
-    return `This action updates a #${id} budget`;
+  async update(id: string, updateBudgetDto: UpdateBudgetDto) :Promise<BudgetRdo> {
+    const budget = await this.budgetsRepository.findOne({
+      where: {
+        id,
+        createdBy: requestContext.getStore()?.userId
+      },
+      relations: {
+        category: true
+      }
+    });
+    if(!budget) {
+      throw new NotFoundException(ErrorCode.BUDGET_NOT_FOUND)
+    }
+    const isExists = await this.isExistsMonth(updateBudgetDto?.month ?? budget?.month, updateBudgetDto?.categoryId ?? budget?.categoryId)
+    if(isExists) {
+      throw new ConflictException(ErrorCode.BUDGET_MONTH_CONFLICT)
+    }
+    if(updateBudgetDto.categoryId) {
+      const category = await this.transactionCategoriesService.findOne(updateBudgetDto.categoryId)
+      Object.assign(budget, {category})
+    }
+    Object.assign(budget, updateBudgetDto);
+    return plainToInstance(BudgetRdo, budget)
   }
+  
 
-  remove(id: number) {
-    return `This action removes a #${id} budget`;
+  async remove(id: string) {
+    await this.findOne(id);
+    await this.budgetsRepository.delete(id)
   }
 }
