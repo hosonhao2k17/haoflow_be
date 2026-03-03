@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { TransactionCategoriesService } from './transaction-categories.service';
 import { CreateTransactionCategoryDto } from './dto/create-transaction-category.dto';
 import { UpdateTransactionCategoryDto } from './dto/update-transaction-category.dto';
@@ -35,8 +35,9 @@ export class TransactionCategoriesController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   remove(@Param('id') id: string) {
-    return this.transactionCategoriesService.remove(+id);
+    return this.transactionCategoriesService.remove(id);
   }
 }

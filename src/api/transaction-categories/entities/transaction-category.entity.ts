@@ -23,7 +23,10 @@ export class TransactionCategoryEntity extends AbstractEntity {
     @Column({nullable: true})
     parentId: string;
 
-    @ManyToOne(() => TransactionCategoryEntity, (category) => category.childrens, {nullable: true})
+    @ManyToOne(() => TransactionCategoryEntity, (category) => category.childrens, {
+        nullable: true,
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({name: 'parentId'})
     parent: TransactionCategoryEntity;
 

@@ -67,7 +67,8 @@ export class TransactionCategoriesService {
     return plainToInstance(TransactionCategoryRdo, category)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transactionCategory`;
+  async remove(id: string) {
+    await this.findOne(id);
+    await this.transactionCategoriesRepository.delete(id) 
   }
 }
