@@ -13,7 +13,7 @@ export class CreateDailyPlanDto {
     title: string;
 
     @StringField({options: true})
-    description: string;
+    description?: string;
 
     @MilitaryTimeField()
     startTime: string;

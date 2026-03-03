@@ -37,7 +37,7 @@ export class DailyPlansService {
       date: createDailyPlanDto.date,
       createdBy: context?.userId
     })
-    if(!isExists) {
+    if(isExists) {
       throw new ValidationException(ErrorCode.DAILY_PLAN_EXISTS)
     }
     const dailyPlan = await this.dailyPlansRepository.create(createDailyPlanDto).save();
