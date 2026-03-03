@@ -30,6 +30,7 @@ import { AccountsModule } from './api/accounts/accounts.module';
 import { AccountEntity } from './api/accounts/entities/account.entity';
 import { TransactionCategoriesModule } from './api/transaction-categories/transaction-categories.module';
 import { TransactionCategoryEntity } from './api/transaction-categories/entities/transaction-category.entity';
+import { TransactionsModule } from './api/transactions/transactions.module';
 @Module({
   imports: [
     RolesModule,
@@ -42,6 +43,7 @@ import { TransactionCategoryEntity } from './api/transaction-categories/entities
     AiModule,
     AccountsModule,
     TransactionCategoriesModule,
+    TransactionsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
