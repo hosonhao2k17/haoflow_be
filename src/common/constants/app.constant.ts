@@ -56,3 +56,15 @@ export enum TransactionCategoryType {
     INCOME = 'income',
     EXPENSE = 'expense'
 }
+
+export enum TransactionType {
+    INCOME = 'income',
+    EXPENSE = 'expense',
+    TRANSFER = 'transfer'
+}
+
+export enum TransactionSource {
+    MANUAL = 'manual',
+    OCR = 'ocr',
+    IMPORT = 'import'
+}

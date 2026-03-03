@@ -31,6 +31,7 @@ import { AccountEntity } from './api/accounts/entities/account.entity';
 import { TransactionCategoriesModule } from './api/transaction-categories/transaction-categories.module';
 import { TransactionCategoryEntity } from './api/transaction-categories/entities/transaction-category.entity';
 import { TransactionsModule } from './api/transactions/transactions.module';
+import { TransactionEntity } from './api/transactions/entities/transaction.entity';
 @Module({
   imports: [
     RolesModule,
@@ -69,7 +70,8 @@ import { TransactionsModule } from './api/transactions/transactions.module';
           VerifyEntity, 
           ProviderEntity,
           AccountEntity,
-          TransactionCategoryEntity
+          TransactionCategoryEntity,
+          TransactionEntity
         ],
         synchronize: true
       }),

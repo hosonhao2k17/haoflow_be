@@ -1,3 +1,4 @@
+import { TransactionEntity } from "src/api/transactions/entities/transaction.entity";
 import { TransactionCategoryType } from "src/common/constants/app.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -29,6 +30,9 @@ export class TransactionCategoryEntity extends AbstractEntity {
     })
     @JoinColumn({name: 'parentId'})
     parent: TransactionCategoryEntity;
+
+    @OneToMany(() => TransactionEntity, (transaction) => transaction.category)
+    transactions: TransactionEntity[];
 
     @OneToMany(() => TransactionCategoryEntity, (categories) => categories.parent)
     childrens: TransactionCategoryEntity[];

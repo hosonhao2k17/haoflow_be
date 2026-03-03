@@ -1,6 +1,7 @@
+import { TransactionEntity } from "src/api/transactions/entities/transaction.entity";
 import { AccountStatus, AccountType } from "src/common/constants/account.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity('accounts')
@@ -34,5 +35,7 @@ export class AccountEntity extends AbstractEntity{
     })
     status: AccountStatus;
 
+    @OneToMany(() => TransactionEntity, (transaction) => transaction.account)
+    transactions: TransactionEntity[];
 
 }
