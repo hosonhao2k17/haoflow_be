@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import { QueryTransactionDto } from './dto/query-transaction.dto';
 import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
 import { getAfterCursor, getBeforeCursor } from 'src/utils/cursor-pagination';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
+import { ErrorCode } from 'src/common/constants/error-code.constant';
 
 @Injectable()
 export class TransactionsService {
@@ -42,8 +43,20 @@ export class TransactionsService {
     return new CursorPaginatedRdo(plainToInstance(TransactionRdo, items), cursorPagination);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
+  async findOne(id: string) {
+    const transaction = await this.transactionsRepository.findOne({
+      where: {
+        id 
+      },
+      relations: {
+        category: true,
+        account: true
+      }
+    });
+    if(!transaction) {
+      throw new NotFoundException(ErrorCode.TRANSACTION_NOT_FOUND)
+    }
+    return plainToInstance(TransactionRdo, transaction)
   }
 
   update(id: number, updateTransactionDto: UpdateTransactionDto) {
