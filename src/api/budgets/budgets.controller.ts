@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { BudgetsService } from './budgets.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { QueryBudgetDto } from './dto/query-budget.dto';
 
 @Controller('budgets')
 export class BudgetsController {
@@ -16,8 +17,8 @@ export class BudgetsController {
 
   @Get()
   @ApiBearerAuth()
-  findAll() {
-    return this.budgetsService.findAll();
+  findAll(@Query() queryBudgetDto: QueryBudgetDto) {
+    return this.budgetsService.findAll(queryBudgetDto);
   }
 
   @Get(':id')

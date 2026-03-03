@@ -9,6 +9,10 @@ import { plainToInstance } from 'class-transformer';
 import { BudgetRdo } from './rdo/budget.rdo';
 import { requestContext } from 'src/common/context/request.context';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
+import { QueryBudgetDto } from './dto/query-budget.dto';
+import { CursorPaginationRdo } from 'src/common/rdo/cursor-pagination.rdo';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 
 @Injectable()
 export class BudgetsService {
@@ -37,8 +41,15 @@ export class BudgetsService {
     return plainToInstance(BudgetRdo, budget);
   }
 
-  findAll() {
-    return `This action returns all budgets`;
+  async findAll(queryBudgetDto: QueryBudgetDto) :Promise<OffsetPaginatedRdo<BudgetRdo>> {
+    const queryBuilder = this.budgetsRepository
+      .createQueryBuilder(queryBudgetDto.getAlias())
+      .leftJoinAndSelect(`${queryBudgetDto.getAlias()}.category`,'category')
+      .andWhere(`${queryBudgetDto.getAlias()}.createdBy = :userId`,{userId: requestContext.getStore()?.userId})
+    queryBudgetDto.handleQueryBuilder(queryBuilder);
+    const [items, total] = await queryBuilder.getManyAndCount();
+    const pagination = new OffsetPaginationRdo(total, queryBudgetDto);
+    return new OffsetPaginatedRdo(plainToInstance(BudgetRdo, items),pagination)
   }
 
   findOne(id: number) {
