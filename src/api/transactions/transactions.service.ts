@@ -99,7 +99,8 @@ export class TransactionsService {
     return plainToInstance(TransactionRdo, transaction)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async remove(id: string) :Promise<void> {
+    await this.findOne(id);
+    await this.transactionsRepository.delete(id)
   }
 }

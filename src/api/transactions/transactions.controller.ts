@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -36,8 +36,9 @@ export class TransactionsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
-    return this.transactionsService.remove(+id);
+  remove(@Param('id') id: string) :Promise<void> {
+    return this.transactionsService.remove(id);
   }
 }
