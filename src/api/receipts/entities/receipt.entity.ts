@@ -1,8 +1,9 @@
 import { ReceiptStatus } from "src/common/constants/app.constant";
+import { AbstractEntity } from "src/database/entities/abstract.entity";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('receipts')
-export class ReceiptEntity {
+export class ReceiptEntity extends AbstractEntity {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;

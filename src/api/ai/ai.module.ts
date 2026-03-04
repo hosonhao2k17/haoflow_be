@@ -3,6 +3,7 @@ import { AiService } from './ai.service';
 import { AI } from 'src/common/constants/app.constant';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenAI } from '@google/genai';
+import { AiController } from './ai.controller';
 
 @Module({
   providers: [
@@ -18,6 +19,7 @@ import { GoogleGenAI } from '@google/genai';
       }
     }
   ],
+  controllers: [AiController],
   exports: [AiService]
 })
 export class AiModule {}

@@ -24,26 +24,9 @@ export class TransformResponseInterceptor<T> implements NestInterceptor<T, ITran
             map(data => ({
                 message,
                 statusCode,
-                data: this.reorderData(data)
+                data
             }))
         )
-    }
-
-    private reorderData(data: any) {
-        
-        if(Array.isArray(data?.items)) {
-            return data?.items.map((item) => this.reorderData(item))
-        }
-        if(data instanceof BaseRdo) {
-            
-            const {createdAt, updatedAt, ...rest} = data;
-            return {
-                ...rest,
-                createdAt,
-                updatedAt
-            }
-        }
-        return data
     }
     
 }

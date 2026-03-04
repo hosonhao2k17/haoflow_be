@@ -1,30 +1,42 @@
-import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
+import { GenerateContentResponse, GoogleGenAI, Part } from '@google/genai';
 import { Inject, Injectable } from '@nestjs/common';
 import { AI } from 'src/common/constants/app.constant';
 import { AiDto } from './dto/ai.dto';
 import { TaskRdo } from '../tasks/rdo/task.rdo';
 import { aiRules } from 'src/common/constants/rule.constant';
+import { AiRdo } from './rdo/ai.rdo';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AiService {
 
     constructor(
-        @Inject(AI) private readonly aiClient: GoogleGenAI
+        @Inject(AI) private readonly aiClient: GoogleGenAI,
+        private configService: ConfigService
     ) {}
 
-    generateAiContent(dto: AiDto<any>) :Promise<GenerateContentResponse>  {
+    async generateAiContent(dto: AiDto<any>, parts: Part[] = []): Promise<GenerateContentResponse> {
+        parts.push({
+            text: JSON.stringify({
+                rules: aiRules.join(),
+                ...dto
+            })
+        });
+
         return this.aiClient.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: [
-                {role: "user", parts: [{text: JSON.stringify(
-                    {
-                        rules: aiRules.join(),
-                        ...dto
-                    }
-                )}]}
-            ]
-        })
+            model: this.configService.getOrThrow<string>('AI_MODEL'),
+            contents: [{ role: "user", parts }]
+        });
     }
+
+    async handleImage(imageUrl: string): Promise<Part> {
+        return {
+            fileData: {
+                mimeType: imageUrl.endsWith('.png') ? 'image/png' : 'image/jpeg',
+                fileUri: imageUrl
+            }
+        };
+}
 
     async generateSuggestTask(currentTask: TaskRdo, recentTasks: TaskRdo[]) {
 
@@ -42,5 +54,15 @@ export class AiService {
             }
         });
         return res.text
+    }
+
+    extractText(response: GenerateContentResponse): string {
+        return response.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    }
+
+    extractJson<T>(response: GenerateContentResponse): AiRdo<T> {
+        const text = this.extractText(response);
+        const clean = text.replace(/```json|```/g, '').trim();
+        return JSON.parse(clean) as AiRdo<T>;
     }
 }

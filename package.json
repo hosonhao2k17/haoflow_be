@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@casl/ability": "^6.8.0",
+    "@google-cloud/vision": "^5.3.4",
     "@google/genai": "^1.42.0",
     "@keyv/redis": "^5.1.5",
     "@nestjs-modules/mailer": "^2.0.2",

@@ -7,6 +7,7 @@ export interface IFieldOptions {
     nullable?: boolean;
     groups?: string[];
     options?: boolean;
+    swaggerOptions?:  ApiPropertyOptions
 }
 
 export interface IStringFieldOptions extends IFieldOptions {
@@ -14,44 +15,43 @@ export interface IStringFieldOptions extends IFieldOptions {
     maxLength?: number;
     toLowerCase?: boolean;
     toUpperCase?: boolean;
-    swaggerOptions?:  ApiPropertyOptions
+    
 } 
 
 export interface INumberFieldOptions extends IFieldOptions {
     min?: number;
     max?: number;
     int?: boolean;
-    swaggerOptions?:  ApiPropertyOptions
 }
 
 export interface IEnumFieldOptions extends IFieldOptions {
-    swaggerOptions?:  ApiPropertyOptions
+
 }
 
 export interface IEmailFieldOptions extends IFieldOptions {
-    swaggerOptions?: ApiPropertyOptions
+    
 }
 
 export interface IurlFieldOptions extends IFieldOptions {
-    swaggerOptions?: ApiPropertyOptions
+    
 }
 
 export interface IPasswordFieldOptions extends IFieldOptions {
-    swaggerOptions?: ApiPropertyOptions
+    
 }
 
 export interface IUuidFieldOptions extends IFieldOptions {
-    swaggerOptions?: ApiPropertyOptions
+    
 }
 
 export interface IDateFieldOptions extends IFieldOptions {
-    swaggerOptions?: ApiPropertyOptions
+    
 }
 
 export interface IBooleanFiledOptions extends IFieldOptions {
-    swaggerOptions?: ApiPropertyOptions
+    
 }
 
 export interface IMilitaryTimeOptions extends IFieldOptions {
-    swaggerOptions?: ApiPropertyOptions;
+
 }
