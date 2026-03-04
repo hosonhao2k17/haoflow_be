@@ -1,5 +1,5 @@
 import { AccountEntity } from "src/api/accounts/entities/account.entity";
-import { ReceiptEntity } from "src/api/receipts/entities/receipt.entity";
+import { ReceiptEntity } from "src/api/transactions/entities/receipt.entity";
 import { TransactionCategoryEntity } from "src/api/transaction-categories/entities/transaction-category.entity";
 import { TransactionSource, TransactionType } from "src/common/constants/app.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
@@ -63,9 +63,9 @@ export class TransactionEntity extends AbstractEntity {
     })
     isRecurring: boolean
 
-    @Column()
-    receiptId: string;
+    @Column({nullable: true})
+    receiptId?: string;
 
-    @OneToOne(() => ReceiptEntity)
-    receipt: ReceiptEntity;
+    @OneToOne(() => ReceiptEntity,{nullable: true})
+    receipt?: ReceiptEntity;
 }

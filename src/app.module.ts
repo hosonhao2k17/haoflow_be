@@ -35,7 +35,7 @@ import { TransactionEntity } from './api/transactions/entities/transaction.entit
 import { BudgetsModule } from './api/budgets/budgets.module';
 import { BudgetEntity } from './api/budgets/entities/budget.entity';
 import { ReceiptsModule } from './api/receipts/receipts.module';
-import { ReceiptEntity } from './api/receipts/entities/receipt.entity';
+import { ReceiptEntity } from './api/transactions/entities/receipt.entity';
 @Module({
   imports: [
     RolesModule,

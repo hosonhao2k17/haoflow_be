@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateReceiptDto } from './dto/create-receipt.dto';
 import { UpdateReceiptDto } from './dto/update-receipt.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ReceiptEntity } from './entities/receipt.entity';
+import { ReceiptEntity } from '../transactions/entities/receipt.entity';
 import { Repository } from 'typeorm';
 import { AiService } from '../ai/ai.service';
 import { classToTypeString } from 'src/utils/handle-object';

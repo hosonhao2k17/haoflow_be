@@ -6,6 +6,8 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { QueryTransactionDto } from './dto/query-transaction.dto';
 import { CursorPaginatedRdo } from 'src/common/rdo/cursor-paginated.rdo';
 import { TransactionRdo } from './rdo/transaction.rdo';
+import { CreateFromReceiptDto } from './dto/create-from-receipt.dto';
+import { ReviewTransactionReceiptDto } from './dto/review-transaction-receipt.dto';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -15,6 +17,18 @@ export class TransactionsController {
   @ApiBearerAuth()
   create(@Body() createTransactionDto: CreateTransactionDto) :Promise<TransactionRdo> {
     return this.transactionsService.create(createTransactionDto);
+  }
+
+  @Post('receipt/preview')
+  @ApiBearerAuth() 
+  reviewTransactionReceipt(@Body() dto: ReviewTransactionReceiptDto) {
+    return this.transactionsService.reviewTransactionReceipt(dto)
+  }
+
+  @Post('receipt')
+  @ApiBearerAuth()
+  createFromReceipt(@Body() createDto: CreateFromReceiptDto) {
+    return this.transactionsService.createFromReceipt(createDto);
   }
 
   @Get()

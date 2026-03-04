@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,7 +24,7 @@ export class AccountsService {
     return plainToInstance(AccountRdo, account)
   }
 
-  async findAll(queryDto: QueryAccountDto) {
+  async findAll(queryDto: QueryAccountDto = new QueryAccountDto()) {
 
     const context = requestContext.getStore()
     const queryBuilder = this.accountsRepository

@@ -14,14 +14,24 @@ import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { TransactionCategoriesService } from '../transaction-categories/transaction-categories.service';
 import { AccountsService } from '../accounts/accounts.service';
 import { requestContext } from 'src/common/context/request.context';
+import { CreateFromReceiptDto } from './dto/create-from-receipt.dto';
+import { AiService } from '../ai/ai.service';
+import { classToTypeString } from 'src/utils/handle-object';
+import { ReceiptEntity } from './entities/receipt.entity';
+import { ReceiptStatus, TransactionSource, TransactionType } from 'src/common/constants/app.constant';
+import { ReviewTransactionReceiptDto } from './dto/review-transaction-receipt.dto';
+import { ReviewTransactionReceiptRdo } from './rdo/review-transaction-receipt.rdo';
+
 
 @Injectable()
 export class TransactionsService {
 
   constructor(
     @InjectRepository(TransactionEntity) private transactionsRepository: Repository<TransactionEntity>,
+    @InjectRepository(ReceiptEntity) private receiptsRepository: Repository<ReceiptEntity>,
     private transactionCategoriesService: TransactionCategoriesService,
-    private accountsService: AccountsService
+    private accountsService: AccountsService,
+    private aiService: AiService
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto) :Promise<TransactionRdo> {
@@ -35,6 +45,55 @@ export class TransactionsService {
       category,
       account
     }).save()
+    return plainToInstance(TransactionRdo, transaction)
+  }
+
+  async reviewTransactionReceipt(dto: ReviewTransactionReceiptDto) {
+    const {imageUrl} = dto;
+    const [accounts, categories] = await Promise.all([
+      this.accountsService.findAll(),
+      this.transactionCategoriesService.findAll()
+    ])
+    const dataImage = await this.aiService.handleImage(imageUrl);
+    const data = await this.aiService.generateAiContent({
+      module: "receipts",
+      message: `Phân tích hóa đơn và trả về dữ liệu theo dạng bên dưới`,
+      typeString: classToTypeString({
+        categoryId: "",
+        accountId: "",
+        type: TransactionType,
+        amount: 0,
+        description: "",
+        merchant: "",
+        transactionDate: new Date(),
+        isRecurring: false,
+        
+      }) + '-receipt:[' + classToTypeString({
+          imageUrl: "",
+          ocrRawText: "",
+          parsedAmount: 0,
+          parsedMerchant: "",
+          parsedDate: new Date(),
+          status: ReceiptStatus
+        }) + ']',
+      data: {
+        dataImage,
+        accounts,
+        categories
+      }
+    })  
+    const json = this.aiService.extractJson<ReviewTransactionReceiptRdo>(data);
+    return plainToInstance(ReviewTransactionReceiptRdo, json);
+  }
+
+  async createFromReceipt(dto: CreateFromReceiptDto) {
+    const {receipt,...data} = dto;
+    const newReceipt = await this.receiptsRepository.create(receipt).save()
+    const transaction = await this.transactionsRepository.create({
+      ...data,
+      source: TransactionSource.OCR,
+      receipt: newReceipt
+    }).save();
     return plainToInstance(TransactionRdo, transaction)
   }
 

@@ -26,7 +26,7 @@ export class TransactionCategoriesService {
     return plainToInstance(TransactionCategoryRdo, transactionCategory)
   }
 
-  async findAll(queryDto: QueryTransactionCategoryDto) :Promise<OffsetPaginatedRdo<TransactionCategoryRdo>> {
+  async findAll(queryDto: QueryTransactionCategoryDto = new QueryTransactionCategoryDto()) :Promise<OffsetPaginatedRdo<TransactionCategoryRdo>> {
     const queryBuilder = this.transactionCategoriesRepository
       .createQueryBuilder(queryDto.getAlias())
       .leftJoinAndSelect(`${queryDto.getAlias()}.childrens`,"childrens")
