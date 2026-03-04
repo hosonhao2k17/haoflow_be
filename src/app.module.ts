@@ -34,7 +34,6 @@ import { TransactionsModule } from './api/transactions/transactions.module';
 import { TransactionEntity } from './api/transactions/entities/transaction.entity';
 import { BudgetsModule } from './api/budgets/budgets.module';
 import { BudgetEntity } from './api/budgets/entities/budget.entity';
-import { ReceiptsModule } from './api/receipts/receipts.module';
 import { ReceiptEntity } from './api/transactions/entities/receipt.entity';
 @Module({
   imports: [
@@ -50,7 +49,6 @@ import { ReceiptEntity } from './api/transactions/entities/receipt.entity';
     TransactionCategoriesModule,
     TransactionsModule,
     BudgetsModule,
-    ReceiptsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
