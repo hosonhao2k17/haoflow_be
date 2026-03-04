@@ -40,3 +40,7 @@ export function ToUpperCase(): PropertyDecorator {
         }
     )
 }
+
+export function ToBoolean(): PropertyDecorator {
+    return Transform(({value}) => value === true)
+}

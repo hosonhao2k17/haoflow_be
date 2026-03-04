@@ -1,367 +1,144 @@
 import { ApiProperty, ApiPropertyOptional, ApiPropertyOptions } from "@nestjs/swagger";
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsMilitaryTime, IsNotEmpty, IsNumber, IsOptional, IsString, IsStrongPassword, IsUrl, IsUUID, Max, MaxLength, Min, MinLength, NotEquals, ValidationOptions } from "class-validator";
-import { IBooleanFiledOptions, IDateFieldOptions, IEmailFieldOptions, IEnumFieldOptions, IMilitaryTimeOptions, INumberFieldOptions, IPasswordFieldOptions, IStringFieldOptions, IurlFieldOptions, IUuidFieldOptions } from "src/common/interfaces/field.interface";
+import {IsBoolean, IsDate, IsEmail, IsEnum, IsInt,IsMilitaryTime, IsOptional, IsString, IsStrongPassword,IsUrl, IsUUID, Max, MaxLength, Min, MinLength, NotEquals,} from "class-validator";
+import {IBooleanFiledOptions, IDateFieldOptions, IEmailFieldOptions,IEnumFieldOptions, IFieldOptions, IMilitaryTimeOptions, INumberFieldOptions, IPasswordFieldOptions, IStringFieldOptions, IurlFieldOptions, IUuidFieldOptions,} from "src/common/interfaces/field.interface";
 import { IsNullable } from "./validators/is-nullable.decorator";
-import { ToLowerCase, ToUpperCase } from "./transform.decorator";
+import { ToBoolean, ToLowerCase, ToUpperCase } from "./transform.decorator";
 import { applyDecorators } from "@nestjs/common";
 import { ErrorCode } from "src/common/constants/error-code.constant";
-import * as validator from 'validator';
 
-export function StringField(
-    options: IStringFieldOptions = {}
-) {
-    
-    const decorators = [Type(() => String), IsString({each: options.each, message: ErrorCode.STRING})] 
+export function buildDecorator(
+    options: IFieldOptions = {},
+    type: ApiPropertyOptions['type']
+): PropertyDecorator[] {
+    const decorators: PropertyDecorator[] = [];
 
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null,{each: options.each}))
+    // Optional
+    if (options.options) {
+        decorators.push(IsOptional({ each: options.each }));
     }
 
-    if(options.options) {
-        decorators.push(IsOptional({each: options.each}))
-    }
-    if(options.swagger !== false) {
-        const {swaggerOptions } = options
-        if(options.options) {
+    // Nullable
+    decorators.push(
+        options.nullable
+            ? IsNullable({ each: options.each })
+            : NotEquals(null, { each: options.each })
+    );
+
+    // Swagger
+    if (options.swagger !== false) {
+        const { swaggerOptions } = options;
+        if (options.options) {
             decorators.push(
-                ApiPropertyOptional({
-                    type: String,
-                    ...swaggerOptions,
-                    isArray: options.each
-                })
-            )
+                ApiPropertyOptional({ type, ...swaggerOptions, isArray: options.each } as ApiPropertyOptions)
+            );
         }
         decorators.push(
-            ApiProperty({
-                type: String,
-                ...swaggerOptions,
-                isArray: options.each
-            })
-        )
+            ApiProperty({ type, ...swaggerOptions, isArray: options.each } as ApiPropertyOptions)
+        );
     }
 
-    const minLength = options.minLength || 1;
-    decorators.push(MinLength(minLength, {message: ErrorCode.STRING_MIN_LENGTH, each: options.each}))
-    if(options.maxLength) {
-        decorators.push(MaxLength(options.maxLength, {message: ErrorCode.STRING_MAX_LENGTH, each: options.each}))
-    }
-
-    if(options.toLowerCase) {
-        decorators.push(ToLowerCase())
-    }
-    if(options.toUpperCase){
-        decorators.push(ToUpperCase())
-    }
-
-    return applyDecorators(...decorators)
+    return decorators;
 }
 
+export function StringField(options: IStringFieldOptions = {}) {
+    const decorators: PropertyDecorator[] = [
+        Type(() => String),
+        IsString({ each: options.each, message: ErrorCode.STRING }),
+        ...buildDecorator(options, String),
+        MinLength(options.minLength ?? 1, { message: ErrorCode.STRING_MIN_LENGTH, each: options.each }),
+    ];
+
+    if (options.maxLength)   decorators.push(MaxLength(options.maxLength, { message: ErrorCode.STRING_MAX_LENGTH, each: options.each }));
+    if (options.toLowerCase) decorators.push(ToLowerCase());
+    if (options.toUpperCase) decorators.push(ToUpperCase());
+
+    return applyDecorators(...decorators);
+}
 
 export function NumberField(options: INumberFieldOptions = {}) {
-    const decorators = [Type(() => Number)];
+    const decorators: PropertyDecorator[] = [
+        Type(() => Number),
+        ...buildDecorator(options, Number),
+    ];
 
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null,{each: options.each}))
-    }
+    if (options.min) decorators.push(Min(options.min, { message: ErrorCode.NUMBER_MIN }));
+    if (options.max) decorators.push(Max(options.max, { message: ErrorCode.NUMBER_MAX }));
+    if (options.int) decorators.push(IsInt({ each: options.each }));
 
-    if(options.options) {
-        decorators.push(IsOptional({each: options.each}))
-    }
-
-    if(options.swagger !==  false) {
-        const {swaggerOptions} = options;
-         if(options.options) {
-            decorators.push(
-                ApiPropertyOptional({
-                    type: Number,
-                    ...swaggerOptions,
-                    isArray: options.each
-                })
-            )
-        }
-        decorators.push(
-            ApiProperty({
-                type: Number,
-                ...swaggerOptions,
-                isArray: options.each
-            })
-        )
-    }
-
-    if(options.min) {
-        decorators.push(Min(options.min, {message: ErrorCode.NUMBER_MIN}))
-    }
-    if(options.max) {
-        decorators.push(Max(options.max, {message: ErrorCode.NUMBER_MAX}))
-    }
-
-    if(options.int) {
-        decorators.push(IsInt({each: options.each}))
-    }
-
-    return applyDecorators(...decorators)
+    return applyDecorators(...decorators);
 }
 
-export function EnumField(entity: object, options: IEnumFieldOptions = {} ) {
-    const decorators = [IsEnum(entity, {each: options.each, message: ErrorCode.ENUM})];
+export function EnumField(entity: object, options: IEnumFieldOptions = {}) {
+    const decorators: PropertyDecorator[] = [
+        IsEnum(entity, { each: options.each, message: ErrorCode.ENUM }),
+        ...buildDecorator(options, String),
+    ];
 
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
-
-    if(options.options) {
-        decorators.push(IsOptional({each: options.each}))
-    }
-
-    if(options.swagger !== false) {
-        const {swaggerOptions} = options;
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional({
-                    type: String,
-                    ...swaggerOptions,
-                    isArray: options.each
-                })
-            )
-        }
-        decorators.push(
-            ApiProperty({
-                type: String,
-                ...swaggerOptions,
-                isArray: options.each
-            })
-        )
-    }
-
-    return applyDecorators(...decorators)
+    return applyDecorators(...decorators);
 }
 
-export function EmailField(options: IEmailFieldOptions = {}){
-
-    const decorators = [IsEmail({},{each: options.each})]
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
-
-    if(options.options) {
-        decorators.push(IsOptional())
-    }
-    if(options.swagger !==  false) {
-        const apiProperty = {
-            type: String,
-            ...options.swaggerOptions,
-            isArray: options.each
-        }
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional(apiProperty)
-            )
-        } else {
-            decorators.push(
-                ApiProperty(apiProperty)
-            )
-        }
-    }
-
+export function EmailField(options: IEmailFieldOptions = {}) {
+    const decorators: PropertyDecorator[] = [
+        IsEmail({}, { each: options.each }),
+        ...buildDecorator(options, String),
+    ];
 
     return applyDecorators(...decorators);
 }
 
 export function UrlField(options: IurlFieldOptions = {}) {
-    const decorators = [IsUrl({},{each: true})]
+    const decorators: PropertyDecorator[] = [
+        IsUrl({}, { each: options.each }),
+        ...buildDecorator(options, String),
+    ];
 
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
-
-    if(options.options) {
-        decorators.push(IsOptional())
-    }
-    if(options.swagger !==  false) {
-        const apiProperty = {
-            type: String,
-            ...options.swaggerOptions,
-            isArray: options.each
-        }
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional(apiProperty)
-            )
-        } else {
-            decorators.push(
-                ApiProperty(apiProperty)
-            )
-        }
-    }
-
-     return applyDecorators(...decorators);
+    return applyDecorators(...decorators);
 }
 
-
 export function PasswordField(options: IPasswordFieldOptions = {}) {
-
-    const decorators = [IsStrongPassword({}, {each: options.each})];
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
-
-    if(options.options) {
-        decorators.push(IsOptional())
-    }
-    if(options.swagger !==  false) {
-        const apiProperty = {
-            type: String,
-            ...options.swaggerOptions,
-            isArray: options.each
-        }
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional(apiProperty)
-            )
-        } else {
-            decorators.push(
-                ApiProperty(apiProperty)
-            )
-        }
-    }
+    const decorators: PropertyDecorator[] = [
+        IsStrongPassword({}, { each: options.each }),
+        ...buildDecorator(options, String),
+    ];
 
     return applyDecorators(...decorators);
 }
 
 export function UuidField(options: IUuidFieldOptions = {}) {
-    const decorators = [IsUUID(4,{each: options.each})]
-     if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
-
-    if(options.options) {
-        decorators.push(IsOptional())
-    }
-    if(options.swagger !==  false) {
-        const apiProperty = {
-            type: String,
-            ...options.swaggerOptions,
-            isArray: options.each
-        }
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional(apiProperty)
-            )
-        } else {
-            decorators.push(
-                ApiProperty(apiProperty)
-            )
-        }
-    }
+    const decorators: PropertyDecorator[] = [
+        IsUUID(4, { each: options.each }),
+        ...buildDecorator(options, String),
+    ];
 
     return applyDecorators(...decorators);
 }
 
 export function DateField(options: IDateFieldOptions = {}) {
-    const decorators = [IsDate({each: options.each}), Type(() => Date)]
-     if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
-
-    if(options.options) {
-        decorators.push(IsOptional())
-    }
-    if(options.swagger !==  false) {
-        const apiProperty = {
-            type: String,
-            ...options.swaggerOptions,
-            isArray: options.each
-        }
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional(apiProperty)
-            )
-        } else {
-            decorators.push(
-                ApiProperty(apiProperty)
-            )
-        }
-    }
+    const decorators: PropertyDecorator[] = [
+        IsDate({ each: options.each }),
+        Type(() => Date),
+        ...buildDecorator(options, String),
+    ];
 
     return applyDecorators(...decorators);
 }
 
-export function BooleanField(options: IBooleanFiledOptions = {})  {
+export function BooleanField(options: IBooleanFiledOptions = {}) {
+    const decorators: PropertyDecorator[] = [
+        ToBoolean,
+        IsBoolean({ each: options.each }),
+        ...buildDecorator(options, Boolean),
+    ];
 
-    const decorators = [Transform(({value}) => value === "true"),IsBoolean({each: options.each})];
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
-
-    if(options.options) {
-        decorators.push(IsOptional())
-    }
-    if(options.swagger !==  false) {
-        const apiProperty = {
-            type: String,
-            ...options.swaggerOptions,
-            isArray: options.each
-        }
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional(apiProperty)
-            )
-        } else {
-            decorators.push(
-                ApiProperty(apiProperty)
-            )
-        }
-    }
-
-    return applyDecorators(...decorators)
+    return applyDecorators(...decorators);
 }
 
-export function MilitaryTimeField(options: IMilitaryTimeOptions = {})  {
-    const decorators = [IsMilitaryTime({each: options.each})];
-    if(options.nullable) {
-        decorators.push(IsNullable({each: options.each}))
-    } else {
-        decorators.push(NotEquals(null, {each: options.each}))
-    }
+export function MilitaryTimeField(options: IMilitaryTimeOptions = {}) {
+    const decorators: PropertyDecorator[] = [
+        IsMilitaryTime({ each: options.each }),
+        ...buildDecorator(options, String),
+    ];
 
-    if(options.options) {
-        decorators.push(IsOptional())
-    }
-    if(options.swagger !==  false) {
-        const apiProperty = {
-            type: String,
-            ...options.swaggerOptions,
-            isArray: options.each
-        }
-        if(options.options) {
-            decorators.push(
-                ApiPropertyOptional(apiProperty)
-            )
-        } else {
-            decorators.push(
-                ApiProperty(apiProperty)
-            )
-        }
-    }
-
-    return applyDecorators(...decorators)
+    return applyDecorators(...decorators);
 }
