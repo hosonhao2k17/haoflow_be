@@ -36,6 +36,7 @@ import { BudgetsModule } from './api/budgets/budgets.module';
 import { BudgetEntity } from './api/budgets/entities/budget.entity';
 import { ReceiptEntity } from './api/transactions/entities/receipt.entity';
 import { NotificationsModule } from './api/notifications/notifications.module';
+import { NotificationEntity } from './api/notifications/entities/notification.entity';
 @Module({
   imports: [
     RolesModule,
@@ -79,7 +80,8 @@ import { NotificationsModule } from './api/notifications/notifications.module';
           TransactionCategoryEntity,
           TransactionEntity,
           BudgetEntity,
-          ReceiptEntity
+          ReceiptEntity,
+          NotificationEntity
         ],
         synchronize: true
       }),
