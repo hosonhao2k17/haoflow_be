@@ -36,6 +36,7 @@ export class DailyPlansService {
   async create(createDailyPlanDto: CreateDailyPlanDto) :Promise<DailyPlanRdo> {
     //unique dailyplan with userId and date
     const context = requestContext.getStore()
+    
     const isExists = await this.dailyPlansRepository.findOneBy({
       date: createDailyPlanDto.date,
       createdBy: context?.userId
