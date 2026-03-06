@@ -34,7 +34,4 @@ export class TaskRdo {
     @Expose()
     @Type(() => TaskCategoryRdo)
     category: TaskCategoryRdo;
-
-    @Expose()
-    dailyPlanId: string;
 }

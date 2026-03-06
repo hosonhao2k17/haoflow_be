@@ -18,6 +18,7 @@ import { AiService } from '../ai/ai.service';
 import { QueryTaskDto } from './dto/query-task.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { CreateMultiTaskDto } from './dto/create-multi-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -31,6 +32,15 @@ export class TasksService {
     const task = this.tasksRepository.create(createTaskDto);
     await task.save()
     return plainToInstance(TaskRdo, task);
+  }
+
+  async createMultiTask(dto: CreateMultiTaskDto) {
+    const tasks = dto.tasks.map((task) => this.tasksRepository.create({
+      ...task,
+      dailyPlanId: dto.dailyPlanId
+    }))
+    await this.tasksRepository.insert(tasks)
+    return plainToInstance(TaskRdo, tasks )
   }
 
   async findAll(queryTaskDto: QueryTaskDto) {

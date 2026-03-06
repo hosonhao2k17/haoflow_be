@@ -11,5 +11,6 @@ import { TasksModule } from '../tasks/tasks.module';
   imports: [TypeOrmModule.forFeature([DailyPlanEntity, TimeBlockEntity, TaskEntity]), TasksModule],
   controllers: [DailyPlansController],
   providers: [DailyPlansService],
+  exports: [DailyPlansService]
 })
 export class DailyPlansModule {}

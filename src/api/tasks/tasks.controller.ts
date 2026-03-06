@@ -7,6 +7,7 @@ import { ReorderTaskDto } from './dto/reorder-task.dto';
 import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 import { TaskRdo } from './rdo/task.rdo';
 import { QueryTaskDto } from './dto/query-task.dto';
+import { CreateMultiTaskDto } from './dto/create-multi-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -16,6 +17,12 @@ export class TasksController {
   @ApiBearerAuth()
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
+  }
+
+  @Post('multi')
+  @ApiBearerAuth()
+  createMulti(@Body() dto: CreateMultiTaskDto) {
+    return this.tasksService.createMultiTask(dto)
   }
 
   @Post(':id/ai-evaluate')
