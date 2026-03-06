@@ -21,6 +21,8 @@ import { TasksService } from '../tasks/tasks.service';
 import { RangeRdo } from 'src/common/rdo/range.rdo';
 import { RangedRdo } from 'src/common/rdo/ranged.rdo';
 import { ValidationException } from 'src/exceptions/validation.exception';
+import { QueryDailyPlanTemplateDto } from './dto/query-daily-plan-template.dto';
+import { DailyPlanTemplateRdo } from './rdo/daily-plan-template.rdo';
 
 @Injectable()
 export class DailyPlansService {
@@ -43,12 +45,26 @@ export class DailyPlansService {
     const dailyPlan = await this.dailyPlansRepository.create(createDailyPlanDto).save();
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
+
+  async findTemplates(dto: QueryDailyPlanTemplateDto) :Promise<OffsetPaginatedRdo<DailyPlanTemplateRdo>>  {
+    const queryBuilder = this.dailyPlansRepository.createQueryBuilder(dto.getAlias())
+    .andWhere(`${dto.getAlias()}.isTemplate = :isTemplate`, {isTemplate: true})
+    .andWhere(`${dto.getAlias()}.createdBy = :createdBy`,{createdBy: requestContext.getStore()?.userId})
+    .leftJoinAndSelect(`${dto.getAlias()}.tasks`,'tasks')
+    dto.handleQueryBuilder(queryBuilder)
+    const [dailyPlans, total] = await queryBuilder.getManyAndCount();
+
+    const pagination = new OffsetPaginationRdo(total, dto);
+    return new OffsetPaginatedRdo(plainToInstance(DailyPlanTemplateRdo, dailyPlans), pagination);
+    
+  }
+
   async findAll(queryDailyPlanDto: QueryDailyPlanDto) {
     const alias = queryDailyPlanDto.getAlias();
     const context = requestContext.getStore()
     const queryBuilder = this.dailyPlansRepository
       .createQueryBuilder(alias)
-      .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId})
+      .andWhere(`${alias}.createdBy = :userId`,{userId: context?.userId, isTemplate: false})
     queryDailyPlanDto.handleQueryBuilder(queryBuilder);
     const dailyPlans = await queryBuilder.getMany();
 
@@ -73,7 +89,8 @@ export class DailyPlansService {
     const dailyPlan = await this.dailyPlansRepository.findOne({
       where: {
         createdBy: context?.userId,
-        id
+        id,
+        isTemplate: false
       }
     })
     if(!dailyPlan) {
@@ -87,7 +104,7 @@ export class DailyPlansService {
   }
 
   async update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
-    const dailyPlan = await this.dailyPlansRepository.findOneBy({id});
+    const dailyPlan = await this.dailyPlansRepository.findOneBy({id, isTemplate: false});
     if(!dailyPlan) {
       throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
     }

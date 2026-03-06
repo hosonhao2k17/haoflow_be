@@ -18,9 +18,16 @@ export class DailyPlanEntity extends AbstractEntity {
     description: string;
 
     @Column({
-        type: 'date'
+        type: 'date',
+        nullable: true //null if template
     })
     date: string;
+
+    @Column({
+        type: 'bool',
+        default: false 
+    })
+    isTemplate: boolean;
 
     @OneToMany(() => TaskEntity, (tasks) => tasks.dailyPlan)
     tasks: TaskEntity[];

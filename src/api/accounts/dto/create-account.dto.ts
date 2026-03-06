@@ -13,6 +13,9 @@ export class CreateAccountDto {
     @NumberField()
     balance: number;
 
+    @EnumField(AccountStatus,{options: true})
+    status: AccountStatus;
+
     @StringField({
         options: true
     })
