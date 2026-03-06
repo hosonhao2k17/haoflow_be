@@ -94,12 +94,27 @@ export class DailyPlansService {
     return new RangedRdo(plainToInstance(DailyPlanRdo, results), range)
   }
 
+  async findTemplate(id: string) :Promise<DailyPlanTemplateRdo> {
+    const dailyPlan = await this.dailyPlansRepository.findOne({
+      where: {
+        id,
+        isTemplate: true,
+        createdBy: requestContext.getStore()?.userId
+      },
+      relations: {
+        tasks: true
+      }
+    });
+    return plainToInstance(DailyPlanTemplateRdo, dailyPlan)
+  }
+
   async findOne(id: string) {
     const context = requestContext.getStore()
     const dailyPlan = await this.dailyPlansRepository.findOne({
       where: {
         createdBy: context?.userId,
-        id
+        id,
+        isTemplate: false 
       }
     })
     if(!dailyPlan) {

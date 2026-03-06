@@ -38,6 +38,12 @@ export class DailyPlansController {
     return this.dailyPlansService.findAll(queryDailyPlanDto);
   }
 
+  @Get(':id/template')
+  @ApiBearerAuth()
+  findTemplate(@Param('id') id: string) {
+    return this.dailyPlansService.findTemplate(id)
+  }
+
   @Get(':id')
   @ApiBearerAuth()
   findOne(@Param('id') id: string) {
