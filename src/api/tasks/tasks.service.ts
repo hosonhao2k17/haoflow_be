@@ -19,6 +19,11 @@ import { QueryTaskDto } from './dto/query-task.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { CreateMultiTaskDto } from './dto/create-multi-task.dto';
+import { SuggestTaskDto } from './dto/suggest-task.dto';
+import { classToTypeString } from 'src/utils/handle-object';
+import { Priority } from 'src/common/constants/priority.constant';
+import { TaskCategoriesService } from '../task-categories/task-categories.service';
+import { SuggestTaskRdo } from './rdo/suggest-task.rdo';
 
 @Injectable()
 export class TasksService {
@@ -26,7 +31,8 @@ export class TasksService {
   constructor(
     @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>,
     @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>,
-    private aiService: AiService
+    private aiService: AiService,
+    private taskCategoriesSevice: TaskCategoriesService
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
     const task = this.tasksRepository.create(createTaskDto);
@@ -112,13 +118,26 @@ export class TasksService {
     return plainToInstance(TaskRdo, task)
   }
   
-  async evaluateTask(id: string) {
-    const context = requestContext.getStore()
-    const task = await this.tasksRepository.findOneBy({id});
-    if(!task) {
-      throw new NotFoundException(ErrorCode.TASK_NOT_FOUND)
-    }
-    
+  async taskSugget(dto: SuggestTaskDto) {
+
+    const result = await this.aiService.generateAiContent({
+      module: "task",
+      message: `tạo danh sách task (phải tạo nhiều hơn 5) với yêu cầu ${dto.prompt} lưu ý startTime và dateTime là kiểu time "00:00"`,
+      typeString: classToTypeString({
+        todo: "",
+        description: "",
+        priority: Priority,
+        startTime: "",
+        endTime: "",
+        status: TaskStatus,
+        categoryId: "",
+      }),
+      data: {
+        categories: await this.taskCategoriesSevice.findAll(),
+
+      }
+    })
+    return plainToInstance(SuggestTaskRdo, this.aiService.extractJson(result).data)
   }
 
   async findOne(id: string) :Promise<TaskRdo> {

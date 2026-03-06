@@ -26,7 +26,7 @@ export class TaskCategoriesService {
    return plainToInstance(TaskCategoryRdo, category)
   }
 
-  async findAll(queryTaskCategoryDto: QueryTaskCategoryDto) {
+  async findAll(queryTaskCategoryDto: QueryTaskCategoryDto = new QueryTaskCategoryDto()) {
     const queryBuilder = this.taskCategoryRepository.createQueryBuilder(queryTaskCategoryDto.getAlias());
     queryTaskCategoryDto.handleQueryBuilder(queryBuilder);
     const context = requestContext.getStore()

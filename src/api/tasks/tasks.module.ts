@@ -6,10 +6,12 @@ import { TaskEntity } from './entities/task.entity';
 import { DailyPlanEntity } from '../daily-plans/entities/daily-plan.entity';
 import { AiModule } from '../ai/ai.module';
 import { DailyPlansService } from '../daily-plans/daily-plans.service';
+import { TaskCategoriesModule } from '../task-categories/task-categories.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TaskEntity, DailyPlanEntity]), AiModule
+    TypeOrmModule.forFeature([TaskEntity, DailyPlanEntity]), AiModule,
+    TaskCategoriesModule
   ],
   controllers: [TasksController],
   providers: [TasksService],

@@ -8,6 +8,7 @@ import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 import { TaskRdo } from './rdo/task.rdo';
 import { QueryTaskDto } from './dto/query-task.dto';
 import { CreateMultiTaskDto } from './dto/create-multi-task.dto';
+import { SuggestTaskDto } from './dto/suggest-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -25,10 +26,10 @@ export class TasksController {
     return this.tasksService.createMultiTask(dto)
   }
 
-  @Post(':id/ai-evaluate')
+  @Post('ai/suggest')
   @ApiBearerAuth()
-  evaluateTask(@Param('id') id: string) {
-    return this.tasksService.evaluateTask(id)
+  taskSuggest(@Body() suggestTask: SuggestTaskDto) {
+    return this.tasksService.taskSugget(suggestTask)
   }
 
   @Get()
