@@ -7,6 +7,8 @@ import { QueryDailyPlanDto } from './dto/query-daily-plan.dto';
 import { QueryDailyPlanTemplateDto } from './dto/query-daily-plan-template.dto';
 import { DailyPlanTemplateRdo } from './rdo/daily-plan-template.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { CreateDailyPlanTemplateDto } from './dto/create-daily-plan-template.dto';
+import { DailyPlanRdo } from './rdo/daily-plan.rdo';
 
 @Controller('daily-plans')
 export class DailyPlansController {
@@ -18,7 +20,14 @@ export class DailyPlansController {
     return this.dailyPlansService.create(createDailyPlanDto);
   }
 
+  @Post('template')
+  @ApiBearerAuth()
+  createTemplate(@Body() dto: CreateDailyPlanTemplateDto) :Promise<DailyPlanTemplateRdo> {
+    return this.dailyPlansService.createTemplate(dto)
+  }
+
   @Get('template')
+  @ApiBearerAuth()
   findTemplates(@Query() dto: QueryDailyPlanTemplateDto) :Promise<OffsetPaginatedRdo<DailyPlanTemplateRdo>> {
     return this.dailyPlansService.findTemplates(dto)
   }

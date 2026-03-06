@@ -23,6 +23,7 @@ import { RangedRdo } from 'src/common/rdo/ranged.rdo';
 import { ValidationException } from 'src/exceptions/validation.exception';
 import { QueryDailyPlanTemplateDto } from './dto/query-daily-plan-template.dto';
 import { DailyPlanTemplateRdo } from './rdo/daily-plan-template.rdo';
+import { CreateDailyPlanTemplateDto } from './dto/create-daily-plan-template.dto';
 
 @Injectable()
 export class DailyPlansService {
@@ -44,6 +45,15 @@ export class DailyPlansService {
     }
     const dailyPlan = await this.dailyPlansRepository.create(createDailyPlanDto).save();
     return plainToInstance(DailyPlanRdo, dailyPlan)
+  }
+
+  async createTemplate(dto: CreateDailyPlanTemplateDto) :Promise<DailyPlanTemplateRdo> {
+    const dailyPlan = await this.dailyPlansRepository.create({
+      ...dto,
+      isTemplate: true
+    }).save()
+    return plainToInstance(DailyPlanTemplateRdo, dailyPlan)
+    
   }
 
   async findTemplates(dto: QueryDailyPlanTemplateDto) :Promise<OffsetPaginatedRdo<DailyPlanTemplateRdo>>  {
@@ -89,8 +99,7 @@ export class DailyPlansService {
     const dailyPlan = await this.dailyPlansRepository.findOne({
       where: {
         createdBy: context?.userId,
-        id,
-        isTemplate: false
+        id
       }
     })
     if(!dailyPlan) {
@@ -104,7 +113,7 @@ export class DailyPlansService {
   }
 
   async update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
-    const dailyPlan = await this.dailyPlansRepository.findOneBy({id, isTemplate: false});
+    const dailyPlan = await this.dailyPlansRepository.findOneBy({id});
     if(!dailyPlan) {
       throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
     }
