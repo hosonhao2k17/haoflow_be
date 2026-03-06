@@ -128,9 +128,14 @@ export class DailyPlansService {
   }
 
   async update(id: string, updateDailyPlanDto: UpdateDailyPlanDto) {
-    const dailyPlan = await this.dailyPlansRepository.findOneBy({id});
+    const dailyPlan = await this.dailyPlansRepository.findOneBy({id, createdBy: requestContext.getStore()?.userId});
+    
     if(!dailyPlan) {
       throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
+    }
+    //Cannot update field date when it is template
+    if(dailyPlan.isTemplate && updateDailyPlanDto.date) {
+      throw new ValidationException(ErrorCode.DAILY_PLAN_DATE_TEMPLATE)
     }
     Object.assign(dailyPlan, updateDailyPlanDto);
     await dailyPlan.save()
@@ -138,7 +143,7 @@ export class DailyPlansService {
   }
 
   async remove(id: string) {
-    const dailyPlan = await this.dailyPlansRepository.findOneBy({id});
+    const dailyPlan = await this.dailyPlansRepository.findOneBy({id, createdBy: requestContext.getStore()?.userId});
     if(!dailyPlan) {
       throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
     }

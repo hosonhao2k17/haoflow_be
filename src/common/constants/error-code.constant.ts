@@ -67,5 +67,6 @@ export enum ErrorCode {
   BUDGET_NOT_FOUND = 'budget.error.not_found',
   // ===== Daily plan 
   DAILY_PLAN_NOT_FOUND = 'daily_plan.error.not_found',
-  DAILY_PLAN_EXISTS = 'daily_plan.error.exists'
+  DAILY_PLAN_EXISTS = 'daily_plan.error.exists',
+  DAILY_PLAN_DATE_TEMPLATE = 'daily_plan.error.date_template'
 }
