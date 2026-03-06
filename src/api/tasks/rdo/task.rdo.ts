@@ -21,12 +21,8 @@ export class TaskRdo {
     @Expose()
     startTime: Date;
 
-
     @Expose()
     endTime: Date;
-
-    @Expose()
-    orderIndex: number;
 
     @Expose()
     status: Date;

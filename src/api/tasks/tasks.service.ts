@@ -24,6 +24,7 @@ import { classToTypeString } from 'src/utils/handle-object';
 import { Priority } from 'src/common/constants/priority.constant';
 import { TaskCategoriesService } from '../task-categories/task-categories.service';
 import { SuggestTaskRdo } from './rdo/suggest-task.rdo';
+import { AiDto } from '../ai/dto/ai.dto';
 
 @Injectable()
 export class TasksService {
@@ -122,7 +123,11 @@ export class TasksService {
 
     const result = await this.aiService.generateAiContent({
       module: "task",
-      message: `tạo danh sách task (phải tạo nhiều hơn 5) với yêu cầu ${dto.prompt} lưu ý startTime và dateTime là kiểu time "00:00"`,
+      message: `
+        tạo danh sách task (phải tạo nhiều hơn 10) với yêu cầu 
+        ${dto.prompt} lưu ý startTime và dateTime là kiểu time "00:00"
+        Phải chọn phù hợp danh mục mà trong data tôi đưa ra chọn categoryId sao cho đúng
+      `,
       typeString: classToTypeString({
         todo: "",
         description: "",
@@ -137,7 +142,11 @@ export class TasksService {
 
       }
     })
-    return plainToInstance(SuggestTaskRdo, this.aiService.extractJson(result).data)
+    const { data, ...rest} = this.aiService.extractJson(result)
+    return plainToInstance(AiDto, {
+      ...rest,
+      data: plainToInstance(SuggestTaskRdo, data)
+    })
   }
 
   async findOne(id: string) :Promise<TaskRdo> {

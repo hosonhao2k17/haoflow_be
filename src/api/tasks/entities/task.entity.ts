@@ -51,6 +51,8 @@ export class TaskEntity extends AbstractEntity {
     @ManyToOne(() => TaskCategoryEntity, (taskCategory) => taskCategory.tasks)
     category: TaskCategoryEntity;
 
-    @ManyToOne(() => DailyPlanEntity, (dailyPlan) => dailyPlan.tasks)
+    @ManyToOne(() => DailyPlanEntity, (dailyPlan) => dailyPlan.tasks, {
+        onDelete: 'CASCADE'
+    })
     dailyPlan: DailyPlanEntity
 }

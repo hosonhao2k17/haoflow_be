@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, NotFoundException, UnprocessableEntityException } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger, NotFoundException, UnprocessableEntityException } from "@nestjs/common";
 import { STATUS_CODES } from "http";
 import { ErrorRdo } from "src/common/rdo/error.rdo";
 import { Request, Response } from 'express';
@@ -12,6 +12,8 @@ import { IsErroCode } from "src/utils/error";
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
+
+    private logger = new Logger()
     constructor(private readonly i18n: I18nService) {
 
     }
@@ -74,6 +76,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     handleError(exception: any): ErrorRdo {
         const statusCode = HttpStatus.INTERNAL_SERVER_ERROR
         const message = exception.message || 'An unexpected error occured'
+        this.logger.error(message)
         return {
             statusCode,
             message,

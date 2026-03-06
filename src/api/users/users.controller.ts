@@ -41,6 +41,12 @@ export class UsersController {
     return this.usersService.getCurrentUser(id)
   }
 
+  @Patch()
+  @ApiBearerAuth()
+  updateCurrentUser() {
+
+  }
+
   @Get()
   @ApiBearerAuth()
   @Action(PermissionAction.READ)
