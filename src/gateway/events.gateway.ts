@@ -1,13 +1,18 @@
-import { Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
-import { WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import { Logger, UseGuards } from '@nestjs/common';
+import { Socket, Server } from 'socket.io';
+import { WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, ConnectedSocket, MessageBody, WebSocketServer } from '@nestjs/websockets';
 import { GatewayService } from './gateway.service';
+import { WsAuthGuard } from 'src/guards/ws-auth.guard';
 
 @WebSocketGateway({
   cors: {origin: '*'},
   namespace: '/'
 })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect{
+
+
+    @WebSocketServer()
+    server: Server;
 
     private logger = new Logger(EventsGateway.name);
 
@@ -39,5 +44,24 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect{
     }
 
 
+    @UseGuards(WsAuthGuard)
+    @SubscribeMessage('send_message')
+    handleMessage(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: { to: string; message: string },
+    ) {
+        const fromUser = client.data.user;
+
+        this.server.to(`user:${data.to}`).emit('receive_message', {
+            from: fromUser.id,
+            message: data.message,
+            timestamp: new Date(),
+        });
+    }
+
+
+    sendToUser(userId: string, event: string, data: any) {
+        this.server.to(`user:${userId}`).emit(event, data);
+    }
     
 }

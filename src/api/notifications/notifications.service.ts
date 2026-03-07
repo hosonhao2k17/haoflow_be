@@ -9,6 +9,7 @@ import { delay, Queue } from 'bullmq';
 import { ScheduleAlarmDto } from './dto/schedule-alarm.dto';
 import { NotificationType } from 'src/common/constants/notification.constant';
 import { JobName } from 'src/common/constants/job.constant';
+import { requestContext } from 'src/common/context/request.context';
 
 @Injectable()
 export class NotificationsService {
@@ -21,8 +22,9 @@ export class NotificationsService {
 
     }
 
-    create(dto: CreateNotificationDto) {
-        return this.notificationRepository.create(dto).save();
+    async create(dto: CreateNotificationDto) {
+        const notification = await this.notificationRepository.create(dto).save();
+        return notification;
     }       
     
     async scheduleAlarm(dto: ScheduleAlarmDto) {
@@ -37,10 +39,11 @@ export class NotificationsService {
         })
 
         const delay = new Date(dto.date).getTime() - Date.now()
-        this.notificationQueue.add(JobName.TASK_ALARM,
+        await  this.notificationQueue.add(JobName.TASK_ALARM,
         {
             taskId: dto.id,
-            notification
+            notificationId: notification.id,
+            userId: requestContext.getStore()?.userId
         }, {
             delay,
             jobId: `task-alarm:${dto.id}`

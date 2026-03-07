@@ -6,5 +6,6 @@ import { AuthModule } from 'src/api/auth/auth.module';
 @Module({
   imports: [AuthModule],
   providers: [EventsGateway, GatewayService],
+  exports: [EventsGateway]
 })
 export class GatewayModule {}
