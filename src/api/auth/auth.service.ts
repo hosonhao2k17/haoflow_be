@@ -63,6 +63,12 @@ export class AuthService {
         })
     }
 
+    verifyAccessToken(token: string) :Promise<PayloadType> {
+        return this.jwtService.verifyAsync(token,{
+            secret: this.configService.getOrThrow('JWT_ACCESS_SECRET')
+        })
+    }
+
     async loginGoogle(profile: GoogleProfile): Promise<string> {
         const role = await this.rolesService.getRoleByName(RoleName.USER)
         let user = await this.usersService.getUserByEmail(profile.email);

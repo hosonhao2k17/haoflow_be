@@ -42,6 +42,12 @@ export class TaskEntity extends AbstractEntity {
     })
     status: TaskStatus;
 
+    @Column({
+        type: Boolean,
+        default: false
+    })
+    isAlarm: boolean;
+
     @Column()
     categoryId: string;
 

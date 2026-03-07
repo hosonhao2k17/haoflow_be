@@ -37,6 +37,7 @@ import { BudgetEntity } from './api/budgets/entities/budget.entity';
 import { ReceiptEntity } from './api/transactions/entities/receipt.entity';
 import { NotificationsModule } from './api/notifications/notifications.module';
 import { NotificationEntity } from './api/notifications/entities/notification.entity';
+import { BullModule } from '@nestjs/bullmq';
 @Module({
   imports: [
     RolesModule,
@@ -117,7 +118,15 @@ import { NotificationEntity } from './api/notifications/entities/notification.en
       
     }),
     MailModule,
-    CloudinaryModule
+    CloudinaryModule,
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          url: configService.getOrThrow<string>('REDIS_URL')
+        },
+      }),
+    }),
   ],
   controllers: [],
   providers: [],
