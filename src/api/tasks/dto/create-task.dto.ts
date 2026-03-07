@@ -1,5 +1,5 @@
 import { Priority } from "src/common/constants/priority.constant";
-import { DateField, EnumField, MilitaryTimeField, StringField, UuidField } from "src/decorators/field.decorator";
+import { BooleanField, DateField, EnumField, MilitaryTimeField, StringField, UuidField } from "src/decorators/field.decorator";
 
 
 export class CreateTaskDto {
@@ -15,6 +15,9 @@ export class CreateTaskDto {
 
     @MilitaryTimeField()
     startTime: string;
+
+    @BooleanField()
+    isAlarm: boolean;
 
     @MilitaryTimeField()
     endTime: string;

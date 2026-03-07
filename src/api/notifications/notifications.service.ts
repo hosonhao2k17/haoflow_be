@@ -46,7 +46,7 @@ export class NotificationsService {
             userId: requestContext.getStore()?.userId
         }, {
             delay,
-            jobId: `task-alarm:${dto.id}`
+            jobId: `task-alarm-${dto.id}`
         })
     }
 }

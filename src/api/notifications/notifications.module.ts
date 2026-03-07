@@ -17,5 +17,6 @@ import { GatewayModule } from 'src/gateway/gateway.module';
   ],
   controllers: [NotificationsController],
   providers: [NotificationsService, NotificationConsumer],
+  exports: [NotificationsService]
 })
 export class NotificationsModule {}

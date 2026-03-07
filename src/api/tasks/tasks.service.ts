@@ -25,6 +25,7 @@ import { Priority } from 'src/common/constants/priority.constant';
 import { TaskCategoriesService } from '../task-categories/task-categories.service';
 import { SuggestTaskRdo } from './rdo/suggest-task.rdo';
 import { AiDto } from '../ai/dto/ai.dto';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class TasksService {
@@ -33,11 +34,27 @@ export class TasksService {
     @InjectRepository(TaskEntity) private tasksRepository: Repository<TaskEntity>,
     @InjectRepository(DailyPlanEntity) private dailyPlansRepository: Repository<DailyPlanEntity>,
     private aiService: AiService,
-    private taskCategoriesSevice: TaskCategoriesService
+    private taskCategoriesSevice: TaskCategoriesService,
+    private notificationsService: NotificationsService
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
+    const dailyPlan = await this.dailyPlansRepository.findOneBy({
+      id: createTaskDto.dailyPlanId, 
+      createdBy: requestContext.getStore()?.userId
+    })
+    if(!dailyPlan) {
+      throw new NotFoundException(ErrorCode.DAILY_PLAN_NOT_FOUND)
+    }
     const task = this.tasksRepository.create(createTaskDto);
     await task.save()
+    if(task.isAlarm) {
+      await this.notificationsService.scheduleAlarm({
+        startTime: task.startTime,
+        date: dailyPlan.date,
+        title: task.todo,
+        id: task.id 
+      })
+    }
     return plainToInstance(TaskRdo, task);
   }
 
