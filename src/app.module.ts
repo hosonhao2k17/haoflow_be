@@ -38,6 +38,7 @@ import { ReceiptEntity } from './api/transactions/entities/receipt.entity';
 import { NotificationsModule } from './api/notifications/notifications.module';
 import { NotificationEntity } from './api/notifications/entities/notification.entity';
 import { BullModule } from '@nestjs/bullmq';
+import { GatewayModule } from './gateway/gateway.module';
 @Module({
   imports: [
     RolesModule,
@@ -127,6 +128,7 @@ import { BullModule } from '@nestjs/bullmq';
         },
       }),
     }),
+    GatewayModule,
   ],
   controllers: [],
   providers: [],
