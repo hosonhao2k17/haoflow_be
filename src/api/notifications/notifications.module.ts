@@ -3,10 +3,17 @@ import { NotificationsService } from './notifications.service';
 import { NotificationsController } from './notifications.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationEntity } from './entities/notification.entity';
+import { NotificationConsumer } from './notifications.consumer';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([NotificationEntity])],
+  imports: [
+    TypeOrmModule.forFeature([NotificationEntity]),
+    BullModule.registerQueue({
+      name: 'notifications'
+    })
+  ],
   controllers: [NotificationsController],
-  providers: [NotificationsService],
+  providers: [NotificationsService, NotificationConsumer],
 })
 export class NotificationsModule {}

@@ -22,6 +22,12 @@ export class NotificationEntity extends AbstractEntity {
     body: string;
 
     @Column({
+        type: 'jsonb',
+        nullable: true
+    })
+    metaData: Record<string, any>
+
+    @Column({
         type: Boolean,
         default: false
     })
