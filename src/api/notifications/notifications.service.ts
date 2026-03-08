@@ -10,6 +10,7 @@ import { ScheduleAlarmDto } from './dto/schedule-alarm.dto';
 import { NotificationType } from 'src/common/constants/notification.constant';
 import { JobName } from 'src/common/constants/job.constant';
 import { requestContext } from 'src/common/context/request.context';
+import { getDelay } from 'src/utils/delay';
 
 @Injectable()
 export class NotificationsService {
@@ -38,12 +39,14 @@ export class NotificationsService {
             }
         })
 
-        const delay = new Date(dto.date).getTime() - Date.now()
+        const delay = getDelay(dto.date, dto.startTime);
         await  this.notificationQueue.add(JobName.TASK_ALARM,
         {
             taskId: dto.id,
             notificationId: notification.id,
-            userId: requestContext.getStore()?.userId
+            userId: requestContext.getStore()?.userId,
+            title: notification.title,
+            body: notification.body
         }, {
             delay,
             jobId: `task-alarm-${dto.id}`

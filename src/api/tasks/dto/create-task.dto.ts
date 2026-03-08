@@ -16,8 +16,8 @@ export class CreateTaskDto {
     @MilitaryTimeField()
     startTime: string;
 
-    @BooleanField()
-    isAlarm: boolean;
+    @BooleanField({options: true})
+    isAlarm?: boolean;
 
     @MilitaryTimeField()
     endTime: string;

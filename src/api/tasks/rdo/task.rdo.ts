@@ -22,6 +22,9 @@ export class TaskRdo {
     startTime: Date;
 
     @Expose()
+    isAlarm: boolean;
+
+    @Expose()
     endTime: Date;
 
     @Expose()

@@ -5,6 +5,10 @@ import { GatewayService } from './gateway.service';
 import { WsAuthGuard } from 'src/guards/ws-auth.guard';
 
 @WebSocketGateway({
+    cors: {
+        origin: 'http://localhost:3000', 
+        credentials: true,
+    }
 })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
