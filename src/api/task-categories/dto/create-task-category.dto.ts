@@ -12,10 +12,13 @@ export class CreateTaskCategoryDto {
     })
     description?: string;
 
-    @UrlField({
+    @StringField({
         options: true
     })
-    thumbnail?: string;
+    color?: string;
+
+    @UrlField()
+    icon?: string;
 
 
 }

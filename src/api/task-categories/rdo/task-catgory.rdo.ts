@@ -14,5 +14,11 @@ export class TaskCategoryRdo {
     description?: string;
 
     @Expose()
-    thumbnail?: string;
+    color?: string;
+
+    @Expose()
+    icon?: string;
+
+    @Expose()
+    totalTask: number;
 }

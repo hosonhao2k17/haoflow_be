@@ -20,7 +20,12 @@ export class TaskCategoryEntity extends AbstractEntity{
     @Column({
         nullable: true
     })
-    thumbnail?: string;
+    color?: string;
+
+    @Column({
+        nullable: true
+    })
+    icon?: string;
 
     @DeleteDateColumn()
     deletedAt?: Date;

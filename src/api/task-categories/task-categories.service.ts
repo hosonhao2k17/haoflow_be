@@ -27,11 +27,13 @@ export class TaskCategoriesService {
   }
 
   async findAll(queryTaskCategoryDto: QueryTaskCategoryDto = new QueryTaskCategoryDto()) {
-    const queryBuilder = this.taskCategoryRepository.createQueryBuilder(queryTaskCategoryDto.getAlias());
+    const queryBuilder = this.taskCategoryRepository.createQueryBuilder(queryTaskCategoryDto.getAlias())
+    .andWhere(`${queryTaskCategoryDto.getAlias()}.createdBy = :userId`,{userId: requestContext.getStore()?.userId})
+    .loadRelationCountAndMap(
+      `${queryTaskCategoryDto.getAlias()}.totalTask`,
+      `${queryTaskCategoryDto.getAlias()}.tasks`
+    );
     queryTaskCategoryDto.handleQueryBuilder(queryBuilder);
-    const context = requestContext.getStore()
-    const userId = context?.userId;
-    queryBuilder.andWhere(`${queryTaskCategoryDto.getAlias()}.createdBy = :userId`,{userId})
     const [items, total] = await queryBuilder.getManyAndCount();
     const pagination = new OffsetPaginationRdo(total, queryTaskCategoryDto);
     return new OffsetPaginatedRdo(plainToInstance(TaskCategoryRdo, items), pagination);
