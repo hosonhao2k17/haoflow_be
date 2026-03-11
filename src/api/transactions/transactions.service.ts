@@ -21,6 +21,7 @@ import { ReceiptEntity } from './entities/receipt.entity';
 import { ReceiptStatus, TransactionSource, TransactionType } from 'src/common/constants/app.constant';
 import { ReviewTransactionReceiptDto } from './dto/review-transaction-receipt.dto';
 import { ReviewTransactionReceiptRdo } from './rdo/review-transaction-receipt.rdo';
+import { AccountEntity } from '../accounts/entities/account.entity';
 
 
 @Injectable()
@@ -29,6 +30,7 @@ export class TransactionsService {
   constructor(
     @InjectRepository(TransactionEntity) private transactionsRepository: Repository<TransactionEntity>,
     @InjectRepository(ReceiptEntity) private receiptsRepository: Repository<ReceiptEntity>,
+    @InjectRepository(AccountEntity) private accountsRepository: Repository<AccountEntity>,
     private transactionCategoriesService: TransactionCategoriesService,
     private accountsService: AccountsService,
     private aiService: AiService
@@ -40,11 +42,17 @@ export class TransactionsService {
       this.transactionCategoriesService.findOne(categoryId),
       this.accountsService.findOne(accountId)
     ])
-    const transaction = await this.transactionsRepository.create({
-      ...rest,
-      category,
-      account
-    }).save()
+    Object.assign(account, {
+      balance: rest.type === TransactionType.EXPENSE ? account.balance - rest.amount : account.balance + rest.amount
+    })
+    const [transaction, _] = await Promise.all([
+      this.transactionsRepository.create({
+        ...rest,
+        category,
+        account
+      }).save(),
+      this.accountsRepository.save(account),
+    ])
     return plainToInstance(TransactionRdo, transaction)
   }
 
@@ -153,6 +161,25 @@ export class TransactionsService {
       categoryId ? this.transactionCategoriesService.findOne(categoryId) : transaction.category,
       accountId ? this.accountsService.findOne(accountId) : transaction.account
     ])
+    
+    if(data.amount) {
+      if (transaction.type === TransactionType.EXPENSE){ 
+        account.balance += transaction.amount
+      } else {
+        account.balance -= transaction.amount;
+      }
+
+      const newType   = data.type   ?? transaction.type;
+      const newAmount = data.amount ?? transaction.amount;
+
+      if (newType === TransactionType.EXPENSE) {
+        account.balance -= newAmount
+      }
+      else {
+        account.balance += newAmount;
+      }
+      await this.accountsRepository.save(account)
+    }
     Object.assign(transaction, {
       ...data,
       category,
@@ -163,7 +190,18 @@ export class TransactionsService {
   }
 
   async remove(id: string) :Promise<void> {
-    await this.findOne(id);
+    const transaction = await this.transactionsRepository.findOne({
+      where: { id, createdBy: requestContext.getStore()?.userId },
+      relations: { account: true },
+    });
+    if (!transaction) throw new NotFoundException(ErrorCode.TRANSACTION_NOT_FOUND);
+
+    if (transaction.type === TransactionType.EXPENSE) {
+      transaction.account.balance += transaction.amount;
+    } else {
+      transaction.account.balance -= transaction.amount;
+    }
+    await this.accountsRepository.save(transaction.account)
     await this.transactionsRepository.delete(id)
   }
 }
