@@ -36,7 +36,7 @@ export class TransactionEntity extends AbstractEntity {
     type: TransactionType;
 
     @Column({
-        type: 'decimal'
+        type: 'int'
     })
     amount: number;
 

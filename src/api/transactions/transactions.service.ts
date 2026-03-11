@@ -22,6 +22,7 @@ import { ReceiptStatus, TransactionSource, TransactionType } from 'src/common/co
 import { ReviewTransactionReceiptDto } from './dto/review-transaction-receipt.dto';
 import { ReviewTransactionReceiptRdo } from './rdo/review-transaction-receipt.rdo';
 import { AccountEntity } from '../accounts/entities/account.entity';
+import { TransactionStatRdo } from './rdo/transaction-stat.rdo';
 
 
 @Injectable()
@@ -35,6 +36,40 @@ export class TransactionsService {
     private accountsService: AccountsService,
     private aiService: AiService
   ) {}
+
+  async stats() {
+
+    const [transactions, accounts] = await Promise.all([
+      this.transactionsRepository.find(),
+      this.accountsRepository.find(),
+    ]);
+
+    const totalBalance = accounts.reduce((prev, current) => {
+      return prev + current.balance;
+    }, 0);
+
+    const totalIncome = transactions.reduce((prev, current) => {
+      return current.type === TransactionType.INCOME
+        ? prev + current.amount
+        : prev; 
+    }, 0);
+
+    const totalExpense = transactions.reduce((prev, current) => {
+      return current.type === TransactionType.EXPENSE
+        ? prev + current.amount
+        : prev;
+    }, 0);
+
+    return plainToInstance(
+      TransactionStatRdo,
+      {
+        totalBalance,
+        totalIncome,
+        totalExpense,
+        totalAccount: accounts.length,
+        netBalance: totalIncome - totalExpense,
+      })
+  }
 
   async create(createTransactionDto: CreateTransactionDto) :Promise<TransactionRdo> {
     const {categoryId, accountId, ...rest} = createTransactionDto

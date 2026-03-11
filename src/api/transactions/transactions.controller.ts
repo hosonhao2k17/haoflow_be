@@ -13,6 +13,12 @@ import { ReviewTransactionReceiptDto } from './dto/review-transaction-receipt.dt
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
+  @Get('stats')
+  @ApiBearerAuth()
+  stats() {
+    return this.transactionsService.stats()
+  }
+
   @Post()
   @ApiBearerAuth()
   create(@Body() createTransactionDto: CreateTransactionDto) :Promise<TransactionRdo> {
