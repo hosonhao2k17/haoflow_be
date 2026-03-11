@@ -17,7 +17,9 @@ export class CreateTaskCategoryDto {
     })
     color?: string;
 
-    @UrlField()
+    @UrlField({
+        options: true
+    })
     icon?: string;
 
 

@@ -12,12 +12,15 @@ export class TransactionEntity extends AbstractEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
-    categoryId: string;
+    @Column({nullable: true})
+    categoryId?: string;
 
-    @ManyToOne(() => TransactionCategoryEntity, (category) => category.transactions )
+    @ManyToOne(() => TransactionCategoryEntity, (category) => category.transactions, {
+        onDelete: 'SET NULL',
+        nullable: true
+    } )
     @JoinColumn({name: 'categoryId'})
-    category: TransactionCategoryEntity;
+    category?: TransactionCategoryEntity;
 
     @Column()
     accountId: string
