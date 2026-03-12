@@ -1,7 +1,7 @@
 import { Transform } from "class-transformer";
 import { BudgetPeriod } from "src/common/constants/app.constant";
 import { DateField, EnumField, NumberField, StringField, UuidField } from "src/decorators/field.decorator";
-
+import {startOfMonth} from 'date-fns'
 
 export class CreateBudgetDto {
 
@@ -16,10 +16,8 @@ export class CreateBudgetDto {
 
     @DateField()
     @Transform(({value}) => {
-        const month = new Date(value);
-        month.setDate(1)
-        month.setHours(0,0,0,0);
-        return month
+        
+        return startOfMonth(value)
     })
     month: Date;
 

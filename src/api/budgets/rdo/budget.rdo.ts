@@ -14,6 +14,9 @@ export class BudgetRdo extends BaseRdo {
     amount: number;
 
     @Expose()
+    spentAmount: number;
+
+    @Expose()
     @Type(() => TransactionCategoryRdo)
     category: TransactionCategoryRdo;
 
