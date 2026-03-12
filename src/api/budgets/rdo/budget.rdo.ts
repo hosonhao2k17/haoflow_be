@@ -24,7 +24,7 @@ export class BudgetRdo extends BaseRdo {
     period: BudgetPeriod;
 
     @Expose()
-    month: Date;
+    startDate: Date;
 
     @Expose()
     alertThreshold: number;

@@ -15,11 +15,7 @@ export class CreateBudgetDto {
     period?: BudgetPeriod;
 
     @DateField()
-    @Transform(({value}) => {
-        
-        return startOfMonth(value)
-    })
-    month: Date;
+    startDate: Date;
 
     @NumberField({min: 0, max: 100})
     alertThreshold: number

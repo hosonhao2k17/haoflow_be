@@ -29,7 +29,7 @@ export class BudgetsService {
   async create(createBudgetDto: CreateBudgetDto): Promise<BudgetRdo> {
     const {categoryId, ...rest} = createBudgetDto
     const category = await this.transactionCategoriesService.findOne(categoryId)
-    const isExists = await this.isExistsMonth(createBudgetDto.month, categoryId)
+    const isExists = await this.isExistsStartDate(createBudgetDto.startDate, categoryId)
     if(isExists) {
       throw new ConflictException(ErrorCode.BUDGET_MONTH_CONFLICT)
     }
@@ -41,9 +41,9 @@ export class BudgetsService {
     return plainToInstance(BudgetRdo, budget);
   }
 
-  private isExistsMonth(month: Date , categoryId: string) {
+  private isExistsStartDate(startDate: Date , categoryId: string) {
     return this.budgetsRepository.findOneBy({
-      month,
+      startDate,
       createdBy: requestContext.getStore()?.userId,
       categoryId
     })
@@ -59,14 +59,14 @@ export class BudgetsService {
     const [items, total] = await queryBuilder.getManyAndCount();
     const budgets = await Promise.all(items.map( async (item) => ({
       ...item,
-      spentAmount: await this.totalSpentAmount(item.period, item.categoryId, item.month)
+      spentAmount: await this.totalSpentAmount(item.period, item.categoryId, item.startDate)
     })))
     const pagination = new OffsetPaginationRdo(total, queryBudgetDto);
     return new OffsetPaginatedRdo(plainToInstance(BudgetRdo, budgets),pagination)
   }
 
-  private async totalSpentAmount(period: BudgetPeriod, categoryId: string, month: Date) {
-    const {start, end} = this.getRangeTransactionDate(period, month);
+  private async totalSpentAmount(period: BudgetPeriod, categoryId: string, startDate: Date) {
+    const {start, end} = this.getRangeTransactionDate(period, startDate);
     const transactions = await this.transactionsRepository
       .createQueryBuilder('transaction')
       .andWhere('transaction.createdBy = :createdBy',{createdBy: requestContext.getStore()?.userId})
@@ -80,14 +80,14 @@ export class BudgetsService {
 
   }
 
-  private getRangeTransactionDate(period: BudgetPeriod, month: Date) {
+  private getRangeTransactionDate(period: BudgetPeriod, startDate: Date) {
     switch (period) {
       case BudgetPeriod.MONTHLY:
-        return { start: startOfMonth(month), end: endOfMonth(month) };
+        return { start: startOfMonth(startDate), end: endOfMonth(startDate) };
       case BudgetPeriod.WEEKLY:
-        return { start: startOfWeek(month), end: endOfWeek(month) };
+        return { start: startOfWeek(startDate), end: endOfWeek(startDate) };
       case BudgetPeriod.YEARLY:
-        return { start: startOfYear(month), end: endOfYear(month) };
+        return { start: startOfYear(startDate), end: endOfYear(startDate) };
     }
   }
 
@@ -124,7 +124,7 @@ export class BudgetsService {
     if(!budget) {
       throw new NotFoundException(ErrorCode.BUDGET_NOT_FOUND)
     }
-    const isExists = await this.isExistsMonth(updateBudgetDto?.month ?? budget?.month, updateBudgetDto?.categoryId ?? budget?.categoryId)
+    const isExists = await this.isExistsStartDate(updateBudgetDto?.startDate ?? budget?.startDate, updateBudgetDto?.categoryId ?? budget?.categoryId)
     if(isExists) {
       throw new ConflictException(ErrorCode.BUDGET_MONTH_CONFLICT)
     }

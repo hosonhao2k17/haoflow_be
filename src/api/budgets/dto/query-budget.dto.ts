@@ -16,7 +16,7 @@ export class QueryBudgetDto extends OffsetPaginationDto {
     period?: BudgetPeriod;
 
     @DateField({options: true})
-    month?: Date;
+    startDate?: Date;
 
     @NumberField({ options: true })
     minAmount?: number;
@@ -35,10 +35,10 @@ export class QueryBudgetDto extends OffsetPaginationDto {
             queryBuilder.andWhere(`${this.alias}.period = :period`, { period: this.period });
         }
 
-        if (this.month) {
+        if (this.startDate) {
             queryBuilder.andWhere(
                 `MONTH(${this.alias}.month) = MONTH(:month) AND YEAR(${this.alias}.month) = YEAR(:month)`,
-                { month: this.month }
+                { month: this.startDate }
             );
         }
 
