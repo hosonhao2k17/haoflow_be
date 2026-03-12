@@ -11,6 +11,8 @@ export class TransactionStatRdo {
     @Expose()
     totalIncome: number;
 
+    
+
     @Expose()
     totalExpense: number;
 

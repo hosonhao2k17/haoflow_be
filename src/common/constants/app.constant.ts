@@ -72,7 +72,7 @@ export enum TransactionSource {
 export enum BudgetPeriod {
     MONTHLY = 'monthly',
     WEEKLY = 'weekly',
-    DAILY = 'daily'
+    YEARLY = 'yearly'
 }
 
 export enum ReceiptStatus {

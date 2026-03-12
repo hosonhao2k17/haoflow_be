@@ -40,8 +40,16 @@ export class TransactionsService {
   async stats() {
 
     const [transactions, accounts] = await Promise.all([
-      this.transactionsRepository.find(),
-      this.accountsRepository.find(),
+      this.transactionsRepository.find({
+        where: {
+          createdBy: requestContext.getStore()?.userId
+        }
+      }),
+      this.accountsRepository.find({
+        where: {
+          createdBy: requestContext.getStore()?.userId
+        }
+      }),
     ]);
 
     const totalBalance = accounts.reduce((prev, current) => {
