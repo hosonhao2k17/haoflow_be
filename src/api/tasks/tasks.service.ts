@@ -3,7 +3,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from './entities/task.entity';
-import { Equal, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Between, Equal, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { DailyPlanEntity } from '../daily-plans/entities/daily-plan.entity';
 import { plainToInstance } from 'class-transformer';
 import { TaskRdo } from './rdo/task.rdo';
@@ -26,6 +26,8 @@ import { TaskCategoriesService } from '../task-categories/task-categories.servic
 import { SuggestTaskRdo } from './rdo/suggest-task.rdo';
 import { AiDto } from '../ai/dto/ai.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+import { StatsTaskRdo } from './rdo/stats-task.rdo';
+import { QueryTaskStatsDto } from './dto/query-task-stats.dto';
 
 @Injectable()
 export class TasksService {
@@ -37,6 +39,76 @@ export class TasksService {
     private taskCategoriesSevice: TaskCategoriesService,
     private notificationsService: NotificationsService
   ) {}
+
+  async stats(dto: QueryTaskStatsDto) : Promise<StatsTaskRdo> {
+    const tasks = await this.tasksRepository.find({
+      where: {
+        createdBy: requestContext.getStore()?.userId,
+        createdAt: Between(dto.getRange().start, dto.getRange().end)
+      }
+    });
+    const total = tasks.length;
+    const done = tasks.reduce((total, item) => {
+      return  item.status === TaskStatus.DONE
+      ?
+      total + 1
+      :
+      total
+    },0)
+
+    const skipped = tasks.reduce((total, item) => {
+      return  item.status === TaskStatus.SKIPPED
+      ?
+      total + 1
+      :
+      total
+    },0)
+
+    const todo = tasks.reduce((total, item) => {
+      return  item.status === TaskStatus.TODO
+      ?
+      total + 1
+      :
+      total
+    }, 0)
+
+    const streak = await this.getCountStreak();
+    return plainToInstance(StatsTaskRdo, {
+      total,
+      done,
+      skipped,
+      todo,
+      streak
+    })
+  }
+
+  async getCountStreak() {
+    let countTaskSuccess = 0;
+    let countStreak = 0;
+    const dailyPlans = await this.dailyPlansRepository.find({
+      where: {
+        createdBy: requestContext.getStore()?.userId
+      },
+      relations: {
+        tasks: true
+      }
+    })
+    for(const item of dailyPlans) {
+      for(const task of item.tasks) {
+        if(task.status === TaskStatus.DONE) {
+          countTaskSuccess++;
+        }
+      }
+      if(countTaskSuccess === item.tasks.length) {
+        countStreak++;
+      }
+      countTaskSuccess = 0;
+
+    }
+    return countStreak;
+  }
+
+
   async create(createTaskDto: CreateTaskDto): Promise<TaskRdo> {
     const dailyPlan = await this.dailyPlansRepository.findOneBy({
       id: createTaskDto.dailyPlanId, 

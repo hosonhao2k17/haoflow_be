@@ -9,10 +9,18 @@ import { TaskRdo } from './rdo/task.rdo';
 import { QueryTaskDto } from './dto/query-task.dto';
 import { CreateMultiTaskDto } from './dto/create-multi-task.dto';
 import { SuggestTaskDto } from './dto/suggest-task.dto';
+import { QueryTaskStatsDto } from './dto/query-task-stats.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
+
+
+  @Get('stats')
+  @ApiBearerAuth()
+  stats(@Query() dto: QueryTaskStatsDto) {
+    return this.tasksService.stats(dto)
+  }
 
   @Post()
   @ApiBearerAuth()
