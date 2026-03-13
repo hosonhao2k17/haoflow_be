@@ -29,6 +29,7 @@ export class BudgetsService {
   ) {}
 
   async create(createBudgetDto: CreateBudgetDto): Promise<BudgetRdo> {
+    console.log(createBudgetDto)
     const {categoryId, ...rest} = createBudgetDto
     const category = await this.transactionCategoriesService.findOne(categoryId)
     const isExists = await this.isExistsStartDate(createBudgetDto.startDate, categoryId)

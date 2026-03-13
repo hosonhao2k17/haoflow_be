@@ -21,7 +21,7 @@ export class AccountRdo extends BaseRdo {
     color?: string;
 
     @Expose()
-    icon?: string;
+    logo?: string;
 
     @Expose()
     status: AccountStatus

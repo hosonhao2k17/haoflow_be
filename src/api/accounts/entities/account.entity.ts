@@ -26,7 +26,7 @@ export class AccountEntity extends AbstractEntity{
     color?: string;
 
     @Column({nullable: true})
-    icon?: string;
+    logo?: string;
 
     @Column({
         default: AccountStatus.ACTIVE,

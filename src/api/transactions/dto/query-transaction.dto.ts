@@ -1,4 +1,4 @@
-import { TransactionSource, TransactionType } from "src/common/constants/app.constant";
+import { SortOrder, TransactionSource, TransactionType } from "src/common/constants/app.constant";
 import { CursorPaginationDto } from "src/common/dto/cursor-pagination.dto";
 import { DateField, EnumField, NumberField, StringField, UuidField } from "src/decorators/field.decorator";
 import { ObjectLiteral, SelectQueryBuilder } from "typeorm";
@@ -32,6 +32,12 @@ export class QueryTransactionDto extends CursorPaginationDto {
 
     @EnumField(TransactionSource, { options: true, swaggerOptions: { enum: TransactionSource } })
     source?: TransactionSource;
+
+    @StringField({options: true})
+    sortBy?: string = 'transactionDate';
+
+    @EnumField(SortOrder, {options: true})
+    sortOrder?: SortOrder = SortOrder.DESC;
 
     handleQueryBuilder<T extends ObjectLiteral>(qb: SelectQueryBuilder<T>): void {
         super.handleQueryBuilder(qb);

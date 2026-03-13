@@ -24,5 +24,5 @@ export class CreateAccountDto {
     @StringField({
         options: true
     })
-    icon?: string;
+    logo?: string;
 }
