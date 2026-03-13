@@ -23,6 +23,8 @@ import { ReviewTransactionReceiptDto } from './dto/review-transaction-receipt.dt
 import { ReviewTransactionReceiptRdo } from './rdo/review-transaction-receipt.rdo';
 import { AccountEntity } from '../accounts/entities/account.entity';
 import { TransactionStatRdo } from './rdo/transaction-stat.rdo';
+import { AiRdo } from '../ai/rdo/ai.rdo';
+import { BudgetsService } from '../budgets/budgets.service';
 
 
 @Injectable()
@@ -34,7 +36,8 @@ export class TransactionsService {
     @InjectRepository(AccountEntity) private accountsRepository: Repository<AccountEntity>,
     private transactionCategoriesService: TransactionCategoriesService,
     private accountsService: AccountsService,
-    private aiService: AiService
+    private aiService: AiService,
+    private budgetService: BudgetsService
   ) {}
 
   async stats() {
@@ -96,6 +99,7 @@ export class TransactionsService {
       }).save(),
       this.accountsRepository.save(account),
     ])
+    await this.budgetService.checkBudgetAlert(categoryId, transaction.transactionDate, transaction.amount)
     return plainToInstance(TransactionRdo, transaction)
   }
 
@@ -108,7 +112,7 @@ export class TransactionsService {
     const dataImage = await this.aiService.handleImage(imageUrl);
     const data = await this.aiService.generateAiContent({
       module: "receipts",
-      message: `Phân tích hóa đơn và trả về dữ liệu theo dạng bên dưới`,
+      message: `Phân tích hóa đơn và trả về dữ liệu theo dạng bên dưới nếu ảnh không liên quan tới hóa đơn hoặc mờ cứ trả data về null`,
       typeString: classToTypeString({
         categoryId: "",
         accountId: "",
@@ -134,7 +138,7 @@ export class TransactionsService {
       }
     })  
     const json = this.aiService.extractJson<ReviewTransactionReceiptRdo>(data);
-    return plainToInstance(ReviewTransactionReceiptRdo, json);
+    return json
   }
 
   async createFromReceipt(dto: CreateFromReceiptDto) {

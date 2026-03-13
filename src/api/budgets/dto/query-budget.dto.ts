@@ -37,7 +37,7 @@ export class QueryBudgetDto extends OffsetPaginationDto {
 
         if (this.startDate) {
             queryBuilder.andWhere(
-                `MONTH(${this.alias}.month) = MONTH(:month) AND YEAR(${this.alias}.month) = YEAR(:month)`,
+                `MONTH(${this.alias}.startDate) = MONTH(:startDate) AND YEAR(${this.alias}.startDate) = YEAR(:startDate)`,
                 { month: this.startDate }
             );
         }

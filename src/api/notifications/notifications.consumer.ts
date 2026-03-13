@@ -12,10 +12,14 @@ export class NotificationConsumer extends WorkerHost {
         super()
     }
     async process(job: Job, token?: string): Promise<any> {
+        
+                const {userId, ...data} = job.data
         switch(job.name) {
             case JobName.TASK_ALARM: 
-                const {userId, ...data} = job.data
                 this.eventsGateway.sendToUser(userId, EventGatewayEnum.TASK_ALARM, data)
+            break;
+            case JobName.ALERT_THRESHOLD: 
+                this.eventsGateway.sendToUser(userId, EventGatewayEnum.ALERT_THRESHOLD, data)
             break;
         }
     }

@@ -9,13 +9,15 @@ import { AiService } from '../ai/ai.service';
 import { ReceiptEntity } from './entities/receipt.entity';
 import { AiModule } from '../ai/ai.module';
 import { AccountEntity } from '../accounts/entities/account.entity';
+import { BudgetsModule } from '../budgets/budgets.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([TransactionEntity, ReceiptEntity, AccountEntity]),
     TransactionCategoriesModule,
     AccountsModule,
-    AiModule
+    AiModule,
+    BudgetsModule
   ],
   controllers: [TransactionsController],
   providers: [TransactionsService],

@@ -11,6 +11,7 @@ import { NotificationType } from 'src/common/constants/notification.constant';
 import { JobName } from 'src/common/constants/job.constant';
 import { requestContext } from 'src/common/context/request.context';
 import { getDelay } from 'src/utils/delay';
+import { AlertThresholdDto } from './dto/alert-threshold.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -51,5 +52,23 @@ export class NotificationsService {
             delay,
             jobId: `task-alarm-${dto.id}`
         })
+    }
+
+    async alertThreshold(dto: AlertThresholdDto) {
+        const { id, categoryTitle } = dto;
+        const notification = await this.create({
+            type: NotificationType.BUDGET_THRESHOLD,
+            title: "Cảnh báo ngân sách",
+            body: `${categoryTitle}: đã dùng ${dto.percentage}%`,
+            metadata: { budgetId: id }
+        });
+
+        await this.notificationQueue.add(JobName.ALERT_THRESHOLD, {
+            ...dto,
+            userId: requestContext.getStore()?.userId,  
+            notificationId: notification.id,
+            title: notification.title,
+            body: notification.body
+        });
     }
 }

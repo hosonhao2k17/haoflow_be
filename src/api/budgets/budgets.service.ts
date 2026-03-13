@@ -15,7 +15,8 @@ import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { TransactionEntity } from '../transactions/entities/transaction.entity';
 import { BudgetPeriod, TransactionType } from 'src/common/constants/app.constant';
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear } from 'date-fns';
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval } from 'date-fns';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class BudgetsService {
@@ -23,7 +24,8 @@ export class BudgetsService {
   constructor(
     @InjectRepository(BudgetEntity) private budgetsRepository: Repository<BudgetEntity>,
     private transactionCategoriesService: TransactionCategoriesService,
-    @InjectRepository(TransactionEntity) private transactionsRepository: Repository<TransactionEntity>
+    @InjectRepository(TransactionEntity) private transactionsRepository: Repository<TransactionEntity>,
+    private notificationsService: NotificationsService
   ) {}
 
   async create(createBudgetDto: CreateBudgetDto): Promise<BudgetRdo> {
@@ -50,6 +52,40 @@ export class BudgetsService {
     
   }
 
+  async findBudgetsByTransactionDate(transactionDate: Date, categoryId: string) {
+    const budgets = await this.budgetsRepository.find({
+      where: {
+        categoryId
+      },
+      relations: {
+        category: true
+      }
+    })
+    const results: BudgetEntity[] = [];
+    for(const budget of budgets) {
+      let endDate: Date;
+      switch (budget.period) {
+        case BudgetPeriod.MONTHLY:
+          endDate = endOfMonth(budget.startDate);
+          break;
+        case BudgetPeriod.WEEKLY:
+          endDate = endOfWeek(budget.startDate, { weekStartsOn: 1 });
+          break;
+        case BudgetPeriod.YEARLY:
+          endDate = endOfYear(budget.startDate);
+          break;
+      }
+      const isInRange = isWithinInterval(transactionDate, {
+        start: budget.startDate,
+        end: endDate
+      })
+      if(isInRange) {
+        results.push(budget)
+      }
+    }
+    return results;
+  }
+
   async findAll(queryBudgetDto: QueryBudgetDto) :Promise<OffsetPaginatedRdo<BudgetRdo>> {
     const queryBuilder = this.budgetsRepository
       .createQueryBuilder(queryBudgetDto.getAlias())
@@ -65,7 +101,7 @@ export class BudgetsService {
     return new OffsetPaginatedRdo(plainToInstance(BudgetRdo, budgets),pagination)
   }
 
-  private async totalSpentAmount(period: BudgetPeriod, categoryId: string, startDate: Date) {
+  async totalSpentAmount(period: BudgetPeriod, categoryId: string, startDate: Date) {
     const {start, end} = this.getRangeTransactionDate(period, startDate);
     const transactions = await this.transactionsRepository
       .createQueryBuilder('transaction')
@@ -109,6 +145,24 @@ export class BudgetsService {
     }
     return plainToInstance(BudgetRdo, budget)
     
+  }
+
+  async checkBudgetAlert(categoryId: string, transactionDate: Date, newAmount: number) {
+    const budgets = await this.findBudgetsByTransactionDate(transactionDate, categoryId);
+    for (const budget of budgets) {
+      const spent = await this.totalSpentAmount(budget.period, budget.categoryId, budget.startDate);
+      const totalAfter = spent + newAmount;
+      const percentage = Math.round((totalAfter / budget.amount) * 100);
+      const isExceeded = totalAfter >= budget.amount;
+      const isThreshold = percentage >= budget.alertThreshold;
+      if (isExceeded || isThreshold) {
+        await this.notificationsService.alertThreshold({
+          id: budget.id,
+          categoryTitle: budget.category.title,
+          percentage
+        });
+      }
+    }
   }
 
   async update(id: string, updateBudgetDto: UpdateBudgetDto) :Promise<BudgetRdo> {
