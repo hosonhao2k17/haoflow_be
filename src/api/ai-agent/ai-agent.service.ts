@@ -17,7 +17,7 @@ export class AiAgentService implements OnModuleInit {
 
     async onModuleInit() {
         const llm = new ChatGoogleGenerativeAI({
-            model: this.configService.getOrThrow('API_MODEL'),
+            model: this.configService.getOrThrow('AI_MODEL'),
             apiKey: this.configService.getOrThrow('AI_API_KEY'),
             temperature: 0,
         });
