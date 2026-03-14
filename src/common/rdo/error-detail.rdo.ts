@@ -1,14 +1,15 @@
 import { Expose } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 
 
 export class ErrorDetailRdo {
 
-    @Expose()
+    @ExposeField()
     property: string;
 
-    @Expose()
+    @ExposeField()
     code: string;
 
-    @Expose()
+    @ExposeField()
     message: string;
 }

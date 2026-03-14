@@ -1,12 +1,12 @@
-import { Expose } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 
 
 export class BaseRdo {
 
-    @Expose()
+    @ExposeField()
     createdAt: Date;
 
-    @Expose()
+    @ExposeField()
     updatedAt: Date;
 
 }

@@ -1,14 +1,16 @@
-import { Expose, Type } from "class-transformer";
+import { Type } from "class-transformer";
 import { CursorPaginationRdo } from "./cursor-pagination.rdo";
+import { ExposeField } from "src/decorators/field.decorator";
 
 
 export class CursorPaginatedRdo<T> {
 
-    @Expose()
+    @ExposeField()6
     items: T[];
 
-    @Expose()
-    @Type(() => CursorPaginationRdo)
+    @ExposeField({
+        classType: () => CursorPaginationRdo
+    })
     pagination: CursorPaginationRdo;
 
     constructor(items: T[], pagination: CursorPaginationRdo) {

@@ -1,26 +1,28 @@
 import { Expose, Type } from "class-transformer";
 import { ErrorDetailRdo } from "./error-detail.rdo";
+import { ExposeField } from "src/decorators/field.decorator";
 
 
 export class ErrorRdo {
 
-    @Expose()
+    @ExposeField()
     message: string;
 
-    @Expose()
+    @ExposeField()
     statusCode: number;
 
-    @Expose()
+    @ExposeField()
     error: string;
     
-    @Expose()
+    @ExposeField()
     errorCode: string;
 
-    @Expose()
+    @ExposeField()
     timestamp: string;
 
-    @Expose()
-    @Type(() => ErrorDetailRdo)
+    @ExposeField({
+        classType: () => ErrorDetailRdo
+    })
     details?: ErrorDetailRdo[];
 
 

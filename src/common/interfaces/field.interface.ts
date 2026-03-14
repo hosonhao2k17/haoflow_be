@@ -59,4 +59,5 @@ export interface IMilitaryTimeOptions extends IFieldOptions {
 export interface IExposeFieldOptions {
     classType?: () => any,
     swaggerOptions?: ApiPropertyOptions;
+    swagger?: boolean
 }

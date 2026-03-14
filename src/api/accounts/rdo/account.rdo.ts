@@ -1,28 +1,29 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
 import { AccountStatus, AccountType } from "src/common/constants/account.constant";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
+import { ExposeField } from "src/decorators/field.decorator";
 
 @Exclude()
 export class AccountRdo extends BaseRdo {
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     title: string;
 
-    @Expose()
+    @ExposeField()
     type: AccountType;
 
-    @Expose()
+    @ExposeField()
     balance: number;
 
-    @Expose()
+    @ExposeField()
     color?: string;
 
-    @Expose()
+    @ExposeField()
     logo?: string;
 
-    @Expose()
+    @ExposeField()
     status: AccountStatus
 }

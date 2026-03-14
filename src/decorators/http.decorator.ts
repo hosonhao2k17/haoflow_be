@@ -50,7 +50,7 @@ export const ApiEndpoint = (options: ApiAuthOptions = {}) => {
     );
   }
 
-  if(options.isPaginated && options.paginationType) {
+  if(options.isPaginated && options.paginationType && options.bodyType) {
     if(options.paginationType === 'cursor') {
         decorators.push(ApiResponse({
             type: CursorPaginatedRdo

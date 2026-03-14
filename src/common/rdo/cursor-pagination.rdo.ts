@@ -1,18 +1,18 @@
-import { Expose } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 
 
 export class CursorPaginationRdo {
 
-    @Expose()
+    @ExposeField()
     limit: number;
 
-    @Expose()
+    @ExposeField()
     afterCursor: string | null;
 
-    @Expose()
+    @ExposeField()
     beforeCursor: string | null;
 
-    @Expose()
+    @ExposeField()
     totalRecords: number;
 
     constructor(

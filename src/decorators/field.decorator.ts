@@ -148,9 +148,13 @@ export function ExposeField(options: IExposeFieldOptions = {}) {
     const { classType, swaggerOptions } = options;
 
     const decorators: any[] = [
-        Expose(),
-        ApiProperty(swaggerOptions)
+        Expose()
     ];
+    if(options.swagger !== false) {
+        decorators.push(
+            ApiProperty(swaggerOptions)
+        )
+    }
 
     if (classType) {
         decorators.push(Type(classType));

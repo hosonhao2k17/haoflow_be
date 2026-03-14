@@ -5,38 +5,51 @@ import { UpdateAccountDto } from './dto/update-account.dto';
 import { AccountRdo } from './rdo/account.rdo';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { QueryAccountDto } from './dto/query-account.dto';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 
 @Controller('accounts')
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
-  @ApiBearerAuth()
+  @ApiEndpoint({
+    responseType: AccountRdo
+  })
   @Post()
   create(@Body() createAccountDto: CreateAccountDto) :Promise<AccountRdo> {
     return this.accountsService.create(createAccountDto);
   }
 
+  @ApiEndpoint({
+    responseType: AccountRdo,
+    isPaginated: true,
+    paginationType: 'offset'
+  })
   @Get()
-  @ApiBearerAuth()
   findAll(@Query() queryAccountDto: QueryAccountDto) {
     return this.accountsService.findAll(queryAccountDto);
   }
 
   @Get(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({
+    responseType: AccountRdo
+  })
   findOne(@Param('id') id: string) :Promise<AccountRdo> {
     return this.accountsService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({
+    responseType: AccountRdo
+  })
   update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) :Promise<AccountRdo> {
     return this.accountsService.update(id, updateAccountDto);
   }
 
   @Delete(':id')  
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
+  @ApiEndpoint({
+    responseType: AccountRdo,
+    httpCode: HttpStatus.NO_CONTENT
+  })
   remove(@Param('id') id: string) :Promise<void> {
     return this.accountsService.remove(id);
   }

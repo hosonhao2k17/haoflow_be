@@ -1,13 +1,16 @@
-import { Exclude, Expose, Type } from "class-transformer";
+import { Exclude } from "class-transformer";
 import { OffsetPaginationRdo } from "./offset-pagination.rdo";
+import { ExposeField } from "src/decorators/field.decorator";
 
 @Exclude()
 export class OffsetPaginatedRdo<T> {
 
-    @Expose()
+    @ExposeField()
     items: T[];
 
-    @Expose()
+    @ExposeField({
+        classType: () => OffsetPaginationRdo
+    })
     pagination: OffsetPaginationRdo;
 
     constructor(items: T[], pagination: OffsetPaginationRdo) {

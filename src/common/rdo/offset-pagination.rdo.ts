@@ -1,28 +1,29 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
 import { OffsetPaginationDto } from "../dto/offset-pagination.dto";
+import { ExposeField } from "src/decorators/field.decorator";
 
 @Exclude()
 export class OffsetPaginationRdo {
 
-    @Expose()
+    @ExposeField()
     page: number;
 
-    @Expose()
+    @ExposeField()
     limit: number;
 
-    @Expose()
+    @ExposeField()
     offset: number;
 
-    @Expose()
+    @ExposeField()
     totalPages: number;
 
-    @Expose()
+    @ExposeField()
     totalRecords: number;
 
-    @Expose()
+    @ExposeField()
     nextPage?: number;
 
-    @Expose()
+    @ExposeField()
     previousPage?: number;
 
     constructor(totalRecords: number, offsetPaginationDto: OffsetPaginationDto) {
