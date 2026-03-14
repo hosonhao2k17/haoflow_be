@@ -22,7 +22,7 @@ export enum PermissionAction {
 export enum PermissionSubject{
     USER = 'user',
     ROLE = 'role',
-    TASK = 'task'
+    AI = 'ai'
 }
 
 export enum Gender {

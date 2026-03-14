@@ -13,9 +13,9 @@ export const PERMISSIONS = [
   { action: PermissionAction.UPDATE, subject: PermissionSubject.ROLE },
   { action: PermissionAction.DELETE, subject: PermissionSubject.ROLE },
 
-  // ===== TASK =====
-  { action: PermissionAction.CREATE, subject: PermissionSubject.TASK },
-  { action: PermissionAction.READ, subject: PermissionSubject.TASK },
-  { action: PermissionAction.UPDATE, subject: PermissionSubject.TASK },
-  { action: PermissionAction.DELETE, subject: PermissionSubject.TASK },
+  // ===== AI =====
+  { action: PermissionAction.CREATE, subject: PermissionSubject.AI },
+  { action: PermissionAction.READ, subject: PermissionSubject.AI },
+  { action: PermissionAction.UPDATE, subject: PermissionSubject.AI },
+  { action: PermissionAction.DELETE, subject: PermissionSubject.AI },
 ];
