@@ -73,12 +73,17 @@ export class TasksService {
     }, 0)
 
     const streak = await this.getCountStreak();
+
+    const doneProgress = total > 0 ? Math.round((done / total) * 100) : 0;
+    const skipProgress = total > 0 ? Math.round((skipped / total) * 100) : 0;
     return plainToInstance(StatsTaskRdo, {
       total,
       done,
       skipped,
       todo,
-      streak
+      streak,
+      doneProgress,
+      skipProgress
     })
   }
 

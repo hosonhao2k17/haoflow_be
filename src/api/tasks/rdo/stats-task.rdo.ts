@@ -18,4 +18,10 @@ export class StatsTaskRdo {
     
     @Expose()
     streak: number;
+
+    @Expose()
+    doneProgress: number;
+
+    @Expose()
+    skipProgress: number
 }
