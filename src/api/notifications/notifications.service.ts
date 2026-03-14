@@ -12,6 +12,10 @@ import { JobName } from 'src/common/constants/job.constant';
 import { requestContext } from 'src/common/context/request.context';
 import { getDelay } from 'src/utils/delay';
 import { AlertThresholdDto } from './dto/alert-threshold.dto';
+import { QueryNotificationDto } from './dto/query-notification.dto';
+import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
+import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
+import { NotificationRdo } from './rdo/notification.rdo';
 
 @Injectable()
 export class NotificationsService {
@@ -21,6 +25,16 @@ export class NotificationsService {
         @InjectRepository(NotificationEntity) private notificationRepository: Repository<NotificationEntity>,
         @InjectQueue('notifications') private notificationQueue: Queue
     ) {
+
+    }
+
+    async findAll(queryDto: QueryNotificationDto) :Promise<OffsetPaginatedRdo<NotificationRdo>> {
+        const queryBuilder = this.notificationRepository.createQueryBuilder(queryDto.getAlias())
+        queryBuilder.andWhere(`${queryDto.getAlias()}.createdBy = :createdBy`,{createdBy: requestContext.getStore()?.userId})
+        queryDto.handleQueryBuilder(queryBuilder);
+        const [items, total] = await queryBuilder.getManyAndCount();
+        const pagination = new OffsetPaginationRdo(total, queryDto);
+        return new OffsetPaginatedRdo(plainToInstance(NotificationRdo, items), pagination)
 
     }
 
