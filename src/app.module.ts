@@ -39,6 +39,7 @@ import { NotificationsModule } from './api/notifications/notifications.module';
 import { NotificationEntity } from './api/notifications/entities/notification.entity';
 import { BullModule } from '@nestjs/bullmq';
 import { GatewayModule } from './gateway/gateway.module';
+import { AiAgentModule } from './api/ai-agent/ai-agent.module';
 @Module({
   imports: [
     RolesModule,
@@ -54,6 +55,7 @@ import { GatewayModule } from './gateway/gateway.module';
     TransactionsModule,
     BudgetsModule,
     NotificationsModule,
+    AiAgentModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

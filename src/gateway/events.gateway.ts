@@ -6,7 +6,7 @@ import { WsAuthGuard } from 'src/guards/ws-auth.guard';
 
 @WebSocketGateway({
     cors: {
-        origin: 'http://localhost:3000', 
+        origin: '*', 
         credentials: true,
     }
 })
