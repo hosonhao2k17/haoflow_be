@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { CursorPaginationRdo } from "./cursor-pagination.rdo";
 
 
@@ -8,6 +8,7 @@ export class CursorPaginatedRdo<T> {
     items: T[];
 
     @Expose()
+    @Type(() => CursorPaginationRdo)
     pagination: CursorPaginationRdo;
 
     constructor(items: T[], pagination: CursorPaginationRdo) {

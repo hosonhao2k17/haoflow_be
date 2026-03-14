@@ -1,19 +1,19 @@
-import { Expose, Type } from "class-transformer";
-import { UserRdo } from "src/api/users/rdo/user.rdo";
+
+import { ExposeField } from "src/decorators/field.decorator";
 
 
 export class LoginRdo {
 
-    @Expose()
+    @ExposeField()
     userId: string;
 
-    @Expose()
+    @ExposeField()
     accessToken: string;
 
-    @Expose()
+    @ExposeField()
     refreshToken: string;
 
-    @Expose()
+    @ExposeField()
     expiresIn: string;
 
 }

@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, ApiPropertyOptions } from "@nestjs/swagger";
-import { Transform, Type } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import {IsBoolean, IsDate, IsEmail, IsEnum, IsInt,IsMilitaryTime, IsOptional, IsString, IsStrongPassword,IsUrl, IsUUID, Max, MaxLength, Min, MinLength, NotEquals,} from "class-validator";
-import {IBooleanFiledOptions, IDateFieldOptions, IEmailFieldOptions,IEnumFieldOptions, IFieldOptions, IMilitaryTimeOptions, INumberFieldOptions, IPasswordFieldOptions, IStringFieldOptions, IurlFieldOptions, IUuidFieldOptions,} from "src/common/interfaces/field.interface";
+import {IBooleanFiledOptions, IDateFieldOptions, IEmailFieldOptions,IEnumFieldOptions, IExposeFieldOptions, IFieldOptions, IMilitaryTimeOptions, INumberFieldOptions, IPasswordFieldOptions, IStringFieldOptions, IurlFieldOptions, IUuidFieldOptions,} from "src/common/interfaces/field.interface";
 import { IsNullable } from "./validators/is-nullable.decorator";
 import { ToBoolean, ToLowerCase, ToUpperCase } from "./transform.decorator";
 import { applyDecorators } from "@nestjs/common";
@@ -139,6 +139,22 @@ export function MilitaryTimeField(options: IMilitaryTimeOptions = {}) {
         IsMilitaryTime({ each: options.each }),
         ...buildDecorator(options, String),
     ];
+
+    return applyDecorators(...decorators);
+}
+
+
+export function ExposeField(options: IExposeFieldOptions = {}) {
+    const { classType, swaggerOptions } = options;
+
+    const decorators: any[] = [
+        Expose(),
+        ApiProperty(swaggerOptions)
+    ];
+
+    if (classType) {
+        decorators.push(Type(classType));
+    }
 
     return applyDecorators(...decorators);
 }

@@ -15,6 +15,8 @@ import { VerifyDto } from './dto/verify.dto';
 import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
+import { RefreshRdo } from './rdo/refresh.rdo';
 
 @Controller('auth')
 export class AuthController {
@@ -24,57 +26,68 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  @Public()
-  @ApiResponse({
-    example: LoginRdo
-  })
   @UseInterceptors(RefreshTokenInterceptor)
-  @HttpCode(HttpStatus.OK)
-  login(@Body() loginDto: LoginDto) {
+  @ApiEndpoint({
+    isPublic: true,
+    httpCode: HttpStatus.OK,
+    responseType: LoginRdo
+  })
+  login(@Body() loginDto: LoginDto) :Promise<LoginRdo> {
     return this.authService.login(loginDto);
   }
 
   @Post('logout')
   @UseInterceptors(RefreshTokenInterceptor)
   @RemoveRefresh()
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.OK)
-  @ResponseMessage('Logout success')
-  logout(@User('sessionId') sessionId: string) {
+  @ApiEndpoint({
+    httpCode: HttpStatus.OK
+  })
+  logout(@User('sessionId') sessionId: string) :Promise<void> {
     return this.authService.logout(sessionId)
   }
 
-  @Public()
   @Post('refresh')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)
   @UseInterceptors(RefreshTokenInterceptor)
+  @ApiEndpoint({
+    httpCode: HttpStatus.OK,
+    isPublic: true,
+    responseType: RefreshRdo
+  })
   refresh(@User('id') id: string) {
     return this.authService.refresh(id);
   }
 
   @Public()
   @Post('register')
-  @ResponseMessage('Check your email')
+  @ApiEndpoint({
+    isPublic: true,
+    responseMessage: 'check your email'
+  })
   register(@Body() registerDto: RegisterDto) :Promise<void> {
     return this.authService.register(registerDto)
   }
 
   @Get('verify')
-  @Public()
-  @ResponseMessage('Veify sucess')
+  @ApiEndpoint({
+    isPublic: true
+  })
   verify(@Query() verifyDto: VerifyDto) {
     return this.authService.verify(verifyDto)
   }
 
   @Get('google')
-  @Public()
+  @ApiEndpoint({
+    isPublic: true
+  })
   @UseGuards(GoogleAuthGuard)
-  googleLogin() {
+    googleLogin() {
   }
 
   @Get('google/callback')
-  @Public()
+  @ApiEndpoint({
+    isPublic: true
+  })
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@Req() req, @Res() res) {
     const accessToken = await this.authService.loginGoogle(req.user);

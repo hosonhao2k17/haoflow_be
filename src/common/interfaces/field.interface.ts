@@ -1,4 +1,4 @@
-import { ApiPropertyOptions } from "@nestjs/swagger";
+import { ApiPropertyOptions, SwaggerDocumentOptions } from "@nestjs/swagger";
 
 
 export interface IFieldOptions {
@@ -54,4 +54,9 @@ export interface IBooleanFiledOptions extends IFieldOptions {
 
 export interface IMilitaryTimeOptions extends IFieldOptions {
 
+}
+
+export interface IExposeFieldOptions {
+    classType?: () => any,
+    swaggerOptions?: ApiPropertyOptions;
 }
