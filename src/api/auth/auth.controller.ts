@@ -94,6 +94,6 @@ export class AuthController {
     
     const clientUrl = this.configService.get('FE_URL');
 
-    res.redirect(`/${clientUrl}/oauth/callback?token=${accessToken}`)
+    res.redirect(`${clientUrl}/?token=${accessToken}`)
   }
 }
