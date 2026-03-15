@@ -27,12 +27,22 @@ export class TaskCategoriesService {
   }
 
   async findAll(queryTaskCategoryDto: QueryTaskCategoryDto = new QueryTaskCategoryDto()) {
-    const queryBuilder = this.taskCategoryRepository.createQueryBuilder(queryTaskCategoryDto.getAlias())
-    .andWhere(`${queryTaskCategoryDto.getAlias()}.createdBy = :userId`,{userId: requestContext.getStore()?.userId})
-    .loadRelationCountAndMap(
-      `${queryTaskCategoryDto.getAlias()}.totalTask`,
-      `${queryTaskCategoryDto.getAlias()}.tasks`
-    );
+    const queryBuilder = this.taskCategoryRepository
+      .createQueryBuilder(queryTaskCategoryDto.getAlias())
+      .andWhere(`${queryTaskCategoryDto.getAlias()}.createdBy = :userId`, {
+        userId: requestContext.getStore()?.userId,
+      })
+      .loadRelationCountAndMap(
+        `${queryTaskCategoryDto.getAlias()}.totalTask`,
+        `${queryTaskCategoryDto.getAlias()}.tasks`
+      )
+      .loadRelationCountAndMap(
+        `${queryTaskCategoryDto.getAlias()}.doneTask`,
+        `${queryTaskCategoryDto.getAlias()}.tasks`,
+        'task',
+        (qb) => qb.andWhere('task.status = :status', { status: 'done' })
+      );
+
     queryTaskCategoryDto.handleQueryBuilder(queryBuilder);
     const [items, total] = await queryBuilder.getManyAndCount();
     const pagination = new OffsetPaginationRdo(total, queryTaskCategoryDto);

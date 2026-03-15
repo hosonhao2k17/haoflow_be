@@ -21,4 +21,7 @@ export class TaskCategoryRdo {
 
     @Expose()
     totalTask: number;
+
+    @Expose()
+    doneTask: number;
 }
