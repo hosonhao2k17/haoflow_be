@@ -35,4 +35,10 @@ export class NotificationsController {
   remove(@Param('id') id: string) {
     return this.notificationsService.remove(id)
   }
+
+  @Patch('read/all') 
+  @ApiEndpoint()
+  readAll() {
+    return this.notificationsService.readAll()
+  }
 }

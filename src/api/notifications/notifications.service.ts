@@ -131,4 +131,10 @@ export class NotificationsService {
         }
         await this.notificationRepository.delete(id);
     }
+
+    async readAll() {
+        await this.notificationRepository.updateAll({
+            isRead: true
+        })
+    }
 }
