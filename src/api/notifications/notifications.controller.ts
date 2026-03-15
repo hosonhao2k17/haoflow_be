@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Query } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { QueryNotificationDto } from './dto/query-notification.dto';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
@@ -26,5 +26,13 @@ export class NotificationsController {
   })
   updateRead(@Param('id') id: string,@Body() updateDto: UpdateReadNotificationDto) :Promise<NotificationRdo> {
     return this.notificationsService.updateRead(id, updateDto)
+  }
+
+  @Delete(':id')
+  @ApiEndpoint({
+    httpCode: HttpStatus.NO_CONTENT
+  })
+  remove(@Param('id') id: string) {
+    return this.notificationsService.remove(id)
   }
 }

@@ -87,7 +87,7 @@ export class NotificationsService {
         });
     }
 
-    async updateRead(id: string, updateDto: UpdateReadNotificationDto) {
+    async updateRead(id: string, updateDto: UpdateReadNotificationDto) :Promise<NotificationRdo> {
 
         const notification = await this.notificationRepository.findOneBy({
             id,
@@ -100,5 +100,16 @@ export class NotificationsService {
         await notification.save()
 
         return plainToInstance(NotificationRdo, notification)
+    }
+
+    async remove(id: string) {
+        const notification = await this.notificationRepository.findOneBy({
+            id,
+            createdBy: requestContext.getStore()?.userId
+        })
+        if(!notification) {
+            throw new NotFoundException()
+        }
+        await this.notificationRepository.delete(id);
     }
 }
