@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { Repository } from 'typeorm';
 import { NotificationEntity } from './entities/notification.entity';
@@ -16,6 +16,7 @@ import { QueryNotificationDto } from './dto/query-notification.dto';
 import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { NotificationRdo } from './rdo/notification.rdo';
+import { UpdateReadNotificationDto } from './dto/update-read-notification.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -84,5 +85,20 @@ export class NotificationsService {
             title: notification.title,
             body: notification.body
         });
+    }
+
+    async updateRead(id: string, updateDto: UpdateReadNotificationDto) {
+
+        const notification = await this.notificationRepository.findOneBy({
+            id,
+            createdBy: requestContext.getStore()?.userId
+        });
+        if(!notification) {
+            throw new NotFoundException()
+        }
+        notification.isRead = updateDto.isRead;
+        await notification.save()
+
+        return plainToInstance(NotificationRdo, notification)
     }
 }

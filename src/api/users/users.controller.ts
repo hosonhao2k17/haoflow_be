@@ -14,6 +14,7 @@ import { PermissionGuard } from 'src/guards/permission.guard';
 import { Public } from 'src/decorators/public.decorator';
 import { UpdateMultiUserDto } from './dto/update-multi-user.dto';
 import { UserDetailRdo } from './rdo/user-detail.rdo';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 
 @Controller('users')
 @UseGuards(PermissionGuard)
@@ -23,7 +24,9 @@ export class UsersController {
 
   @Post()
   @Action(PermissionAction.CREATE)
-  @ApiBearerAuth()
+  @ApiEndpoint({
+    responseType: UserRdo
+  })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }

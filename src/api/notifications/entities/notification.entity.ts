@@ -1,6 +1,6 @@
 import { NotificationType } from "src/common/constants/notification.constant";
 import { AbstractEntity } from "src/database/entities/abstract.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity('notifications')
@@ -38,4 +38,11 @@ export class NotificationEntity extends AbstractEntity {
         nullable: true
     })
     readAt?: Date;
+
+    @BeforeInsert()
+    updateReadAt() {
+        if(this.isRead) {
+            this.readAt = new Date()
+        }
+    }
 }
