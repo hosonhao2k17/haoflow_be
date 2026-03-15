@@ -41,6 +41,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { GatewayModule } from './gateway/gateway.module';
 import { AiAgentModule } from './api/ai-agent/ai-agent.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HealthModule } from './api/health/health.module';
 
 
 @Module({
@@ -59,6 +60,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     BudgetsModule,
     NotificationsModule,
     AiAgentModule,
+    HealthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
