@@ -107,7 +107,6 @@ export class NotificationsService {
     }
 
     async updateRead(id: string, updateDto: UpdateReadNotificationDto) :Promise<NotificationRdo> {
-
         const notification = await this.notificationRepository.findOneBy({
             id,
             createdBy: requestContext.getStore()?.userId

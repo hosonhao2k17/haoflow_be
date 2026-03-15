@@ -13,6 +13,7 @@ export class QueryNotificationDto extends OffsetPaginationDto{
     isRead?: boolean;
 
     handleQueryBuilder<T extends ObjectLiteral>(queryBuilder: SelectQueryBuilder<T>): void {
+        super.handleQueryBuilder(queryBuilder)
         if(this.keyword) {
             queryBuilder.andWhere(`${this.getAlias()}.title = :keyword`,{keyword: `%${this.keyword}%`})
         }

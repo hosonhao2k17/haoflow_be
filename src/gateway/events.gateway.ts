@@ -63,6 +63,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
 
     sendToUser(userId: string, event: string, data: any) {
+        this.logger.log(`Client connected ${userId} | Event: ${event}`)
         this.server.to(`user:${userId}`).emit(event, data);
     }
     
