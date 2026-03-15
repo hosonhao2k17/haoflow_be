@@ -40,6 +40,34 @@ export class TasksService {
     private notificationsService: NotificationsService
   ) {}
 
+  async analyze() :Promise<string> {
+    const tasks = await this.tasksRepository.find({
+      where: {
+        createdBy: requestContext.getStore()?.userId
+      },
+      relations: {
+        category: true,
+        dailyPlan: true
+      }
+    })
+    console.log("RUN HERE")
+    const result = await this.aiService.generateAiContent({
+      module: "task",
+      message: `
+        Phân tích cho tôi các thứ sao đây tổng quan, đánh giá tổng quan phân 
+        tích tôi thường bỏ trống ngày nào và nhưng danh mục công việc nào thường bỏ trống,
+        bạn quản lý thời gian như thế nào bạn đã kỉ luật chưa
+        Điểm tốt
+        Điểm xấu
+      `,
+      typeString: "content",
+      data: tasks
+
+    })
+    const text = this.aiService.extractText(result)
+    return text
+  }
+
   async stats(dto: QueryTaskStatsDto) : Promise<StatsTaskRdo> {
     const tasks = await this.tasksRepository.find({
       where: {

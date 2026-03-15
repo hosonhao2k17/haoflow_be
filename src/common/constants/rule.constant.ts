@@ -23,5 +23,6 @@ export const aiRules = [
     "Thứ 6: response góp ý trong message nữa",
     "Thứ 7: response message phải cảm ơn và chúc cho bạn một ngày mới tốt lành ",
     "Thứ 8: Nếu người dùng hỏi tào lao không liên quan gì tới hệ thống của tôi thì trả về ai chỉ trả về liên quan tới hệ thống của tôi",
+    "THứ 9: data có thể trả về string nếu typeString là kiểu string hoặc content"
     
 ]

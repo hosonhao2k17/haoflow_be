@@ -10,6 +10,7 @@ import { QueryTaskDto } from './dto/query-task.dto';
 import { CreateMultiTaskDto } from './dto/create-multi-task.dto';
 import { SuggestTaskDto } from './dto/suggest-task.dto';
 import { QueryTaskStatsDto } from './dto/query-task-stats.dto';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 
 @Controller('tasks')
 export class TasksController {
@@ -21,6 +22,13 @@ export class TasksController {
   stats(@Query() dto: QueryTaskStatsDto) {
     return this.tasksService.stats(dto)
   }
+
+  @Get('analise')
+  @ApiEndpoint()
+  analyze(): Promise<string> {
+    return this.tasksService.analyze()
+  }
+
 
   @Post()
   @ApiBearerAuth()

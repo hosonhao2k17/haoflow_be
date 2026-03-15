@@ -48,6 +48,10 @@ export class DailyPlansService {
     return plainToInstance(DailyPlanRdo, dailyPlan)
   }
 
+  stats() {
+    return null
+  }
+
   async createTemplate(dto: CreateDailyPlanTemplateDto) :Promise<DailyPlanTemplateRdo> {
     const dailyPlan = await this.dailyPlansRepository.create({
       ...dto,

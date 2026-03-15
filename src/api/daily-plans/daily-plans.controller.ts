@@ -20,6 +20,11 @@ export class DailyPlansController {
     return this.dailyPlansService.create(createDailyPlanDto);
   }
 
+  @Get('stats')
+  stats() {
+    
+  }
+
   @Post('template')
   @ApiBearerAuth()
   createTemplate(@Body() dto: CreateDailyPlanTemplateDto) :Promise<DailyPlanTemplateRdo> {
