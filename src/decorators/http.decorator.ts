@@ -5,10 +5,16 @@ import { ApiAuthOptions } from "src/common/interfaces/api-auth-options.interface
 import { CursorPaginatedRdo } from "src/common/rdo/cursor-paginated.rdo";
 import { OffsetPaginatedRdo } from "src/common/rdo/offset-paginated.rdo";
 import { ResponseMessage } from "./message.decorator";
+import { ErrorRdo } from "src/common/rdo/error.rdo";
 
 
 export const ApiEndpoint = (options: ApiAuthOptions = {}) => {
-  const decorators: any[] = [];
+  const decorators: any[] = [
+    ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      type: ErrorRdo
+    })
+  ];
   if (options.isPublic === true) {
     decorators.push(Public());
   } else {
