@@ -1,35 +1,35 @@
-import { Exclude, Expose } from "class-transformer";
-import { UserRdo } from "./user.rdo";
+import { Exclude } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { Gender, UserStatus } from "src/common/constants/app.constant";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 import { RoleRdo } from "src/api/roles/rdo/role.rdo";
 
 @Exclude()
 export class UserDetailRdo extends BaseRdo {
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     fullName: string;
 
-    @Expose()
+    @ExposeField()
     email: string;
 
-    @Expose()
+    @ExposeField()
     avatar?: string;
 
-    @Expose()
+    @ExposeField()
     gender?: Gender;
 
-    @Expose()
+    @ExposeField()
     verified: boolean;
 
-    @Expose()
+    @ExposeField()
     birthDate?: Date;
 
-    @Expose()
+    @ExposeField()
     status: UserStatus;
 
-    @Expose()
+    @ExposeField()
     role: RoleRdo;
 }

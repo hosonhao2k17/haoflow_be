@@ -3,7 +3,6 @@ import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { AccountRdo } from './rdo/account.rdo';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { QueryAccountDto } from './dto/query-account.dto';
 import { ApiEndpoint } from 'src/decorators/http.decorator';
 

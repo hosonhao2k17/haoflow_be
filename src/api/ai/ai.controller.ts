@@ -1,8 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { AiService } from "./ai.service";
 import { TestDto } from "./dto/test.dto";
-import { ApiBearerAuth } from "@nestjs/swagger";
-
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 
 @Controller()
 export class AiController {
@@ -10,7 +9,7 @@ export class AiController {
     constructor(private aiService: AiService) {}
 
     @Post()
-    @ApiBearerAuth()
+    @ApiEndpoint()
     test(@Body() dto: TestDto) {
         return this.aiService.handleImage(dto.imageUrl)
     }

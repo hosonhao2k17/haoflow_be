@@ -1,4 +1,4 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 import { ExposeField } from "src/decorators/field.decorator";
 

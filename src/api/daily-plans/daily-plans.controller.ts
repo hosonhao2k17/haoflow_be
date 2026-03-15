@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { DailyPlansService } from './daily-plans.service';
 import { CreateDailyPlanDto } from './dto/create-daily-plan.dto';
 import { UpdateDailyPlanDto } from './dto/update-daily-plan.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 import { QueryDailyPlanDto } from './dto/query-daily-plan.dto';
 import { QueryDailyPlanTemplateDto } from './dto/query-daily-plan-template.dto';
 import { DailyPlanTemplateRdo } from './rdo/daily-plan-template.rdo';
@@ -15,54 +15,55 @@ export class DailyPlansController {
   constructor(private readonly dailyPlansService: DailyPlansService) {}
 
   @Post()
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: DailyPlanRdo })
   create(@Body() createDailyPlanDto: CreateDailyPlanDto) {
     return this.dailyPlansService.create(createDailyPlanDto);
   }
 
   @Get('stats')
+  @ApiEndpoint()
   stats() {
     
   }
 
   @Post('template')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: DailyPlanTemplateRdo })
   createTemplate(@Body() dto: CreateDailyPlanTemplateDto) :Promise<DailyPlanTemplateRdo> {
     return this.dailyPlansService.createTemplate(dto)
   }
 
   @Get('template')
-  @ApiBearerAuth()
+  @ApiEndpoint()
   findTemplates(@Query() dto: QueryDailyPlanTemplateDto) :Promise<OffsetPaginatedRdo<DailyPlanTemplateRdo>> {
     return this.dailyPlansService.findTemplates(dto)
   }
 
   @Get()
-  @ApiBearerAuth()
+  @ApiEndpoint()
   findAll(@Query() queryDailyPlanDto: QueryDailyPlanDto) {
     return this.dailyPlansService.findAll(queryDailyPlanDto);
   }
 
   @Get(':id/template')
-  @ApiBearerAuth()
+  @ApiEndpoint()
   findTemplate(@Param('id') id: string) {
     return this.dailyPlansService.findTemplate(id)
   }
 
   @Get(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: DailyPlanRdo })
   findOne(@Param('id') id: string) {
     return this.dailyPlansService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: DailyPlanRdo })
   update(@Param('id') id: string, @Body() updateDailyPlanDto: UpdateDailyPlanDto) {
     return this.dailyPlansService.update(id, updateDailyPlanDto);
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint()
   remove(@Param('id') id: string) {
     return this.dailyPlansService.remove(id);
   }

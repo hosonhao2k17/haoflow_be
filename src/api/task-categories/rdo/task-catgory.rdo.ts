@@ -1,27 +1,28 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 
 @Exclude()
 export class TaskCategoryRdo {
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     title: string;
 
-    @Expose()
+    @ExposeField()
     description?: string;
 
-    @Expose()
+    @ExposeField()
     color?: string;
 
-    @Expose()
+    @ExposeField()
     icon?: string;
 
-    @Expose()
+    @ExposeField()
     totalTask: number;
 
-    @Expose()
+    @ExposeField()
     doneTask: number;
 }

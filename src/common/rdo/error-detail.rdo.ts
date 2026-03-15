@@ -1,4 +1,3 @@
-import { Expose } from "class-transformer";
 import { ExposeField } from "src/decorators/field.decorator";
 
 

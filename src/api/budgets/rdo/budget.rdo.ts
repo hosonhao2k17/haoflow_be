@@ -1,31 +1,31 @@
-import { Exclude, Expose, Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { TransactionCategoryRdo } from "src/api/transaction-categories/rdo/transaction-category.rdo";
 import { BudgetPeriod } from "src/common/constants/app.constant";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 
-
 @Exclude()
 export class BudgetRdo extends BaseRdo {
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     amount: number;
 
-    @Expose()
+    @ExposeField()
     spentAmount: number;
 
-    @Expose()
+    @ExposeField()
     @Type(() => TransactionCategoryRdo)
     category: TransactionCategoryRdo;
 
-    @Expose()
+    @ExposeField()
     period: BudgetPeriod;
 
-    @Expose()
+    @ExposeField()
     startDate: Date;
 
-    @Expose()
+    @ExposeField()
     alertThreshold: number;
 }

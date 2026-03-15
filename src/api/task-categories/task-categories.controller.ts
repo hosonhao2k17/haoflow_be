@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, Htt
 import { TaskCategoriesService } from './task-categories.service';
 import { CreateTaskCategoryDto } from './dto/create-task-category.dto';
 import { UpdateTaskCategoryDto } from './dto/update-task-category.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { TaskCategoryRdo } from './rdo/task-catgory.rdo';
 import { QueryTaskCategoryDto } from './dto/query-task-category.dto';
@@ -12,32 +12,31 @@ export class TaskCategoriesController {
   constructor(private readonly taskCategoriesService: TaskCategoriesService) {}
 
   @Post()
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TaskCategoryRdo })
   create(@Body() createTaskCategoryDto: CreateTaskCategoryDto) {
     return this.taskCategoriesService.create(createTaskCategoryDto);
   }
 
   @Get()
-  @ApiBearerAuth()
+  @ApiEndpoint()
   findAll(@Query() queryTaskCategoryDto: QueryTaskCategoryDto) {
     return this.taskCategoriesService.findAll(queryTaskCategoryDto)
   }
 
   @Get(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TaskCategoryRdo })
   findOne(@Param('id') id: string) {
     return this.taskCategoriesService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TaskCategoryRdo })
   update(@Param('id') id: string, @Body() updateTaskCategoryDto: UpdateTaskCategoryDto) {
     return this.taskCategoriesService.update(id, updateTaskCategoryDto);
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiEndpoint({ httpCode: HttpStatus.NO_CONTENT })
   remove(@Param('id') id: string) {
     return this.taskCategoriesService.remove(id);
   }

@@ -1,19 +1,20 @@
-import { Exclude, Expose, Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { PermissionRdo } from "src/api/roles/rdo/permission.rdo";
 
 @Exclude()
 export class UserRoleRdo {
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     name: string;
 
-    @Expose()
+    @ExposeField()
     title: string;
 
-    @Expose()
+    @ExposeField()
     @Type(() => PermissionRdo)
     permissions: PermissionRdo[];
 

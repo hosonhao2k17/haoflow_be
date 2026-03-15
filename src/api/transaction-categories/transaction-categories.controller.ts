@@ -3,40 +3,39 @@ import { TransactionCategoriesService } from './transaction-categories.service';
 import { CreateTransactionCategoryDto } from './dto/create-transaction-category.dto';
 import { UpdateTransactionCategoryDto } from './dto/update-transaction-category.dto';
 import { TransactionCategoryRdo } from './rdo/transaction-category.rdo';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { QueryTransactionCategoryDto } from './dto/query-transaction-category.dto';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 
 @Controller('transaction-categories')
 export class TransactionCategoriesController {
   constructor(private readonly transactionCategoriesService: TransactionCategoriesService) {}
 
   @Post()
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TransactionCategoryRdo })
   create(@Body() createTransactionCategoryDto: CreateTransactionCategoryDto) :Promise<TransactionCategoryRdo> {
     return this.transactionCategoriesService.create(createTransactionCategoryDto);
   }
 
   @Get()
-  @ApiBearerAuth()
+  @ApiEndpoint()
   findAll(@Query() queryDto: QueryTransactionCategoryDto) {
     return this.transactionCategoriesService.findAll(queryDto);
   }
 
   @Get(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TransactionCategoryRdo })
   findOne(@Param('id') id: string) :Promise<TransactionCategoryRdo> {
     return this.transactionCategoriesService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TransactionCategoryRdo })
   update(@Param('id') id: string, @Body() updateTransactionCategoryDto: UpdateTransactionCategoryDto) :Promise<TransactionCategoryRdo> {
     return this.transactionCategoriesService.update(id, updateTransactionCategoryDto);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
+  @ApiEndpoint({ httpCode: HttpStatus.NO_CONTENT })
   remove(@Param('id') id: string) {
     return this.transactionCategoriesService.remove(id);
   }

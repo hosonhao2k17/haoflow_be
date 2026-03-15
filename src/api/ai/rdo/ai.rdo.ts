@@ -1,17 +1,16 @@
-import { Expose } from "class-transformer";
-
+import { ExposeField } from "src/decorators/field.decorator";
 
 export class AiRdo<T> {
 
-    @Expose()
+    @ExposeField()
     module: string;
 
-    @Expose()
+    @ExposeField()
     message: string;
 
-    @Expose()
+    @ExposeField()
     summary: string;
 
-    @Expose()
+    @ExposeField()
     data: T;
 }

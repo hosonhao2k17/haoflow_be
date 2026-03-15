@@ -5,7 +5,7 @@ import { ExposeField } from "src/decorators/field.decorator";
 
 export class CursorPaginatedRdo<T> {
 
-    @ExposeField()6
+    @ExposeField()
     items: T[];
 
     @ExposeField({

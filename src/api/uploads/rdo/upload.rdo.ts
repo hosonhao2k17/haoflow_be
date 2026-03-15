@@ -1,11 +1,12 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 
 @Exclude()
 export class UploadRdo {
 
-    @Expose()
+    @ExposeField()
     publicId: string;
 
-    @Expose()
+    @ExposeField()
     url: string;
 }

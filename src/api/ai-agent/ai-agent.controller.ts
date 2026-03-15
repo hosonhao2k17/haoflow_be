@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AiAgentService } from './ai-agent.service';
 import { AiAgentDto } from './dto/ai-agent.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 import { Action, Subject } from 'src/decorators/permission.decorator';
 import { PermissionAction, PermissionSubject } from 'src/common/constants/app.constant';
 
@@ -11,7 +11,7 @@ export class AiAgentController {
   constructor(private readonly aiAgentService: AiAgentService) {}
 
   @Post() 
-  @ApiBearerAuth()
+  @ApiEndpoint()
   @Action(PermissionAction.CREATE)
   chat(@Body() dto: AiAgentDto) {
     return this.aiAgentService.chat(dto.message)

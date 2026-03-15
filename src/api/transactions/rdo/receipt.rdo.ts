@@ -1,29 +1,27 @@
-import { Expose } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { ReceiptStatus } from "src/common/constants/app.constant";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 
-
-
 export class ReceiptRdo extends BaseRdo {
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     imageUrl: string;
 
-    @Expose()
+    @ExposeField()
     ocrRawText?: string;
 
-    @Expose()
+    @ExposeField()
     parsedAmount: number;
-    
-    @Expose()
+
+    @ExposeField()
     parsedMerchant?: string;
 
-    @Expose()
+    @ExposeField()
     parsedDate?: Date;
 
-    @Expose()
+    @ExposeField()
     status: ReceiptStatus;
 }

@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { ErrorCode } from 'src/common/constants/error-code.constant';
 import { LoginDto } from './dto/login.dto';
 import { Public } from 'src/decorators/public.decorator';
-import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { LoginRdo } from './rdo/login.rdo';
 import { RegisterDto } from './dto/register.dto';
 import { ResponseMessage } from 'src/decorators/message.decorator';

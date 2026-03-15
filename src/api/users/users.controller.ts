@@ -6,7 +6,6 @@ import { QueryUserDto } from './dto/query-user.dto';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { UserRdo } from './rdo/user.rdo';
 import { LoadMoreUserDto } from './dto/load-more-user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { User } from 'src/decorators/user.decorator';
 import { Action, Subject } from 'src/decorators/permission.decorator';
 import { PermissionAction, PermissionSubject } from 'src/common/constants/app.constant';
@@ -33,45 +32,45 @@ export class UsersController {
 
   @Get('load-more')
   @Action(PermissionAction.READ)
-  @ApiBearerAuth()
+  @ApiEndpoint()
   loadMore(@Query() loadMoreUserDto: LoadMoreUserDto) {
     return this.usersService.loadMore(loadMoreUserDto)
   }
 
   @Get('me')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: UserRdo })
   getCurrentUser(@User('id') id: string) {
     return this.usersService.getCurrentUser(id)
   }
 
   @Patch()
-  @ApiBearerAuth()
+  @ApiEndpoint()
   updateCurrentUser() {
 
   }
 
   @Get()
-  @ApiBearerAuth()
+  @ApiEndpoint()
   @Action(PermissionAction.READ)
   findAll(@Query() queryUserDto: QueryUserDto): Promise<OffsetPaginatedRdo<UserRdo>> {
     return this.usersService.findAll(queryUserDto);
   }
 
   @Get(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: UserDetailRdo })
   @Action(PermissionAction.READ)
   findOne(@Param('id') id: string) :Promise<UserDetailRdo> {
     return this.usersService.findOne(id);
   }
 
   @Patch('multi')
-  @ApiBearerAuth()
+  @ApiEndpoint()
   updateMulti(@Body() dto: UpdateMultiUserDto): Promise<void> {
     return this.usersService.updateMulti(dto)
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: UserRdo })
   @Action(PermissionAction.UPDATE)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
@@ -79,8 +78,7 @@ export class UsersController {
 
   @Delete(':id')
   @Action(PermissionAction.DELETE)
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiEndpoint({ httpCode: HttpStatus.NO_CONTENT })
   remove(@Param('id') id: string) :Promise<void> {
     return this.usersService.remove(id);
   }

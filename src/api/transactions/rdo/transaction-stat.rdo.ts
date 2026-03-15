@@ -1,25 +1,20 @@
-import { Expose } from "class-transformer";
-
-
-
+import { ExposeField } from "src/decorators/field.decorator";
 
 export class TransactionStatRdo {
 
-    @Expose()
+    @ExposeField()
     totalBalance: number;
 
-    @Expose()
+    @ExposeField()
     totalIncome: number;
 
-    
-
-    @Expose()
+    @ExposeField()
     totalExpense: number;
 
-    @Expose()
+    @ExposeField()
     totalAccount: number;
 
-    @Expose()
+    @ExposeField()
     netBalance: number;
 
 }

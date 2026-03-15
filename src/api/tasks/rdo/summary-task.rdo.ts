@@ -1,14 +1,13 @@
-import { Expose } from "class-transformer";
-
+import { ExposeField } from "src/decorators/field.decorator";
 
 export class SummaryTaskRdo {
 
-    @Expose()
+    @ExposeField()
     totalTask: number;
 
-    @Expose()
+    @ExposeField()
     completedTasks: number;
 
-    @Expose()
+    @ExposeField()
     progressPercent: number;
 }

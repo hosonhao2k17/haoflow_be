@@ -1,4 +1,5 @@
-import { Exclude, Expose, Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { TaskCategoryRdo } from "src/api/task-categories/rdo/task-catgory.rdo";
 import { Priority } from "src/common/constants/priority.constant";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
@@ -6,31 +7,31 @@ import { BaseRdo } from "src/common/rdo/base-response.rdo";
 @Exclude()
 export class TaskRdo {
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     todo: string;
 
-    @Expose()
+    @ExposeField()
     description?: string;
-    
-    @Expose()
+
+    @ExposeField()
     priority: Priority;
 
-    @Expose()
+    @ExposeField()
     startTime: Date;
 
-    @Expose()
+    @ExposeField()
     isAlarm: boolean;
 
-    @Expose()
+    @ExposeField()
     endTime: Date;
 
-    @Expose()
+    @ExposeField()
     status: Date;
 
-    @Expose()
+    @ExposeField()
     @Type(() => TaskCategoryRdo)
     category: TaskCategoryRdo;
 }

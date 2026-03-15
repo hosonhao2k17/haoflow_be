@@ -1,28 +1,28 @@
-import { Exclude, Expose, Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { TransactionCategoryType } from "src/common/constants/app.constant";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
 
 @Exclude()
 export class TransactionCategoryRdo extends BaseRdo{
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     title: string;
 
-    @Expose()
+    @ExposeField()
     type: TransactionCategoryType;
 
-    @Expose()
+    @ExposeField()
     icon?: string;
 
-    @Expose()
+    @ExposeField()
     color?: string;
 
-    @Expose()
+    @ExposeField()
     @Type(() => TransactionCategoryRdo)
     childrens: TransactionCategoryRdo[]
 
-    
 }

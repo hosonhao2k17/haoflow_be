@@ -1,4 +1,5 @@
-import { Exclude, Expose, Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { AccountRdo } from "src/api/accounts/rdo/account.rdo";
 import { TransactionCategoryRdo } from "src/api/transaction-categories/rdo/transaction-category.rdo";
 import { TransactionSource, TransactionType } from "src/common/constants/app.constant";
@@ -8,39 +9,39 @@ import { ReceiptRdo } from "./receipt.rdo";
 @Exclude()
 export class TransactionRdo extends BaseRdo {
 
-    @Expose()
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     @Type(() => TransactionCategoryRdo)
-    category: TransactionCategoryRdo;  
-    
-    @Expose()
+    category: TransactionCategoryRdo;
+
+    @ExposeField()
     @Type(() => AccountRdo)
     account: AccountRdo;
 
-    @Expose()
+    @ExposeField()
     type: TransactionType;
 
-    @Expose()
+    @ExposeField()
     amount: number;
 
-    @Expose()
+    @ExposeField()
     description?: string;
 
-    @Expose()
+    @ExposeField()
     merchant?: string;
 
-    @Expose()
+    @ExposeField()
     transactionDate: Date;
 
-    @Expose()
+    @ExposeField()
     source: TransactionSource;
 
-    @Expose()
+    @ExposeField()
     isRecurring: boolean;
 
-    @Expose()
+    @ExposeField()
     @Type(() => ReceiptRdo)
     receipt?: ReceiptRdo;
 }

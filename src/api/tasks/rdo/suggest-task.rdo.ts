@@ -1,9 +1,10 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { TaskRdo } from "./task.rdo";
 
 @Exclude()
 export class SuggestTaskRdo extends TaskRdo {
-    
-    @Expose()
+
+    @ExposeField()
     categoryId: string;
 }

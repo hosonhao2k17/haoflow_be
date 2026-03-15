@@ -1,29 +1,29 @@
-import { Exclude, Expose, Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
+import { ExposeField } from "src/decorators/field.decorator";
 import { BaseRdo } from "src/common/rdo/base-response.rdo";
-import { TaskRdo } from "src/api/tasks/rdo/task.rdo";
 import { SummaryTaskRdo } from "src/api/tasks/rdo/summary-task.rdo";
 
 @Exclude()
 export class DailyPlanRdo extends BaseRdo {
-    
-    @Expose()
+
+    @ExposeField()
     id: string;
 
-    @Expose()
+    @ExposeField()
     title: string;
 
-    @Expose()
+    @ExposeField()
     description: string;
 
-    @Expose()
+    @ExposeField()
     date: Date;
 
-    @Expose()
+    @ExposeField()
     summary: SummaryTaskRdo;
 
-    @Expose()
+    @ExposeField()
     startTime: string;
 
-    @Expose()
+    @ExposeField()
     endTime: string;
 }

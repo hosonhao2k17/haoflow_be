@@ -1,15 +1,16 @@
 import { Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { UploadsService } from './uploads.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { UploadRdo } from './rdo/upload.rdo';
+import { ApiEndpoint } from 'src/decorators/http.decorator';
 
 @Controller('uploads')
 export class UploadsController {
   constructor(private readonly uploadsService: UploadsService) {}
 
   @Post()
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: UploadRdo, isMultipart: true })
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -28,6 +29,7 @@ export class UploadsController {
   }
 
   @Post('multi')
+  @ApiEndpoint({ responseType: UploadRdo, isMultipart: true })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {

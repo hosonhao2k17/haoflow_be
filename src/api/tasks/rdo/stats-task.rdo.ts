@@ -1,27 +1,25 @@
-import { Expose } from "class-transformer";
-
-
+import { ExposeField } from "src/decorators/field.decorator";
 
 export class StatsTaskRdo {
 
-    @Expose()
+    @ExposeField()
     total: number;
 
-    @Expose()
+    @ExposeField()
     done: number;
 
-    @Expose()
+    @ExposeField()
     skipped: number;
 
-    @Expose()
+    @ExposeField()
     todo: number;
-    
-    @Expose()
+
+    @ExposeField()
     streak: number;
 
-    @Expose()
+    @ExposeField()
     doneProgress: number;
 
-    @Expose()
+    @ExposeField()
     skipProgress: number
 }

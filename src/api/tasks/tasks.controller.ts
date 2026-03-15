@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { ReorderTaskDto } from './dto/reorder-task.dto';
 import { RemoveMultiTaskDto } from './dto/remove-multi-task.dto';
 import { TaskRdo } from './rdo/task.rdo';
@@ -18,7 +17,7 @@ export class TasksController {
 
 
   @Get('stats')
-  @ApiBearerAuth()
+  @ApiEndpoint()
   stats(@Query() dto: QueryTaskStatsDto) {
     return this.tasksService.stats(dto)
   }
@@ -31,51 +30,49 @@ export class TasksController {
 
 
   @Post()
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TaskRdo })
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }
 
   @Post('multi')
-  @ApiBearerAuth()
+  @ApiEndpoint()
   createMulti(@Body() dto: CreateMultiTaskDto) {
     return this.tasksService.createMultiTask(dto)
   }
 
   @Post('ai/suggest')
-  @ApiBearerAuth()
+  @ApiEndpoint()
   taskSuggest(@Body() suggestTask: SuggestTaskDto) {
     return this.tasksService.taskSugget(suggestTask)
   }
 
   @Get()
-  @ApiBearerAuth()
+  @ApiEndpoint()
   findAll(@Query() queryTaskDto: QueryTaskDto) {
     return this.tasksService.findAll(queryTaskDto)
   }
 
   @Get('current')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TaskRdo })
   currentTask() :Promise<TaskRdo> {
     return this.tasksService.currentTask()
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
+  @ApiEndpoint({ responseType: TaskRdo })
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.tasksService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
+  @ApiEndpoint({ httpCode: HttpStatus.NO_CONTENT })
   remove(@Param('id') id: string) :Promise<void> {
     return this.tasksService.remove(id);
   }
 
   @Delete()
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiEndpoint({ httpCode: HttpStatus.NO_CONTENT })
   removeMulti(@Body() dto: RemoveMultiTaskDto) :Promise<void> {
     return this.tasksService.removeMulti(dto)
   }
