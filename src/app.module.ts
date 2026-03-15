@@ -40,6 +40,9 @@ import { NotificationEntity } from './api/notifications/entities/notification.en
 import { BullModule } from '@nestjs/bullmq';
 import { GatewayModule } from './gateway/gateway.module';
 import { AiAgentModule } from './api/ai-agent/ai-agent.module';
+import { ScheduleModule } from '@nestjs/schedule';
+
+
 @Module({
   imports: [
     RolesModule,
@@ -131,6 +134,7 @@ import { AiAgentModule } from './api/ai-agent/ai-agent.module';
       }),
     }),
     GatewayModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [],
   providers: [],

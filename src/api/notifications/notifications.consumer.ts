@@ -11,9 +11,9 @@ export class NotificationConsumer extends WorkerHost {
     constructor(private eventsGateway: EventsGateway) {
         super()
     }
-    async process(job: Job, token?: string): Promise<any> {
+    async process(job: Job): Promise<any> {
         
-                const {userId, ...data} = job.data
+        const {userId, ...data} = job.data
         switch(job.name) {
             case JobName.TASK_ALARM: 
                 this.eventsGateway.sendToUser(userId, EventGatewayEnum.TASK_ALARM, data)
@@ -21,6 +21,8 @@ export class NotificationConsumer extends WorkerHost {
             case JobName.ALERT_THRESHOLD: 
                 this.eventsGateway.sendToUser(userId, EventGatewayEnum.ALERT_THRESHOLD, data)
             break;
+            case JobName.REMIND_TASK:
+                this.eventsGateway.sendToUser(userId, EventGatewayEnum.REMIND_TASK, data)
         }
     }
 

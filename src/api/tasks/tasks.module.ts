@@ -8,6 +8,7 @@ import { AiModule } from '../ai/ai.module';
 import { DailyPlansService } from '../daily-plans/daily-plans.service';
 import { TaskCategoriesModule } from '../task-categories/task-categories.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { TasksCheduler } from './tasks.scheduler';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
     NotificationsModule
   ],
   controllers: [TasksController],
-  providers: [TasksService],
+  providers: [TasksService, TasksCheduler],
   exports: [TasksService]
 })
 export class TasksModule {}

@@ -17,6 +17,7 @@ import { OffsetPaginationRdo } from 'src/common/rdo/offset-pagination.rdo';
 import { OffsetPaginatedRdo } from 'src/common/rdo/offset-paginated.rdo';
 import { NotificationRdo } from './rdo/notification.rdo';
 import { UpdateReadNotificationDto } from './dto/update-read-notification.dto';
+import { RemindTaskDto } from './dto/remind-task.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -67,6 +68,24 @@ export class NotificationsService {
             delay,
             jobId: `task-alarm-${dto.id}`
         })
+    }
+
+    async  remindTask(dto: RemindTaskDto) {
+        const notification = await this.create({
+            type: NotificationType.REMIND_TASK,
+            title: dto.title,
+            body: dto.body,
+            metadata: {
+                userId: dto.userId,
+                dailyPlanId: dto.dailyPlanId
+            }
+
+        })
+        await this.notificationQueue.add(JobName.REMIND_TASK, {
+            notificationId: notification.id,
+            ...dto
+        })
+       
     }
 
     async alertThreshold(dto: AlertThresholdDto) {
