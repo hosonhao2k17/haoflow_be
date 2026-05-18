@@ -8,4 +8,28 @@ services:
       - "4000:4000"
     env_file:
       - .env
+    networks:
+      - haoflow_be_network
+    depends_on:
+      database:
+        condition: service_healthy
     restart: always
+  database: 
+    image: mysql
+    container_name: haoflow-database 
+    ports:
+      - 3307:3306
+    environment: 
+      - MYSQL_ROOT_PASSWORD=Sonhao@20045 
+      - MYSQL_DATABASE=defaultdb 
+    networks:
+      - haoflow_be_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 60s
+      timeout: 5s
+      retries: 10
+      start_period: 60s 
+networks:
+  haoflow_be_network:
+    driver: bridge

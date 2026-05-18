@@ -42,7 +42,7 @@ import { GatewayModule } from './gateway/gateway.module';
 import { AiAgentModule } from './api/ai-agent/ai-agent.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './api/health/health.module';
-
+import { makeCounterProvider, PrometheusModule } from "@willsoto/nestjs-prometheus";
 
 @Module({
   imports: [
@@ -61,6 +61,10 @@ import { HealthModule } from './api/health/health.module';
     NotificationsModule,
     AiAgentModule,
     HealthModule,
+    PrometheusModule.register({
+      path: '/mymetrics',
+      defaultMetrics: {enabled: true}
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -139,6 +143,12 @@ import { HealthModule } from './api/health/health.module';
     ScheduleModule.forRoot()
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    makeCounterProvider({
+      name: 'http_request_total',
+      help: 'Tong so http Request',
+      labelNames: ['methods', 'path','status']
+    })
+  ],
 })
 export class AppModule {}
